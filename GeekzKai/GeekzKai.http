@@ -1,0 +1,6 @@
+@GeekzKai_HostAddress = http://localhost:5131
+
+GET {{GeekzKai_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
