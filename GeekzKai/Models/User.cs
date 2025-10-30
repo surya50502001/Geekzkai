@@ -6,15 +6,13 @@ namespace geekzKai.Models
     public class User
     {
         public int Id { get; set; }
-        public required string Username { get; set; }
-        public required string Email { get; set; }
-        public required string PasswordHash { get; set; }
+        public string Username { get; set; } = string.Empty;
+        public string Email { get; set; } = string.Empty;
+        public string PasswordHash { get; set; } = string.Empty;
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
-        //Relationships can be added here in the future
-
-        public List<Post> Posts { get; set; }
-        public List<Comments> Comments { get; set; }
-
+        // Navigation properties
+        public List<Post> Posts { get; set; } = new();
+        public List<Comment> Comments { get; set; } = new();
     }
 }

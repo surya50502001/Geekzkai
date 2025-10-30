@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using geekzKai.Data;
 
@@ -11,9 +12,11 @@ using geekzKai.Data;
 namespace GeekzKai.Migrations
 {
     [DbContext(typeof(AppdbContext))]
-    partial class AppdbContextModelSnapshot : ModelSnapshot
+    [Migration("20251030071444_CleanRelations")]
+    partial class CleanRelations
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -36,6 +39,9 @@ namespace GeekzKai.Migrations
                     b.Property<int>("PostId")
                         .HasColumnType("int");
 
+                    b.Property<int>("PostId1")
+                        .HasColumnType("int");
+
                     b.Property<string>("Text")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -47,7 +53,7 @@ namespace GeekzKai.Migrations
 
                     b.HasIndex("PostId");
 
-                    b.HasIndex("UserId");
+                    b.HasIndex("PostId1");
 
                     b.ToTable("Comments");
                 });
@@ -136,16 +142,16 @@ namespace GeekzKai.Migrations
 
             modelBuilder.Entity("geekzKai.Models.Comment", b =>
                 {
-                    b.HasOne("geekzKai.Models.Post", "Post")
-                        .WithMany("Comments")
-                        .HasForeignKey("PostId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("geekzKai.Models.User", "User")
                         .WithMany("Comments")
-                        .HasForeignKey("UserId")
+                        .HasForeignKey("PostId")
                         .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("geekzKai.Models.Post", "Post")
+                        .WithMany("Comments")
+                        .HasForeignKey("PostId1")
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Post");
