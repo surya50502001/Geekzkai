@@ -44,9 +44,11 @@ namespace geekzKai.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateUser(User user)
         {
-            if (user == null)
+            var ExistingUser = await _context.Users.FirstOrDefaultAsync(u => u.Username == user.Username || u.Email == user.Email);
+
+            if (ExistingUser != null)
             {
-                return BadRequest(new { message = "Invalid user data" });
+                return BadRequest(new { message = "Username or Email already taken." });
             }
 
             user.CreatedAt = DateTime.UtcNow;
