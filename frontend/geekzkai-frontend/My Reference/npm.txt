@@ -1,0 +1,17 @@
+project creation with vite:
+
+npm install vite@latest geekzKai-frontend
+
+React Router DOM:
+
+npm install react-router-dom
+
+lucide react for icons:
+npm install lucide-react
+
+
+tail wind css:
+npm install -D tailwindcss postcss autoprefixer
+npx tailwindcss init -p
+
+

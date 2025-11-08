@@ -1,0 +1,23 @@
+.light-gradient {
+    background: linear-gradient(135deg, #facc15, #f97316, #facc15);
+    background-size: 300% 300%;
+    animation: flowingGradient 6s ease infinite;
+}
+
+.dark-gradient {
+    background: linear-gradient(135deg, #4f46e5, #c026d3, #4f46e5);
+    background-size: 300% 300%;
+    animation: flowingGradient 6s ease infinite;
+}
+
+@keyframes flowingGradient {
+    0% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 0% 50%;
+    }
+}

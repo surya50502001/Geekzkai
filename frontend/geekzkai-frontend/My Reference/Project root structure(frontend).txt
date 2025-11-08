@@ -1,0 +1,14 @@
+src/
+│
+├── assets/              # images, logos, icons
+├── components/          # reusable UI bits (Navbar, PostCard, etc.)
+├── pages/               # full pages (Home, Explore, Profile, etc.)
+├── hooks/               # custom React hooks (optional, later)
+├── context/             # for global state (AuthContext, etc.)
+├── services/            # API calls (axios functions)
+├── utils/               # helper functions, constants
+│
+├── App.jsx              # main app component
+├── main.jsx             # entry file (React root)
+├── index.css            # Tailwind styles imported here
+└── App.css              # component-specific styles if needed

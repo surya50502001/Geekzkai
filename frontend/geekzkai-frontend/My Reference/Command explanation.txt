@@ -1,0 +1,10 @@
+| Command                                           | Purpose                               |
+| ------------------------------------------------- | ------------------------------------- |
+| `mkdir`                                           | Make a folder                         |
+| `cd`                                              | Move into folder                      |
+| `npm create vite@latest`                          | Create new React project              |
+| `npm install`                                     | Install dependencies                  |
+| `npm run dev`                                     | Run the app                           |
+| `npm install -D tailwindcss postcss autoprefixer` | Add Tailwind                          |
+| `npx tailwindcss init -p`                         | (Optional) Make Tailwind config files |
+| `npm list tailwindcss`                            | Check Tailwind version                |

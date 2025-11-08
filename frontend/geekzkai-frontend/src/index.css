@@ -1,0 +1,39 @@
+@import "tailwindcss";
+ 
+:root {
+    --gradient-color-1: #facc15;
+    --gradient-color-2: #f97316;
+    --gradient-color-3: #facc15;
+}
+ 
+[data-theme="sasuke"] {
+    --gradient-color-1: #4f46e5;
+    --gradient-color-2: #c026d3;
+    --gradient-color-3: #4f46e5;
+}
+ 
+[data-theme="itachi"] {
+    --gradient-color-1: #8f090a;
+    --gradient-color-2: #fc3542;
+    --gradient-color-3: #8f090a;
+}
+ 
+.animated-gradient {
+    background: linear-gradient(135deg, var(--gradient-color-1), var(--gradient-color-2), var(--gradient-color-3));
+    background-size: 300% 300%;
+    animation: flowingGradient 6s ease infinite;
+}
+ 
+ @keyframes flowingGradient {
+    0% {
+        background-position: 0% 50%;
+    }
+
+    50% {
+        background-position: 100% 50%;
+    }
+
+    100% {
+        background-position: 0% 50%;
+    }
+}
