@@ -2,6 +2,8 @@
 
 const AuthContext = createContext();
 
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://192.168.0.6:5131/api";
+
 export const AuthProvider = ({ children }) => {
     const [user, setUser] = useState(null);
     const [token, setToken] = useState(localStorage.getItem("token") || null);
@@ -9,7 +11,7 @@ export const AuthProvider = ({ children }) => {
     useEffect(() => {
         if (token) {
             // ✅ fetch user info using token
-            fetch("http://localhost:5131/api/user/me", {
+            fetch(`${API_BASE_URL}/user/me`, {
                 headers: {
                     Authorization: `Bearer ${token}`,
                 },
@@ -21,13 +23,16 @@ export const AuthProvider = ({ children }) => {
     }, [token]);
 
     const login = async (email, password) => {
-        const res = await fetch("http://localhost:5131/api/user/login", {
+        const res = await fetch(`${API_BASE_URL}/user/login`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ email, password }),
         });
 
-        if (!res.ok) throw new Error("Invalid credentials");
+        if (!res.ok) {
+            const errorData = await res.json().catch(() => ({ message: "Invalid credentials" }));
+            throw new Error(errorData.message || "Invalid credentials");
+        }
 
         const data = await res.json();
         setToken(data.token);
@@ -35,11 +40,11 @@ export const AuthProvider = ({ children }) => {
         setUser(data.user);
     };
 
-    const register = async (username, email, password) => {
-        const res = await fetch("http://localhost:5131/api/user", {
+    const register = async (username, email, password, channelLink = null) => {
+        const res = await fetch(`${API_BASE_URL}/user`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ username, email, passwordHash: password }),
+            body: JSON.stringify({ username, email, passwordHash: password, channelLink }),
         });
 
         if (!res.ok) {

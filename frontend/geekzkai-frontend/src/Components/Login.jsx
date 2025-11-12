@@ -2,9 +2,9 @@ import { useState } from "react";
 import { useAuth } from "../Context/AuthContext";
 import { useNavigate, Link } from "react-router-dom";
 import { useTheme } from "../Context/ThemeContext";
-import narutoBg from "../assets/themes/naruto.png";
-import sasukeBg from "../assets/themes/sasuke.png";
-import itachiBg from "../assets/themes/itachi.png";
+//import narutoBg from "../assets/themes/naruto.png";
+//import sasukeBg from "../assets/themes/sasuke.png";
+//import itachiBg from "../assets/themes/itachi.png";
 
 function Login() {
     const [email, setEmail] = useState("");
@@ -40,7 +40,7 @@ function Login() {
         <div
             className="min-h-screen flex flex-col items-center justify-center"
             style={{
-                background: `linear-gradient(rgba(0,0,0,0.2), rgba(0,0,0,0.2)), linear-gradient(rgba(0,0,0,0.5), rgba(255,100,0,0.3)), url(${getBackgroundImage()}) center/cover no-repeat`
+                background: `linear-gradient(rgba(0,0,0,0.2), rgba(0,0,0,0.2)), linear-gradient(rgba(0,0,0,0.5), rgba(255,100,0,0.3))`/*, url(${ getBackgroundImage()}) center /cover no - repeat*/
             }}
         >
             <div className="bg-white bg-opacity-80 p-8 rounded-lg shadow-lg">
@@ -51,14 +51,14 @@ function Login() {
                         placeholder="Email"
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
-                        className="p-2 border rounded"
+                        className="p-2 border rounded text-gray-900 bg-white"
                     />
                     <input
                         type="password"
                         placeholder="Password"
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
-                        className="p-2 border rounded"
+                        className="p-2 border rounded text-gray-900 bg-white"
                     />
                     <button type="submit" className="p-2 bg-orange-500 text-white rounded animated-gradient">
                         Login
