@@ -1,25 +1,48 @@
 @import "tailwindcss";
  
-:root {
+[data-theme="naruto"] {
+    --text-primary: #000000;
+    --text-secondary: #4a4a4a;
+    --background-primary: #ffffff;
+    --background-secondary: #f2f2f2;
+    --primary: #f97316;
+    --primary-dark: #c45a11;
+    --border-primary: #e6e6e6;
     --gradient-color-1: #facc15;
     --gradient-color-2: #f97316;
     --gradient-color-3: #facc15;
-    --bg-color: #ffffff;
-    --text-color: #000000;
+    --success: #28a745;
+    --error: #dc3545;
 }
  
 [data-theme="sasuke"] {
+    --text-primary: #ffffff;
+    --text-secondary: #a0a0a0;
+    --background-primary: #1a1a1a;
+    --background-secondary: #2a2a2a;
+    --primary: #4f46e5;
+    --primary-dark: #3c36b3;
+    --border-primary: #444444;
     --gradient-color-1: #4f46e5;
     --gradient-color-2: #c026d3;
     --gradient-color-3: #4f46e5;
-    --text-color: #ffffff;
+    --success: #28a745;
+    --error: #dc3545;
 }
- 
+
 [data-theme="itachi"] {
+    --text-primary: #ffffff;
+    --text-secondary: #a0a0a0;
+    --background-primary: #000000;
+    --background-secondary: #1c1c1c;
+    --primary: #8f090a;
+    --primary-dark: #6d0708;
+    --border-primary: #444444;
     --gradient-color-1: #8f090a;
     --gradient-color-2: #fc3542;
     --gradient-color-3: #8f090a;
-    --text-color: #ffffff;
+    --success: #28a745;
+    --error: #dc3545;
 }
  
 .animated-gradient {
@@ -27,8 +50,8 @@
     background-size: 300% 300%;
     animation: flowingGradient 6s ease infinite;
 }
- 
- @keyframes flowingGradient {
+
+@keyframes flowingGradient {
     0% {
         background-position: 0% 50%;
     }
@@ -40,8 +63,22 @@
     100% {
         background-position: 0% 50%;
     }
+
+
 }
 
-input {
-    color: var(--text-color);
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateX(-10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
 }
+
+
+
+

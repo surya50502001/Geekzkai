@@ -38,34 +38,31 @@ function Login() {
 
     return (
         <div
-            className="min-h-screen flex flex-col items-center justify-center"
-            style={{
-                background: `linear-gradient(rgba(0,0,0,0.2), rgba(0,0,0,0.2)), linear-gradient(rgba(0,0,0,0.5), rgba(255,100,0,0.3))`/*, url(${ getBackgroundImage()}) center /cover no - repeat*/
-            }}
+            className="min-h-screen flex flex-col items-center justify-center bg-background-primary p-4"
         >
-            <div className="bg-white bg-opacity-80 p-8 rounded-lg shadow-lg">
-                <h2 className="text-2xl font-bold mb-4 text-center">Login</h2>
-                <form onSubmit={handleSubmit} className="flex flex-col gap-4 w-64">
+            <div className="bg-background-secondary bg-opacity-80 p-8 rounded-xl shadow-lg w-full max-w-sm">
+                <h2 className="text-3xl font-bold mb-6 text-center text-text-primary">Login</h2>
+                <form onSubmit={handleSubmit} className="flex flex-col gap-4">
                     <input
                         type="email"
                         placeholder="Email"
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
-                        className="p-2 border rounded text-gray-900 bg-white"
+                        className="p-3 bg-background-secondary border border-border-primary rounded-lg text-text-primary focus:outline-none focus:ring-2 focus:ring-primary"
                     />
                     <input
                         type="password"
                         placeholder="Password"
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
-                        className="p-2 border rounded text-gray-900 bg-white"
+                        className="p-3 bg-background-secondary border border-border-primary rounded-lg text-text-primary focus:outline-none focus:ring-2 focus:ring-primary"
                     />
-                    <button type="submit" className="p-2 bg-orange-500 text-white rounded animated-gradient">
+                    <button type="submit" className="p-3 bg-primary text-white rounded-lg hover:bg-primary-dark transition-colors animated-gradient">
                         Login
                     </button>
-                    <p className="mt-4 text-center">
+                    <p className="mt-6 text-center text-text-secondary">
                         New User?{" "}
-                        <Link to="/Register" className="text-orange-500 ">
+                        <Link to="/Register" className="text-primary hover:underline">
                             Register here
                         </Link>
                     </p>
