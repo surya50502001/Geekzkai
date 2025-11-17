@@ -31,10 +31,10 @@ function Navbar() {
         <nav className="p-2 flex justify-between items-center text-text-primary relative animated-gradient font-sans">
             <Link to="/" className="font-bold text-xl text-white">GeekzKai</Link>
             <div className="flex gap-2 items-center text-white">
-                <button onClick={() => navigate("/settings")} className="p-2 rounded-full hover:bg-white/20 transition-colors">
+                <button onClick={() => navigate("/settings")} className="p-2 rounded-full bg-gray-600 hover:bg-gray-700 transition-colors">
                     <Settings size={20} />
                 </button>
-                <button onClick={HandleMenuClick} className="p-2 rounded-full hover:bg-white/20 transition-colors">
+                <button onClick={HandleMenuClick} className="p-2 rounded-full bg-gray-600 hover:bg-gray-700 transition-colors">
                     <Menu size={20} />
                 </button>
 
