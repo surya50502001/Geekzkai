@@ -36,7 +36,7 @@ function Login() {
 
     return (
         <div
-            className="min-h-screen flex flex-col items-center justify-center bg-background-primary p-4"
+            className="min-h-screen flex flex-col items-center justify-center p-4 relative"
             style={{
                 backgroundImage: `url(${getBackgroundImage()})`,
                 backgroundSize: 'cover',
@@ -44,7 +44,8 @@ function Login() {
                 backgroundRepeat: 'no-repeat'
             }}
         >
-            <div className="bg-background-secondary bg-opacity-80 p-8 rounded-xl shadow-lg w-full max-w-xs">
+            <div className="absolute inset-0 bg-black bg-opacity-50"></div>
+            <div className="bg-background-secondary bg-opacity-80 p-8 rounded-xl shadow-lg w-full max-w-xs relative z-10">
                 <h2 className="text-3xl font-bold mb-6 text-center text-text-primary">Login</h2>
                 <form onSubmit={handleSubmit} className="flex flex-col gap-4">
                     <input
