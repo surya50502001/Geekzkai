@@ -44,7 +44,7 @@ function Login() {
                 backgroundRepeat: 'no-repeat'
             }}
         >
-            <div className="absolute inset-0 bg-black bg-opacity-25"></div>
+            <div className="absolute inset-0 bg-black bg-opacity-10"></div>
             <div className="bg-background-secondary bg-opacity-80 p-8 rounded-xl shadow-lg w-full max-w-xs relative z-10">
                 <h2 className="text-3xl font-bold mb-6 text-center text-text-primary">Login</h2>
                 <form onSubmit={handleSubmit} className="flex flex-col gap-4">
