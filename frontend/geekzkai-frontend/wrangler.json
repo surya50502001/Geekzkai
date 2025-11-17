@@ -1,0 +1,7 @@
+{
+  "name": "geekzkai-frontend",
+  "compatibility_date": "2024-11-17",
+  "assets": {
+    "directory": "./dist"
+  }
+}
