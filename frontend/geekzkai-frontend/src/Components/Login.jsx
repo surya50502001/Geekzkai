@@ -2,8 +2,8 @@ import { useState } from "react";
 import { useAuth } from "../Context/AuthContext";
 import { useNavigate, Link } from "react-router-dom";
 import { useTheme } from "../Context/ThemeContext";
-//import narutoBg from "../assets/themes/naruto.png";
-//import sasukeBg from "../assets/themes/sasuke.png";
+import narutoBg from "../assets/themes/naruto.png";
+import sasukeBg from "../assets/themes/sasuke.png";
 //import itachiBg from "../assets/themes/itachi.png";
 
 function Login() {
@@ -25,12 +25,10 @@ function Login() {
 
     const getBackgroundImage = () => {
         switch (theme) {
-            case "naruto":
+            case "light":
                 return narutoBg;
-            case "sasuke":
+            case "dark":
                 return sasukeBg;
-            case "itachi":
-                return itachiBg;
             default:
                 return narutoBg;
         }
@@ -39,6 +37,12 @@ function Login() {
     return (
         <div
             className="min-h-screen flex flex-col items-center justify-center bg-background-primary p-4"
+            style={{
+                backgroundImage: `url(${getBackgroundImage()})`,
+                backgroundSize: 'cover',
+                backgroundPosition: 'center',
+                backgroundRepeat: 'no-repeat'
+            }}
         >
             <div className="bg-background-secondary bg-opacity-80 p-8 rounded-xl shadow-lg w-full max-w-xs">
                 <h2 className="text-3xl font-bold mb-6 text-center text-text-primary">Login</h2>
