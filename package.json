@@ -1,0 +1,10 @@
+{
+  "name": "anime-project",
+  "version": "1.0.0",
+  "description": "Anime project with .NET backend and React frontend",
+  "scripts": {
+    "build": "cd frontend/geekzkai-frontend && npm run build",
+    "dev": "cd frontend/geekzkai-frontend && npm run dev",
+    "lint": "cd frontend/geekzkai-frontend && npm run lint"
+  }
+}

@@ -1,0 +1,192 @@
+﻿@baseUrl = http://localhost:5131/api
+
+### 👤 Create User
+POST {{baseUrl}}/user
+Content-Type: application/json
+
+{
+  "username": "itachi",
+  "email": "itachi@example.com",
+  "passwordHash": "sharingan"
+}
+
+###
+
+### 👤 Create Another User
+POST {{baseUrl}}/user
+Content-Type: application/json
+
+{
+  "username": "naruto",
+  "email": "naruto@example.com",
+  "passwordHash": "rasengan"
+}
+
+###
+
+### 📜 Get All Users
+GET {{baseUrl}}/user
+
+###
+
+### 👤 Get Single User
+GET {{baseUrl}}/user/1
+
+###
+
+### 📝 Create Post (User 1)
+POST {{baseUrl}}/post
+Content-Type: application/json
+
+{
+  "question": "What if Naruto joined the Akatsuki?",
+  "description": "Would the Leaf still survive?",
+  "userId": 1
+}
+
+###
+
+### 📝 Create Another Post (User 2)
+POST {{baseUrl}}/post
+Content-Type: application/json
+
+{
+  "question": "What if Itachi never died?",
+  "description": "How would the Uchiha clan evolve?",
+  "userId": 2
+}
+
+###
+
+### 📜 Get All Posts
+GET {{baseUrl}}/post
+
+###
+
+### 📜 Get Post by ID
+GET {{baseUrl}}/post/1
+
+###
+
+### 💬 Create Comment (User 1 on Post 1)
+POST {{baseUrl}}/comment
+Content-Type: application/json
+
+{
+  "text": "That would be wild!",
+  "postId": 1,
+  "userId": 1
+}
+
+###
+
+### 💬 Create Comment (User 1 on Post 2)
+POST {{baseUrl}}/comment
+Content-Type: application/json
+
+{
+  "text": "Itachi would still be the strongest",
+  "postId": 2,
+  "userId": 1
+}
+
+###
+
+### 💬 Create Comment (User 2 on Post 1)
+POST {{baseUrl}}/comment
+Content-Type: application/json
+
+{
+  "text": "The village would definitely fall",
+  "postId": 1,
+  "userId": 2
+}
+
+###
+
+### 💭 Get All Comments
+GET {{baseUrl}}/comment
+
+###
+
+### 💭 Get Comments by Post ID
+GET {{baseUrl}}/comment/post/1
+
+###
+
+### 🔼 Toggle Upvote (User 1 on Post 1)
+POST {{baseUrl}}/upvote/toggle
+Content-Type: application/json
+
+{
+  "userId": 1,
+  "postId": 1
+}
+
+###
+
+### 🔼 Toggle Upvote (User 2 on Post 1)
+POST {{baseUrl}}/upvote/toggle
+Content-Type: application/json
+
+{
+  "userId": 2,
+  "postId": 1
+}
+
+###
+
+### 🔼 Remove Upvote (User 1 on Post 1)
+POST {{baseUrl}}/upvote/toggle
+Content-Type: application/json
+
+{
+  "userId": 1,
+  "postId": 1
+}
+
+###
+
+### 🔼 Get Upvote Count for Post
+GET {{baseUrl}}/upvote/post/1
+
+###
+
+### ✏️ Update Post
+PUT {{baseUrl}}/post/1
+Content-Type: application/json
+
+{
+  "id": 1,
+  "question": "What if Naruto joined the Akatsuki? (Updated)",
+  "description": "How would the world change?",
+  "userId": 1
+}
+
+###
+
+### ✏️ Update Comment
+PUT {{baseUrl}}/comment/1
+Content-Type: application/json
+
+{
+  "id": 1,
+  "text": "That would be absolutely wild!",
+  "postId": 1,
+  "userId": 1
+}
+
+###
+
+### 🗑️ Delete Comment
+DELETE {{baseUrl}}/comment/2
+
+###
+
+### 🗑️ Delete Post
+DELETE {{baseUrl}}/post/1
+
+###
+
+### 🗑️ Delete User
+DELETE {{baseUrl}}/user/2
