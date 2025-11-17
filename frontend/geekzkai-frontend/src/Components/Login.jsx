@@ -1,16 +1,11 @@
 import { useState } from "react";
 import { useAuth } from "../Context/AuthContext";
 import { useNavigate, Link } from "react-router-dom";
-import { useTheme } from "../Context/ThemeContext";
-import narutoBg from "../assets/themes/naruto.png";
-import sasukeBg from "../assets/themes/sasuke.png";
-//import itachiBg from "../assets/themes/itachi.png";
 
 function Login() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const { login } = useAuth();
-    const { theme } = useTheme();
     const navigate = useNavigate();
 
     const handleSubmit = async (e) => {
@@ -23,29 +18,9 @@ function Login() {
         }
     };
 
-    const getBackgroundImage = () => {
-        switch (theme) {
-            case "light":
-                return narutoBg;
-            case "dark":
-                return sasukeBg;
-            default:
-                return narutoBg;
-        }
-    };
-
     return (
-        <div
-            className="min-h-screen flex flex-col items-center justify-center p-4 relative"
-            style={{
-                backgroundImage: `url(${getBackgroundImage()})`,
-                backgroundSize: 'cover',
-                backgroundPosition: 'center',
-                backgroundRepeat: 'no-repeat'
-            }}
-        >
-            <div className="absolute inset-0 bg-black bg-opacity-10"></div>
-            <div className="bg-background-secondary bg-opacity-80 p-8 rounded-xl shadow-lg w-full max-w-xs relative z-10">
+        <div className="min-h-screen flex flex-col items-center justify-center bg-background-primary p-4">
+            <div className="bg-background-secondary bg-opacity-80 p-8 rounded-xl shadow-lg w-full max-w-xs">
                 <h2 className="text-3xl font-bold mb-6 text-center text-text-primary">Login</h2>
                 <form onSubmit={handleSubmit} className="flex flex-col gap-4">
                     <input
