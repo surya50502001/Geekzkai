@@ -31,10 +31,10 @@ function Navbar() {
         <nav className="p-2 flex justify-between items-center text-text-primary relative animated-gradient font-sans">
             <Link to="/" className="font-bold text-xl text-white">GeekzKai</Link>
             <div className="flex gap-2 items-center text-white">
-                <button onClick={() => navigate("/settings")} className="p-2 rounded-full bg-gray-600 hover:bg-gray-700 transition-colors">
+                <button onClick={() => navigate("/settings")} className="p-2 rounded-full hover:bg-white/20 transition-colors">
                     <Settings size={20} />
                 </button>
-                <button onClick={HandleMenuClick} className="p-2 rounded-full bg-gray-600 hover:bg-gray-700 transition-colors">
+                <button onClick={HandleMenuClick} className="p-2 rounded-full hover:bg-white/20 transition-colors">
                     <Menu size={20} />
                 </button>
 
@@ -44,12 +44,12 @@ function Navbar() {
                             <X size={20} />
                         </button>
                         {navLinks.map((link) => (
-                            <Link key={link.to} to={link.to} aria-label={link.label} className="flex items-center gap-3 p-3 w-full rounded-lg hover:bg-accent-primary/10 hover:text-accent-primary transition-all duration-200 font-medium">
+                            <Link key={link.to} to={link.to} aria-label={link.label} className="flex items-center gap-3 p-3 w-full rounded-lg bg-gray-600 hover:bg-gray-700 transition-all duration-200 font-medium">
                                 {link.icon}
                                 <span>{link.label}</span>
                             </Link>
                         ))}
-                        <button onClick={handleProfileClick} aria-label="Profile" className="flex items-center gap-3 p-3 w-full rounded-lg hover:bg-accent-primary/10 hover:text-accent-primary transition-all duration-200 font-medium">
+                        <button onClick={handleProfileClick} aria-label="Profile" className="flex items-center gap-3 p-3 w-full rounded-lg bg-gray-600 hover:bg-gray-700 transition-all duration-200 font-medium">
                             <User size={20} />
                             <span>Profile</span>
                         </button>
