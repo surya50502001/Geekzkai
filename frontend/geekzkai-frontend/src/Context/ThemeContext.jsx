@@ -2,11 +2,11 @@ import { createContext, useContext, useState, useEffect } from "react";
 
 const ThemeContext = createContext();
 
-const themes  = ["naruto","sasuke","itachi"];
+const themes  = ["light","dark"];
 
 export const ThemeProvider = ({ children }) => { 
     const [theme, setTheme] = useState(() => {
-        return localStorage.getItem("theme") || "naruto";
+        return localStorage.getItem("theme") || "light";
     });
 
     useEffect(() => {

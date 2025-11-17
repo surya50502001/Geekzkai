@@ -28,31 +28,35 @@ function Navbar() {
     }
 
     return (
-        <nav className="p-2 flex justify-between items-center text-white relative animated-gradient">
-            <Link to="/" className="font-bold text-xl">GeekzKai</Link>
-            <div className="flex gap-10 items-center ">
-                {navLinks.slice(0, 2).map((link) => (
-                    <Link key={link.to} to={link.to} aria-label={link.label} className="p-2 rounded-full hover:bg-white/20 transition-colors">
-                        {link.icon}
-                    </Link>
-                ))}
-                <button onClick={handleProfileClick} aria-label="Profile" className="p-2 rounded-full hover:bg-white/20 transition-colors">
-                    <User size={20} />
+        <nav className="p-2 flex justify-between items-center text-text-primary relative animated-gradient font-sans">
+            <Link to="/" className="font-bold text-xl text-white">GeekzKai</Link>
+            <div className="flex gap-2 items-center text-white">
+                <button onClick={() => navigate("/settings")} className="p-2 rounded-full hover:bg-white/20 transition-colors">
+                    <Settings size={20} />
                 </button>
-
                 <button onClick={HandleMenuClick} className="p-2 rounded-full hover:bg-white/20 transition-colors">
-                    {open ? <X size={20} /> : <Menu size={20} />}
+                    <Menu size={20} />
                 </button>
 
                 {open && (
-                    <div className="absolute top-full left-0 w-50 h-screen  flex flex-col items-left py-4 gap-3 bg-white font-semibold shadow-md z-50 animate-slideDown">
-                        <button onClick={HandleMenuClick} className="self-end p-2 text-white hover:bg-white/20 rounded-full">
+                    <div className="absolute top-full right-0 w-48 flex flex-col items-start py-4 gap-3 bg-background-secondary font-semibold shadow-lg rounded-lg border border-border-primary z-50 animate-slideDown">
+                        <button onClick={HandleMenuClick} className="self-end p-2 hover:bg-accent-primary/20 rounded-full transition-all duration-200">
                             <X size={20} />
                         </button>
-                        <div className="flex items-center  ">
-                            <span className="mx-2 text-black font-semibold">Theme</span>
+                        {navLinks.map((link) => (
+                            <Link key={link.to} to={link.to} aria-label={link.label} className="flex items-center gap-3 p-3 w-full rounded-lg hover:bg-accent-primary/10 hover:text-accent-primary transition-all duration-200 font-medium">
+                                {link.icon}
+                                <span>{link.label}</span>
+                            </Link>
+                        ))}
+                        <button onClick={handleProfileClick} aria-label="Profile" className="flex items-center gap-3 p-3 w-full rounded-lg hover:bg-accent-primary/10 hover:text-accent-primary transition-all duration-200 font-medium">
+                            <User size={20} />
+                            <span>Profile</span>
+                        </button>
+                        <div className="flex items-center justify-between w-full px-3 py-2 border-t border-border-primary pt-4">
+                            <span className="font-semibold text-text-secondary">Theme</span>
                             <ThemeToggle />
-                        </div>                       
+                        </div>
                     </div>
                 )}
             </div>

@@ -1,12 +1,13 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom"
-import Navbar from "./components/Navbar"
-import Home from "./pages/Home"
-import Login from "./components/Login";
+import Navbar from "./Components/Navbar"
+import Home from "./Pages/Home"
+import Login from "./Components/Login";
 import Register from "./Components/Register";
 
 import { Navigate } from "react-router-dom";
 import { useAuth } from "./Context/AuthContext";
-import Profile from "./pages/profile";
+import Settings from "./Pages/Settings";
+import Profile from "./Pages/Profile";
 
 
 function PrivateRoute({ children }) {
@@ -23,6 +24,7 @@ function App() {
                     <Route path="/login" element={<Login />} />
                     <Route path="/register" element={<Register  />} />
                     <Route path="/profile" element={<PrivateRoute><Profile />  </PrivateRoute>} />
+                    <Route path="/settings" element={<PrivateRoute><Settings />  </PrivateRoute>} />
                 </Routes>
             </div>
         </Router>
