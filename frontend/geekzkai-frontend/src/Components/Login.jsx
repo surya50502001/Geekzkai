@@ -20,7 +20,7 @@ function Login() {
 
     return (
         <div className="min-h-screen flex flex-col items-center justify-center bg-background-primary p-4 bg-black">
-            <div className="bg-background-secondary bg-opacity-80 p-8 rounded-xl shadow-lg w-full max-w-xs">
+            <div className="bg-background-secondary bg-opacity-80 p-8 rounded-xl shadow-lg w-full max-w-xs animated-gradient">
                 <h2 className="text-3xl font-bold mb-6 text-center text-text-primary">Login</h2>
                 <form onSubmit={handleSubmit} className="flex flex-col gap-4">
                     <input
