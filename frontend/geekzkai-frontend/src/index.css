@@ -13,8 +13,9 @@
     --gradient-color-3: #facc15;
     --success: #28a745;
     --error: #dc3545;
+   
 }
- 
+
 [data-theme="dark"] {
     --text-primary: #ffffff;
     --text-secondary: #a0a0a0;
@@ -28,6 +29,7 @@
     --gradient-color-3: #4f46e5;
     --success: #28a745;
     --error: #dc3545;
+    --background-color: black;
 }
  
 .animated-gradient {
