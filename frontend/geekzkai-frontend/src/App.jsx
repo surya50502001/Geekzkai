@@ -18,14 +18,16 @@ function App() {
     return (
         <Router>
             <div className="min-h-screen bg-background-primary text-text-primary transition-colors duration-500">
-                <Navbar />
-                <Routes>
-                    <Route path="/" element={<Home />} />
-                    <Route path="/login" element={<Login />} />
-                    <Route path="/register" element={<Register  />} />
-                    <Route path="/profile" element={<PrivateRoute><Profile />  </PrivateRoute>} />
-                    <Route path="/settings" element={<PrivateRoute><Settings />  </PrivateRoute>} />
-                </Routes>
+                <Navbar  />
+                <main className="md:ml-48">
+                    <Routes>
+                        <Route path="/" element={<Home />} />
+                        <Route path="/login" element={<Login />} />
+                        <Route path="/register" element={<Register  />} />
+                        <Route path="/profile" element={<PrivateRoute><Profile />  </PrivateRoute>} />
+                        <Route path="/settings" element={<PrivateRoute><Settings />  </PrivateRoute>} />
+                    </Routes>
+                </main>
             </div>
         </Router>
     )

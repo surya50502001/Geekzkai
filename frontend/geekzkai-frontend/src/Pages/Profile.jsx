@@ -1,15 +1,13 @@
 import { useAuth } from "../Context/AuthContext";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { Plus } from "lucide-react";
-import CreatePostModal from "../Components/CreatePostModal";
+import { LogOut } from "lucide-react";
 
 function Profile() {
     const { user, logout, token } = useAuth();
     const navigate = useNavigate();
     const [fullUser, setFullUser] = useState(null);
     const [loading, setLoading] = useState(true);
-    const [openModal, setOpenModal] = useState(false);
 
     const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:5131/api";
 
@@ -33,46 +31,38 @@ function Profile() {
         }
     }, [token, API_BASE_URL]);
 
-  
+    const handleLogout = () => {
+        logout();
+        navigate("/login");
+    };
 
     if (loading) {
-        return <div className="flex justify-center items-center h-screen">Loading...</div>;
+        return <div className="flex justify-center items-center h-screen text-text-primary">Loading...</div>;
     }
 
     if (!fullUser) {
-        return <div className="flex justify-center items-center h-screen">Unable to load profile</div>;
+        return <div className="flex justify-center items-center h-screen text-text-primary">Unable to load profile</div>;
     }
 
     return (
-
-       
-        <div className="w-full min-h-screen bg-gray-50">
-            {/* Profile Header stuff here */}
-
-            {/* Floating + button (Instagram style) */}
-            <button
-                onClick={() => setOpenModal(true)}
-                className="fixed bottom-6 right-6 bg-orange-500 text-white p-4 rounded-full shadow-lg hover:scale-110 transition-all"
-            >
-                <Plus size={28} />
-            </button>
-
-            {/* Modal Component */}
-            {openModal && <CreatePostModal closeModal={() => setOpenModal(false)} />}
+        <div className="w-full min-h-screen bg-background-primary text-text-primary">
             {/* Header */}
-            <div className="bg-white shadow-sm border-b">
+            <div className="bg-background-secondary shadow-sm border-b border-border-primary">
                 <div className="max-w-4xl mx-auto px-4 py-4 flex justify-between items-center">
-                    <h1 className="text-2xl font-bold text-gray-800">Profile</h1>                   
+                    <h1 className="text-2xl font-bold">Profile</h1>
+                    <button onClick={handleLogout} className="text-text-secondary hover:text-primary transition-colors">
+                        <LogOut size={24} />
+                    </button>
                 </div>
             </div>
 
             {/* Profile Content */}
             <div className="max-w-4xl mx-auto px-4 py-8">
                 {/* Profile Header */}
-                <div className="bg-white rounded-lg shadow-sm p-6 mb-6">
+                <div className="bg-background-secondary rounded-lg shadow-sm p-6 mb-6">
                     <div className="flex flex-col md:flex-row items-center md:items-start space-y-4 md:space-y-0 md:space-x-6">
                         {/* Profile Picture */}
-                        <div className="w-32 h-32 rounded-full bg-gray-200 flex items-center justify-center overflow-hidden">
+                        <div className="w-32 h-32 rounded-full bg-background-tertiary flex items-center justify-center overflow-hidden">
                             {fullUser.profilePictureUrl ? (
                                 <img
                                     src={fullUser.profilePictureUrl}
@@ -80,7 +70,7 @@ function Profile() {
                                     className="w-full h-full object-cover"
                                 />
                             ) : (
-                                <div className="text-4xl text-gray-400">
+                                <div className="text-4xl text-text-secondary">
                                     {fullUser.username?.charAt(0).toUpperCase() || "?"}
                                 </div>
                             )}
@@ -88,7 +78,7 @@ function Profile() {
 
                         {/* Profile Info */}
                         <div className="flex-1 text-center md:text-left">
-                            <h2 className="text-2xl font-bold text-gray-800 mb-2">
+                            <h2 className="text-2xl font-bold mb-2">
                                 {fullUser.username}
                             </h2>
 
@@ -96,21 +86,21 @@ function Profile() {
                             <div className="flex justify-center md:justify-start space-x-6 mb-4">
                                 <div className="text-center">
                                     <div className="font-bold text-lg">{fullUser.posts?.length || 0}</div>
-                                    <div className="text-gray-600 text-sm">Posts</div>
+                                    <div className="text-text-secondary text-sm">Posts</div>
                                 </div>
                                 <div className="text-center">
                                     <div className="font-bold text-lg">{fullUser.followersCount || 0}</div>
-                                    <div className="text-gray-600 text-sm">Followers</div>
+                                    <div className="text-text-secondary text-sm">Followers</div>
                                 </div>
                                 <div className="text-center">
                                     <div className="font-bold text-lg">{fullUser.followingCount || 0}</div>
-                                    <div className="text-gray-600 text-sm">Following</div>
+                                    <div className="text-text-secondary text-sm">Following</div>
                                 </div>
                             </div>
 
                             {/* Bio */}
                             {fullUser.bio && (
-                                <p className="text-gray-700 mb-3">{fullUser.bio}</p>
+                                <p className="text-text-secondary mb-3">{fullUser.bio}</p>
                             )}
 
                             {/* YouTube Link */}
@@ -127,23 +117,23 @@ function Profile() {
                                     YouTube Channel
                                 </a>
                             )}
-                            <div className="flex space-x-6">
-                                <div className="border border-yellow-500 p-1">Edit Profile</div>
-                                <div className="border border-yellow-500 p-1">Share Profile</div>
+                            <div className="flex space-x-6 mt-4">
+                                <button className="border border-primary p-2 rounded-lg text-primary hover:bg-primary hover:text-white transition-colors">Edit Profile</button>
+                                <button className="border border-primary p-2 rounded-lg text-primary hover:bg-primary hover:text-white transition-colors">Share Profile</button>
                             </div>
                         </div>
                     </div>
                 </div>
 
                 {/* Additional Info */}
-                <div className="bg-white rounded-lg shadow-sm p-6">
-                    <h3 className="text-lg font-semibold text-gray-800 mb-4">Account Details</h3>
+                <div className="bg-background-secondary rounded-lg shadow-sm p-6">
+                    <h3 className="text-lg font-semibold mb-4">Account Details</h3>
                     <div className="space-y-3">
                         <div>
-                            <span className="font-medium text-gray-600">Email:</span> {fullUser.email}
+                            <span className="font-medium text-text-secondary">Email:</span> {fullUser.email}
                         </div>
                         <div>
-                            <span className="font-medium text-gray-600">Member since:</span>{" "}
+                            <span className="font-medium text-text-secondary">Member since:</span>{" "}
                             {new Date(fullUser.createdAt).toLocaleDateString()}
                         </div>
                         {fullUser.isYoutuber && (
