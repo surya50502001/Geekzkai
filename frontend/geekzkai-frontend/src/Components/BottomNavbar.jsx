@@ -1,54 +1,76 @@
-import { Link } from "react-router-dom";
-import { Home, User, Plus } from "lucide-react";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import { Home, User, Plus, Settings } from "lucide-react";
 import ThemeToggle from "./ThemeToggle";
 import { useTheme } from "../Context/ThemeContext";
 import { useAuth } from "../Context/AuthContext";
-import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import CreatePostModal from "./CreatePostModal"; // Import the modal component
 
-const navLinks = [
-    { to: "/", icon: <Home size={20} />, label: "Home" },
-    { to: "/profile", icon: <User size={20} />, label: "Profile" },
-];
-
 function BottomNavbar() {
-    const { theme } = useTheme();
     const { user } = useAuth();
     const navigate = useNavigate();
-    const [isModalOpen, setIsModalOpen] = useState(false); // State for modal
+    const location = useLocation();
+    const [isModalOpen, setIsModalOpen] = useState(false);
 
-    const handleProfileClick = () => {
-        if (user) navigate("/profile");
-        else navigate("/login");
+    const openModal = (e) => {
+        e.preventDefault(); // Prevent navigation
+        if (user) {
+            setIsModalOpen(true);
+        } else {
+            navigate("/login");
+        }
     };
-
-    const openModal = () => setIsModalOpen(true);
     const closeModal = () => setIsModalOpen(false);
+
+    const navLinks = [
+        { to: "/", icon: Home, label: "Home" },
+        { to: "/create", icon: Plus, label: "Create", action: openModal },
+        { to: "/profile", icon: User, label: "Profile" },
+    ];
+
+    const handleNavClick = (e, link) => {
+        if (link.action) {
+            link.action(e);
+        } else if (!user) {
+            e.preventDefault();
+            navigate("/login");
+        }
+    };
 
     return (
         <>
-            <nav className="fixed bottom-0 left-0 right-0 md:top-16 md:bottom-0 md:w-48 p-4 flex flex-col justify-start items-start text-text-primary font-sans z-40 bg-background-secondary md:border-r border-border-primary">
-                {navLinks.map((link) => (
-                    <Link
-                        key={link.to}
-                        to={user ? link.to : "/login"}
-                        aria-label={link.label}
-                        className="flex items-center gap-3 p-3 rounded-lg text-text-primary hover:bg-primary/20 transition-all duration-200 font-medium"
-                    >
-                        {link.icon}
-                        <span>{link.label}</span>
-                    </Link>
-                ))}
-                <button
-                    onClick={openModal}
-                    aria-label="Create Post"
-                    className="flex items-center gap-3 p-3 rounded-lg text-text-primary hover:bg-primary/20 transition-all duration-200 font-medium"
-                >
-                    <Plus size={20} />
-                    <span>Create Post</span>
-                </button>
-                <div className="mt-auto">
+            {/* Combined Mobile and Desktop Navbar */}
+            <nav className="fixed bottom-0 left-0 right-0 z-40 flex justify-around items-center p-2 bg-background-secondary border-t border-border-primary
+                            md:top-16 md:w-48 md:flex-col md:justify-start md:items-stretch md:p-4 md:border-t-0 md:border-r">
+                
+                {/* Desktop: Logo/Header (Optional) */}
+                <div className="hidden md:block mb-4">
+                    {/* You can place a logo or header here for the desktop sidebar */}
+                </div>
+
+                {/* Navigation Links */}
+                <div className="flex justify-around w-full md:flex-col md:w-auto">
+                    {navLinks.map((link) => {
+                        const isActive = location.pathname === link.to;
+                        return (
+                            <Link
+                                key={link.label}
+                                to={link.to}
+                                onClick={(e) => handleNavClick(e, link)}
+                                aria-label={link.label}
+                                className={`flex flex-col items-center justify-center gap-1 text-text-secondary p-2 rounded-lg transition-all duration-200
+                                            md:flex-row md:justify-start md:gap-3 md:p-3
+                                            ${isActive ? 'text-primary' : 'hover:bg-primary/10 hover:text-text-primary'}`}
+                            >
+                                <link.icon size={24} strokeWidth={isActive ? 2.5 : 2} />
+                                <span className={`text-xs font-medium md:text-base ${isActive ? 'font-semibold' : ''}`}>{link.label}</span>
+                            </Link>
+                        );
+                    })}
+                </div>
+
+                {/* Desktop: Theme Toggle */}
+                <div className="hidden md:block mt-auto">
                     <ThemeToggle />
                 </div>
             </nav>
