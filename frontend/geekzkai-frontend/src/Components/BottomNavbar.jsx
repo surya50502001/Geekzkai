@@ -42,9 +42,8 @@ function BottomNavbar() {
     const desktopNav = (
         <Resizable>
             <nav className="z-40 w-full h-full flex-col justify-start items-stretch p-4 animated-gradient border-border-primary border rounded-lg shadow-xl flex animate-gradient">
-                <div className="mb-4 flex justify-between items-center">
-                    <h1 className="text-xl font-bold text-white">GeekzKai</h1>
-                    <ThemeToggle />
+                <div className="mb-4">
+                    {/* You can place a logo or header here for the desktop sidebar */}
                 </div>
                 <div className="flex flex-col w-full">
                     {navLinks.map((link) => {

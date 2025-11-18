@@ -2,7 +2,7 @@ import React, { useState, useCallback, useEffect } from 'react';
 
 const Resizable = ({ children }) => {
     const [width, setWidth] = useState(250); // Initial width
-    const [height, setHeight] = useState(500); // Initial height
+    const [height, setHeight] = useState(window.innerHeight - 80); // Initial height to full screen minus some margin
     const [isResizingWidth, setIsResizingWidth] = useState(false);
     const [isResizingHeight, setIsResizingHeight] = useState(false);
 

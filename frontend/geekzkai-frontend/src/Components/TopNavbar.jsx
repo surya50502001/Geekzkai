@@ -1,4 +1,5 @@
 import { Search } from "lucide-react";
+import ThemeToggle from "./ThemeToggle";
 
 export default function TopNavbar({ isDraggable, setIsDraggable }) {
     return (
@@ -13,6 +14,7 @@ export default function TopNavbar({ isDraggable, setIsDraggable }) {
                         className="bg-transparent focus:outline-none text-text-primary"
                     />
                 </div>
+                <ThemeToggle />
                 <button onClick={() => setIsDraggable(!isDraggable)} className="bg-primary text-white p-2 rounded-full">
                     {isDraggable ? "Fix Navbar" : "Move Navbar"}
                 </button>
