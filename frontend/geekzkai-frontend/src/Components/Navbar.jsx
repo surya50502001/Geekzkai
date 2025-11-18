@@ -26,6 +26,12 @@ function Navbar() {
     const HandleMenuClick = () => {
         SetOpen(!open);
     }
+    const { logout } = useAuth();
+
+    const handleLogout = () => {
+        logout();
+        navigate("/login");
+    };
 
     return (
         <nav className="p-2 flex justify-between items-center text-text-primary relative animated-gradient font-sans">
@@ -39,24 +45,28 @@ function Navbar() {
                 </button>
 
                 {open && (
-                    <div className="absolute max-h-screen top-full right-0 w-48 flex flex-col items-start py-4 gap-3 bg-black  font-semibold shadow-lg rounded-lg border border-border-primary z-50 animate-slideDown">
-                        <button onClick={HandleMenuClick} className="self-end p-2 hover:bg-accent-primary/20 rounded-full transition-all duration-200">
+                    <div className="absolute max-h-screen top-full right-0 w-48 flex flex-col items-start py-4 gap-3 bg-black  font-semibold shadow-lg rounded-lg border border-border-primary z-50 animate-slideDown ">
+                        <button onClick={HandleMenuClick} className="self-end p-2 hover:bg-primary/20 rounded-full transition-all duration-200">
                             <X size={20} />
                         </button>
                         {navLinks.map((link) => (
-                            <Link key={link.to} to={link.to} aria-label={link.label} className="flex items-center gap-3 p-3 w-full rounded-lg bg-black/20 hover:bg-black/30 transition-all duration-200 font-medium">
+                            <Link key={link.to} to={link.to} aria-label={link.label} className="flex items-center gap-3 p-3 w-full rounded-lg text-black/60 hover:bg-black/30 transition-all duration-200 font-medium">
                                 {link.icon}
                                 <span>{link.label}</span>
                             </Link>
                         ))}
-                        <button onClick={handleProfileClick} aria-label="Profile" className="flex items-center gap-3 p-3 w-full rounded-lg bg-black/20 hover:bg-black/30 transition-all duration-200 font-medium">
+                        <button onClick={handleProfileClick} aria-label="Profile" className="flex items-center gap-3 p-3 w-full rounded-lg text-black/60  hover:bg-black/30 transition-all duration-200 font-medium">
                             <User size={20} />
                             <span>Profile</span>
                         </button>
-                        <div className="flex items-center justify-between w-full px-3 py-2 border-t border-border-primary pt-4">
+                        <div className="flex items-center justify-between w-full px-3 py-2 border-t border-border-primary pt-4 text-black/60">
                             <span className="font-semibold text-text-secondary">Theme</span>
                             <ThemeToggle />
                         </div>
+
+                        <button onClick={handleLogout} className="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors" >
+                            Logout
+                        </button>
                     </div>
                 )}
             </div>

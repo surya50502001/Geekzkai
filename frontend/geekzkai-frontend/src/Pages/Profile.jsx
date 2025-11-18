@@ -1,12 +1,15 @@
 import { useAuth } from "../Context/AuthContext";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
+import { Plus } from "lucide-react";
+import CreatePostModal from "../Components/CreatePostModal";
 
 function Profile() {
     const { user, logout, token } = useAuth();
     const navigate = useNavigate();
     const [fullUser, setFullUser] = useState(null);
     const [loading, setLoading] = useState(true);
+    const [openModal, setOpenModal] = useState(false);
 
     const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:5131/api";
 
@@ -30,10 +33,7 @@ function Profile() {
         }
     }, [token, API_BASE_URL]);
 
-    const handleLogout = () => {
-        logout();
-        navigate("/login");
-    };
+  
 
     if (loading) {
         return <div className="flex justify-center items-center h-screen">Loading...</div>;
@@ -44,17 +44,25 @@ function Profile() {
     }
 
     return (
+
+       
         <div className="w-full min-h-screen bg-gray-50">
+            {/* Profile Header stuff here */}
+
+            {/* Floating + button (Instagram style) */}
+            <button
+                onClick={() => setOpenModal(true)}
+                className="fixed bottom-6 right-6 bg-orange-500 text-white p-4 rounded-full shadow-lg hover:scale-110 transition-all"
+            >
+                <Plus size={28} />
+            </button>
+
+            {/* Modal Component */}
+            {openModal && <CreatePostModal closeModal={() => setOpenModal(false)} />}
             {/* Header */}
             <div className="bg-white shadow-sm border-b">
                 <div className="max-w-4xl mx-auto px-4 py-4 flex justify-between items-center">
-                    <h1 className="text-2xl font-bold text-gray-800">Profile</h1>
-                    <button
-                        onClick={handleLogout}
-                        className="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors"
-                    >
-                        Logout
-                    </button>
+                    <h1 className="text-2xl font-bold text-gray-800">Profile</h1>                   
                 </div>
             </div>
 
@@ -119,6 +127,10 @@ function Profile() {
                                     YouTube Channel
                                 </a>
                             )}
+                            <div className="flex space-x-6">
+                                <div className="border border-yellow-500 p-1">Edit Profile</div>
+                                <div className="border border-yellow-500 p-1">Share Profile</div>
+                            </div>
                         </div>
                     </div>
                 </div>
