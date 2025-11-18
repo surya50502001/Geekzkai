@@ -39,7 +39,7 @@ function Navbar() {
                 </button>
 
                 {open && (
-                    <div className="absolute top-full right-0 w-48 flex flex-col items-start py-4 gap-3 bg-background-secondary font-semibold shadow-lg rounded-lg border border-border-primary z-50 animate-slideDown">
+                    <div className="absolute top-full right-0 w-48 flex flex-col items-start py-4 gap-3 bg-red font-semibold shadow-lg rounded-lg border border-border-primary z-50 animate-slideDown">
                         <button onClick={HandleMenuClick} className="self-end p-2 hover:bg-accent-primary/20 rounded-full transition-all duration-200">
                             <X size={20} />
                         </button>
