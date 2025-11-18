@@ -39,17 +39,17 @@ function Navbar() {
                 </button>
 
                 {open && (
-                    <div className="absolute h-screen top-full right-0 w-48 flex flex-col items-start py-4 gap-3 text-black font-semibold shadow-lg rounded-lg border border-border-primary z-50 animate-slideDown">
+                    <div className="absolute max-h-screen top-full right-0 w-48 flex flex-col items-start py-4 gap-3 text-black font-semibold shadow-lg rounded-lg border border-border-primary z-50 animate-slideDown">
                         <button onClick={HandleMenuClick} className="self-end p-2 hover:bg-accent-primary/20 rounded-full transition-all duration-200">
                             <X size={20} />
                         </button>
                         {navLinks.map((link) => (
-                            <Link key={link.to} to={link.to} aria-label={link.label} className="flex items-center gap-3 p-3 w-full rounded-lg bg-white/20 hover:bg-white/30 transition-all duration-200 font-medium">
+                            <Link key={link.to} to={link.to} aria-label={link.label} className="flex items-center gap-3 p-3 w-full rounded-lg bg-black/20 hover:bg-black/30 transition-all duration-200 font-medium">
                                 {link.icon}
                                 <span>{link.label}</span>
                             </Link>
                         ))}
-                        <button onClick={handleProfileClick} aria-label="Profile" className="flex items-center gap-3 p-3 w-full rounded-lg bg-white/20 hover:bg-white/30 transition-all duration-200 font-medium">
+                        <button onClick={handleProfileClick} aria-label="Profile" className="flex items-center gap-3 p-3 w-full rounded-lg bg-black/20 hover:bg-black/30 transition-all duration-200 font-medium">
                             <User size={20} />
                             <span>Profile</span>
                         </button>
