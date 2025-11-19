@@ -40,8 +40,9 @@ function BottomNavbar() {
     };
 
     const desktopNav = (
-        <Resizable>
-            <nav className="z-40 w-full h-full flex-col justify-start items-stretch p-4 bg-black/80 border-border-primary border rounded-lg shadow-xl">
+        <div className="fixed left-0 top-16 z-40">
+            <Resizable>
+                <nav className="w-full h-full flex-col justify-start items-stretch p-4 bg-black/80 border-border-primary border rounded-lg shadow-xl">
                 <div className="mb-4">
                     {/* You can place a logo or header here for the desktop sidebar */}
                 </div>
@@ -54,7 +55,7 @@ function BottomNavbar() {
                                 to={link.to}
                                 onClick={(e) => handleNavClick(e, link)}
                                 aria-label={link.label}
-                                className={`flex justify-start gap-3 p-3 flex items-center w-full text-white rounded-lg transition-all duration-200
+                                className={`flex justify-start gap-3 p-3 flex items-center w-full text-white rounded-lg transition-all duration-200 pointer-events-auto
                                             ${isActive ? 'text-white font-bold' : 'hover:bg-white/10 hover:text-white'}`}
                             >
                                 <link.icon size={24} strokeWidth={isActive ? 2.5 : 2} className="flex-shrink-0" />

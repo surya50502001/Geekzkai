@@ -68,15 +68,15 @@ const Resizable = ({ children }) => {
                 )}
             </div>
             <div
-                className="absolute top-0 right-0 w-2 h-full cursor-col-resize bg-transparent"
+                className="absolute top-0 right-0 w-2 h-full cursor-col-resize bg-transparent z-50"
                 onMouseDown={startResizingWidth}
             />
             <div
-                className="absolute bottom-0 left-0 right-0 h-2 cursor-row-resize bg-transparent"
+                className="absolute bottom-0 left-0 right-0 h-2 cursor-row-resize bg-transparent z-50"
                 onMouseDown={startResizingHeight}
             />
             <div
-                className="absolute top-0 left-0 w-2 h-full cursor-col-resize bg-transparent"
+                className="absolute top-0 left-0 w-2 h-full cursor-col-resize bg-transparent z-50"
                 onMouseDown={startResizingWidth}
             />
         </div>
