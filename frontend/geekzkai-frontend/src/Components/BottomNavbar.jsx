@@ -41,7 +41,7 @@ function BottomNavbar() {
 
     const desktopNav = (
         <Resizable>
-            <nav className="z-40 w-full h-full flex-col justify-start items-stretch p-4 animated-gradient border-border-primary border rounded-lg shadow-xl flex animate-gradient">
+            <nav className="z-40 w-full h-full flex-col justify-start items-stretch p-4 bg-black/80 border-border-primary border rounded-lg shadow-xl">
                 <div className="mb-4">
                     {/* You can place a logo or header here for the desktop sidebar */}
                 </div>
@@ -54,11 +54,11 @@ function BottomNavbar() {
                                 to={link.to}
                                 onClick={(e) => handleNavClick(e, link)}
                                 aria-label={link.label}
-                                className={`flex-row justify-start gap-3 p-3 flex items-center w-full text-white rounded-lg transition-all duration-200
+                                className={`flex justify-start gap-3 p-3 flex items-center w-full text-white rounded-lg transition-all duration-200
                                             ${isActive ? 'text-white font-bold' : 'hover:bg-white/10 hover:text-white'}`}
                             >
-                                <link.icon size={24} strokeWidth={isActive ? 2.5 : 2} />
-                                <span className={`text-base ${isActive ? 'font-semibold' : 'font-medium'}`}>{link.label}</span>
+                                <link.icon size={24} strokeWidth={isActive ? 2.5 : 2} className="flex-shrink-0" />
+                                <span className={`text-base ${isActive ? 'font-semibold' : 'font-medium'} flex-grow overflow-hidden text-ellipsis whitespace-nowrap`}>{link.label}</span>
                             </Link>
                         );
                     })}
@@ -68,7 +68,7 @@ function BottomNavbar() {
     );
 
     const mobileNav = (
-        <nav className="fixed bottom-0 left-0 right-0 z-40 flex justify-around items-center p-2 bg-background-secondary border-t border-border-primary">
+        <nav className="fixed bottom-0 left-0 right-0 z-40 flex justify-around items-center p-2 bg-background-secondary border-t border-border-primary animated-gradient">
             {navLinks.map((link) => {
                 const isActive = location.pathname === link.to;
                 return (
@@ -77,7 +77,7 @@ function BottomNavbar() {
                         to={link.to}
                         onClick={(e) => handleNavClick(e, link)}
                         aria-label={link.label}
-                        className={`flex flex-col items-center justify-center gap-1 text-text-secondary p-2 rounded-lg transition-all duration-200
+                        className={`flex flex-col items-center justify-center gap-1 text-white p-2 rounded-lg transition-all duration-200
                                     ${isActive ? 'text-primary' : 'hover:bg-primary/10 hover:text-text-primary'}`}
                     >
                         <link.icon size={24} strokeWidth={isActive ? 2.5 : 2} />

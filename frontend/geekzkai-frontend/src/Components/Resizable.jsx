@@ -1,6 +1,9 @@
 import React, { useState, useCallback, useEffect } from 'react';
 
 const Resizable = ({ children }) => {
+    // The Resizable component passes its current `width` and `height` as props to its children.
+    // Children components can use these props to adjust their layout and styling dynamically
+    // when the Resizable component is resized by the user.
     const [width, setWidth] = useState(250); // Initial width
     const [height, setHeight] = useState(window.innerHeight - 80); // Initial height to full screen minus some margin
     const [isResizingWidth, setIsResizingWidth] = useState(false);
@@ -51,12 +54,19 @@ const Resizable = ({ children }) => {
 
     useEffect(() => {
         document.documentElement.style.setProperty('--sidebar-width', `${width}px`);
+        return () => {
+            document.documentElement.style.setProperty('--sidebar-width', '0px');
+        };
     }, [width]);
 
 
     return (
         <div style={{ width: `${width}px`, height: `${height}px` }} className="relative">
-            {children}
+            <div style={{ width: '100%', height: '100%', overflow: 'auto' }}>
+                {React.Children.map(children, child =>
+                    React.cloneElement(child, { width, height })
+                )}
+            </div>
             <div
                 className="absolute top-0 right-0 w-2 h-full cursor-col-resize bg-transparent"
                 onMouseDown={startResizingWidth}
