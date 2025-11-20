@@ -1,18 +1,51 @@
 import { X } from "lucide-react";
 import { useState } from "react";
+import { useAuth } from "../Context/AuthContext";
 
 export default function CreatePostModal({ isOpen, onClose }) {
+    const { token } = useAuth();
     const [content, setContent] = useState("");
     const [anime, setAnime] = useState("");
+    const [loading, setLoading] = useState(false);
+    const [message, setMessage] = useState("");
+
+    const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:5131/api";
 
     if (!isOpen) return null;
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        const postData = { content, anime, imageUrl: null };
+        setLoading(true);
+        setMessage("");
 
-        console.log("Post Created:", postData);
-        onClose();
+        try {
+            const res = await fetch(`${API_BASE_URL}/post`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${token}`,
+                },
+                body: JSON.stringify({
+                    question: content,
+                    anime: anime,
+                    userId: null, // Assuming userId is set on backend from token
+                }),
+            });
+
+            if (res.ok) {
+                setMessage("Post created successfully!");
+                setContent("");
+                setAnime("");
+                onClose();
+            } else {
+                const errorData = await res.json();
+                setMessage(errorData.message || "Failed to create post");
+            }
+        } catch (error) {
+            setMessage("An error occurred while creating the post");
+        } finally {
+            setLoading(false);
+        }
     };
 
     // ✨ Close when clicking outside the box
@@ -54,6 +87,7 @@ export default function CreatePostModal({ isOpen, onClose }) {
                         className="border border-border-primary bg-background-primary p-2 rounded-md text-text-primary focus:outline-none focus:ring-2 focus:ring-primary"
                         value={anime}
                         onChange={(e) => setAnime(e.target.value)}
+                        required
                     >
                         <option value="">Select Anime</option>
                         <option value="Naruto">Naruto</option>
@@ -65,13 +99,19 @@ export default function CreatePostModal({ isOpen, onClose }) {
                     {/* Submit button */}
                     <button
                         type="submit"
-                        disabled={content.length < 3}
+                        disabled={loading || content.length < 3 || !anime}
                         className={`p-2 rounded-md text-white transition-all ${
-                            content.length < 3 ? "bg-gray-400" : "bg-primary hover:bg-primary-dark"
+                            loading || content.length < 3 || !anime ? "bg-gray-400" : "bg-primary hover:bg-primary-dark"
                         }`}
                     >
-                        Post
+                        {loading ? "Posting..." : "Post"}
                     </button>
+
+                    {message && (
+                        <div className={`mt-4 p-2 rounded-md ${message.includes("successfully") ? "bg-green-100 text-green-800" : "bg-red-100 text-red-800"}`}>
+                            {message}
+                        </div>
+                    )}
 
                 </form>
             </div>
