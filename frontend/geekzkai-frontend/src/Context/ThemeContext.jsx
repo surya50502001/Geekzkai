@@ -1,30 +1,33 @@
-import { createContext, useContext, useState, useEffect } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
 
 const ThemeContext = createContext();
 
-const themes  = ["dark","naruto"];
+export function ThemeProvider({ children }) {
+  const [theme, setTheme] = useState("dark");
 
-export const ThemeProvider = ({ children }) => {
-    const [theme, setTheme] = useState(() => {
-        return localStorage.getItem("theme") || "dark";
-    });
+  useEffect(() => {
+    const savedTheme = localStorage.getItem("theme") || "dark";
+    setTheme(savedTheme);
+    document.documentElement.setAttribute("data-theme", savedTheme);
+  }, []);
 
-    useEffect(() => {
-        document.documentElement.setAttribute("data-theme", theme);
-        localStorage.setItem("theme", theme);
-    }, [theme]);
+  const nextTheme = () => {
+    const themes = ["light", "dark"];
+    const currentIndex = themes.indexOf(theme);
+    const nextIndex = (currentIndex + 1) % themes.length;
+    const newTheme = themes[nextIndex];
+    setTheme(newTheme);
+    localStorage.setItem("theme", newTheme);
+    document.documentElement.setAttribute("data-theme", newTheme);
+  };
 
-    const nextTheme = () => {
-        const currentIndex = themes.indexOf(theme);
-        const nextIndex = (currentIndex+1) % themes.length;
-        setTheme(themes[nextIndex]);
-    }
+  return (
+    <ThemeContext.Provider value={{ theme, nextTheme }}>
+      {children}
+    </ThemeContext.Provider>
+  );
+}
 
-    return (
-        <ThemeContext.Provider value={{ theme, nextTheme }}>
-            {children}
-        </ThemeContext.Provider>
-    );
-};
-
-export const useTheme = () => useContext(ThemeContext);
+export function useTheme() {
+  return useContext(ThemeContext);
+}

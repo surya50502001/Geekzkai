@@ -1,12 +1,14 @@
 import { useAuth } from "../Context/AuthContext";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { LogOut } from "lucide-react";
+import { LogOut, Edit, Share2 } from "lucide-react";
+import UpdateProfile from "../Components/UpdateProfile";
 
 function Profile() {
     const { user, logout, token } = useAuth();
     const navigate = useNavigate();
     const [fullUser, setFullUser] = useState(null);
+    const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false);
     const [loading, setLoading] = useState(true);
 
     const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:5131/api";
@@ -117,9 +119,15 @@ function Profile() {
                                     YouTube Channel
                                 </a>
                             )}
-                            <div className="flex space-x-6 mt-4">
-                                <button onClick={() => setIsUpdateModalOpen(true)} className="border border-primary p-2 rounded-lg text-primary hover:bg-primary hover:text-white transition-colors">Edit Profile</button>
-                                <button onClick={() => navigator.clipboard.writeText(window.location.href).then(() => alert('Profile link copied to clipboard!'))} className="border border-primary p-2 rounded-lg text-primary hover:bg-primary hover:text-white transition-colors">Share Profile</button>
+                            <div className="flex justify-center md:justify-start space-x-4 mt-4">
+                                <button onClick={() => setIsUpdateModalOpen(true)} className="flex items-center gap-2 border border-border-primary p-2 rounded-lg text-text-secondary hover:bg-background-tertiary hover:text-primary transition-colors">
+                                    <Edit size={18} />
+                                    <span>Edit Profile</span>
+                                </button>
+                                <button onClick={() => navigator.clipboard.writeText(window.location.href).then(() => alert('Profile link copied to clipboard!'))} className="flex items-center gap-2 border border-border-primary p-2 rounded-lg text-text-secondary hover:bg-background-tertiary hover:text-primary transition-colors">
+                                    <Share2 size={18} />
+                                    <span>Share Profile</span>
+                                </button>
                             </div>
                         </div>
                     </div>

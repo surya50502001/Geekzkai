@@ -1,5 +1,9 @@
 @import "tailwindcss";
 
+/* ============================
+   GLOBAL ROOT VARIABLES
+============================ */
+
 :root {
     --sidebar-width: 300px;
 }
@@ -10,7 +14,11 @@
     }
 }
 
-[data-theme="light"] {
+/* ============================
+   LIGHT THEME
+============================ */
+
+html[data-theme="light"] {
     --text-primary: #000000;
     --text-secondary: #4a4a4a;
     --background-primary: #ffffff;
@@ -18,32 +26,64 @@
     --primary: #f97316;
     --primary-dark: #c45a11;
     --border-primary: #e6e6e6;
+    /* Gradients */
     --gradient-color-1: #facc15;
     --gradient-color-2: #f97316;
     --gradient-color-3: #facc15;
+    /* Alerts */
     --success: #28a745;
     --error: #dc3545;
-   
+    /* Sidebar text color */
+    --sidebar-text: #000000;
 }
 
-[data-theme="dark"] {
+/* ============================
+   DARK THEME
+============================ */
+
+html[data-theme="dark"] {
     --text-primary: #ffffff;
-    --text-secondary: #a0a0a0;
-    --background-primary: #1a1a1a;
+    --text-secondary: #e6e6e6;
+    --background-primary: #000000;
     --background-secondary: #2a2a2a;
     --primary: #4f46e5;
     --primary-dark: #3c36b3;
     --border-primary: #444444;
+    /* Gradients */
     --gradient-color-1: #4f46e5;
     --gradient-color-2: #c026d3;
     --gradient-color-3: #4f46e5;
+    /* Alerts */
     --success: #28a745;
     --error: #dc3545;
-    --background-color: black;
+    --background-color: #000000;
+    /* Sidebar text color */
+    --sidebar-text: #ffffff;
 }
- 
+
+    /* ============================
+   DARK MODE INPUTS
+============================ */
+
+    html[data-theme="dark"] input,
+    html[data-theme="dark"] textarea,
+    html[data-theme="dark"] select {
+        background-color: #ffffff !important;
+        color: #000000 !important;
+        border-color: #444444;
+    }
+
+        html[data-theme="dark"] input::placeholder,
+        html[data-theme="dark"] textarea::placeholder {
+            color: #666666;
+        }
+
+/* ============================
+   ANIMATED GRADIENT
+============================ */
+
 .animated-gradient {
-    background: linear-gradient(135deg, var(--gradient-color-1), var(--gradient-color-2), var(--gradient-color-3));
+    background: linear-gradient( 135deg, var(--gradient-color-1), var(--gradient-color-2), var(--gradient-color-3) );
     background-size: 300% 300%;
     animation: flowingGradient 6s ease infinite;
 }
@@ -60,11 +100,14 @@
     100% {
         background-position: 0% 50%;
     }
-
-
 }
 
+/* ============================
+   OPTIONAL GLOBAL BASE
+============================ */
 
-
-
-
+body {
+    background-color: var(--background-primary);
+    color: var(--text-primary);
+    transition: background 0.25s ease, color 0.25s ease;
+}

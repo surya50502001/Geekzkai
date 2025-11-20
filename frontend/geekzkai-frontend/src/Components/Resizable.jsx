@@ -1,59 +1,76 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect } from "react";
 
-const Resizable = ({ children, minWidth = 0, maxWidth }) => {
-    const [width, setWidth] = useState(300);
-    const [isResizing, setIsResizing] = useState(false);
-    const resizableRef = useRef(null);
+const Resizable = ({ children, minWidth = 80, maxWidth = 400 }) => {
+    const [width, setWidth] = useState(260);
+    const isResizing = useRef(false);
+    const containerRef = useRef(null);
 
     const handleMouseDown = (e) => {
-        setIsResizing(true);
+        isResizing.current = true;
         e.preventDefault();
     };
 
     const handleMouseMove = (e) => {
-        if (!isResizing) return;
-        const newWidth = Math.max(minWidth, Math.min(maxWidth, e.clientX - resizableRef.current.getBoundingClientRect().left));
+        if (!isResizing.current) return;
+
+        let newWidth = e.clientX;
+
+        // Boundaries
+        if (newWidth < minWidth) newWidth = minWidth;
+        if (newWidth > maxWidth) newWidth = maxWidth;
+
         setWidth(newWidth);
-        document.documentElement.style.setProperty('--sidebar-width', `${newWidth}px`);
+
+        // Update CSS variable for rest of layout
+        document.documentElement.style.setProperty(
+            "--sidebar-width",
+            `${newWidth}px`
+        );
     };
 
     const handleMouseUp = () => {
-        setIsResizing(false);
+        isResizing.current = false;
     };
 
     useEffect(() => {
-        if (window.innerWidth >= 768) {
-            document.documentElement.style.setProperty('--sidebar-width', `${width}px`);
-        }
-    }, [width]);
-
-    useEffect(() => {
-        if (isResizing) {
-            document.addEventListener('mousemove', handleMouseMove);
-            document.addEventListener('mouseup', handleMouseUp);
-        } else {
-            document.removeEventListener('mousemove', handleMouseMove);
-            document.removeEventListener('mouseup', handleMouseUp);
-        }
+        document.addEventListener("mousemove", handleMouseMove);
+        document.addEventListener("mouseup", handleMouseUp);
 
         return () => {
-            document.removeEventListener('mousemove', handleMouseMove);
-            document.removeEventListener('mouseup', handleMouseUp);
+            document.removeEventListener("mousemove", handleMouseMove);
+            document.removeEventListener("mouseup", handleMouseUp);
         };
-    }, [isResizing]);
+    }, []);
 
     return (
         <div
-            ref={resizableRef}
-            style={{ width: `${width}px` }}
-            className="fixed left-0 top-0 h-full bg-background-secondary border-r border-border-primary z-30 hidden md:block"
+            ref={containerRef}
+            style={{ width }}
+            className="
+                fixed left-0 top-0 
+                h-full 
+                bg-background-secondary 
+                border-r border-border-primary
+                z-30 hidden md:block 
+                overflow-hidden 
+                transition-[width] duration-150
+            "
         >
-            {children}
+            {children(width)}
+
+            {/* Resize handle */}
             <div
                 onMouseDown={handleMouseDown}
-                className="absolute right-0 top-0 h-full w-2 bg-transparent cursor-col-resize hover:bg-primary/20 transition-colors flex items-center justify-center z-50"
+                className="
+                    absolute right-0 top-0 
+                    h-full w-[6px] 
+                    cursor-col-resize 
+                    bg-transparent 
+                    hover:bg-primary/20 
+                    flex items-center justify-center
+                "
             >
-                <div className="w-0.5 h-8 bg-border-primary rounded-full opacity-50 hover:opacity-100 transition-opacity" />
+                <div className="w-[2px] h-10 bg-border-primary rounded-full opacity-60"></div>
             </div>
         </div>
     );
