@@ -20,9 +20,9 @@ export default function Sidebar() {
 
     return (
         <>
-            <Resizable>
-                <aside className="w-full h-full bg-background-secondary border-r border-border-primary p-4 flex flex-col">
-                    <div className="text-xl font-bold text-text-primary mb-8">GeekZkai</div>
+            <Resizable minWidth={0} maxWidth={window.innerWidth / 2}>
+                <aside className="w-full h-full bg-background-secondary border-r border-border-primary p-4 flex flex-col bg-black/60">
+                    
                     <nav className="flex-1">
                         {navItems.map((item) => {
                             const Icon = item.icon;

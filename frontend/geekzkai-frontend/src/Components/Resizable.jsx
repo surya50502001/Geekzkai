@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 
-const Resizable = ({ children, minWidth = 200, maxWidth = 600 }) => {
+const Resizable = ({ children, minWidth = 0, maxWidth }) => {
     const [width, setWidth] = useState(300);
     const [isResizing, setIsResizing] = useState(false);
     const resizableRef = useRef(null);
@@ -12,11 +12,9 @@ const Resizable = ({ children, minWidth = 200, maxWidth = 600 }) => {
 
     const handleMouseMove = (e) => {
         if (!isResizing) return;
-        const newWidth = e.clientX - resizableRef.current.getBoundingClientRect().left;
-        if (newWidth >= minWidth && newWidth <= maxWidth) {
-            setWidth(newWidth);
-            document.documentElement.style.setProperty('--sidebar-width', `${newWidth}px`);
-        }
+        const newWidth = Math.max(minWidth, Math.min(maxWidth, e.clientX - resizableRef.current.getBoundingClientRect().left));
+        setWidth(newWidth);
+        document.documentElement.style.setProperty('--sidebar-width', `${newWidth}px`);
     };
 
     const handleMouseUp = () => {

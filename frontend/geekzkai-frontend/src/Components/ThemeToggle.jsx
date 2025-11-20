@@ -6,9 +6,13 @@ function ThemeToggle() {
   return (
     <button
       onClick={nextTheme}
-      className="p-2 rounded-full bg-white/20 text-white font-semibold hover:bg-white/30 transition-all"
+      className={`p-2 rounded-full font-semibold transition-all ${
+        theme === "dark"
+          ? "bg-white/20 text-white hover:bg-white/30"
+          : "bg-black/20 text-black hover:bg-black/30"
+      }`}
     >
-      {theme === "light" ? "🌞" : "🌙"}
+      {theme === "dark" ? "🌙" : "🌀"}
     </button>
   );
 }

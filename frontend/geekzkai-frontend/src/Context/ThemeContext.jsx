@@ -2,11 +2,11 @@ import { createContext, useContext, useState, useEffect } from "react";
 
 const ThemeContext = createContext();
 
-const themes  = ["light","dark"];
+const themes  = ["dark","naruto"];
 
-export const ThemeProvider = ({ children }) => { 
+export const ThemeProvider = ({ children }) => {
     const [theme, setTheme] = useState(() => {
-        return localStorage.getItem("theme") || "light";
+        return localStorage.getItem("theme") || "dark";
     });
 
     useEffect(() => {
