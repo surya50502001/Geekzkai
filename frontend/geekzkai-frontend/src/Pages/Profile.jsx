@@ -118,8 +118,8 @@ function Profile() {
                                 </a>
                             )}
                             <div className="flex space-x-6 mt-4">
-                                <button className="border border-primary p-2 rounded-lg text-primary hover:bg-primary hover:text-white transition-colors">Edit Profile</button>
-                                <button className="border border-primary p-2 rounded-lg text-primary hover:bg-primary hover:text-white transition-colors">Share Profile</button>
+                                <button onClick={() => setIsUpdateModalOpen(true)} className="border border-primary p-2 rounded-lg text-primary hover:bg-primary hover:text-white transition-colors">Edit Profile</button>
+                                <button onClick={() => navigator.clipboard.writeText(window.location.href).then(() => alert('Profile link copied to clipboard!'))} className="border border-primary p-2 rounded-lg text-primary hover:bg-primary hover:text-white transition-colors">Share Profile</button>
                             </div>
                         </div>
                     </div>
@@ -153,6 +153,7 @@ function Profile() {
                     </div>
                 </div>
             </div>
+            <UpdateProfile isOpen={isUpdateModalOpen} onClose={() => setIsUpdateModalOpen(false)} />
         </div>
     );
 }
