@@ -46,7 +46,7 @@ const Resizable = ({ children, minWidth = 200, maxWidth = 600 }) => {
         <div
             ref={resizableRef}
             style={{ width: `${width}px` }}
-            className="fixed left-0 top-0 h-full bg-background-secondary border-r border-border-primary z-30"
+            className="fixed left-0 top-0 h-full bg-background-secondary border-r border-border-primary z-30 hidden md:block"
         >
             {children}
             <div
