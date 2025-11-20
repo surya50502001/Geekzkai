@@ -24,6 +24,10 @@ const Resizable = ({ children, minWidth = 200, maxWidth = 600 }) => {
     };
 
     useEffect(() => {
+        document.documentElement.style.setProperty('--sidebar-width', `${width}px`);
+    }, [width]);
+
+    useEffect(() => {
         if (isResizing) {
             document.addEventListener('mousemove', handleMouseMove);
             document.addEventListener('mouseup', handleMouseUp);

@@ -21,7 +21,7 @@ function App() {
             <div className="min-h-screen bg-background-primary text-text-primary transition-colors duration-500">
                 <Navbar />
                 <Sidebar />
-                <main className="md:ml-64">
+                <main className="transition-all duration-300" style={{ marginLeft: 'var(--sidebar-width)' }}>
                     <Routes>
                         <Route path="/" element={<Home />} />
                         <Route path="/login" element={<Login />} />
