@@ -8,6 +8,7 @@ import { Navigate } from "react-router-dom";
 import { useAuth } from "./Context/AuthContext";
 import Settings from "./Pages/Settings";
 import Profile from "./Pages/Profile";
+import Sidebar from "./Components/Sidebar";
 
 
 function PrivateRoute({ children }) {
@@ -19,7 +20,8 @@ function App() {
         <Router>
             <div className="min-h-screen bg-background-primary text-text-primary transition-colors duration-500">
                 <Navbar />
-                <main className="md:ml-0" style={{ marginLeft: 'var(--sidebar-width)' }}>
+                <Sidebar />
+                <main className="md:ml-64">
                     <Routes>
                         <Route path="/" element={<Home />} />
                         <Route path="/login" element={<Login />} />
