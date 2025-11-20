@@ -1,3 +1,2 @@
-- [x] Uncomment imports for narutoBg and sasukeBg in Login.jsx
-- [x] Update getBackgroundImage function to return narutoBg for "light" and sasukeBg for "dark"
-- [x] Add background-image style to the outer div in Login.jsx
+- [ ] Edit BottomNavbar.jsx to change Create link to a button to prevent navigation issues and ensure modal opens properly.
+- [ ] Test the Home and Create functionality after changes.

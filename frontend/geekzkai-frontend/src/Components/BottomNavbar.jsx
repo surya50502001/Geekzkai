@@ -40,27 +40,40 @@ function BottomNavbar() {
     };
 
     const desktopNav = (
-        <div className="fixed left-0 top-16 z-40">
-            <Resizable>
-                <nav className="w-full h-full flex-col justify-start items-stretch p-4 bg-black/80 border-border-primary border rounded-lg shadow-xl">
+        <Resizable>
+            <nav className="w-full h-full flex-col justify-start items-stretch p-4 bg-black/80 border-border-primary border rounded-lg shadow-xl">
                 <div className="mb-4">
                     {/* You can place a logo or header here for the desktop sidebar */}
                 </div>
                 <div className="flex flex-col w-full">
                     {navLinks.map((link) => {
                         const isActive = location.pathname === link.to;
+                        const isCreate = link.label === "Create";
                         return (
-                            <Link
-                                key={link.label}
-                                to={link.to}
-                                onClick={(e) => handleNavClick(e, link)}
-                                aria-label={link.label}
-                                className={`flex justify-start gap-3 p-3 flex items-center w-full text-white rounded-lg transition-all duration-200 pointer-events-auto
-                                            ${isActive ? 'text-white font-bold' : 'hover:bg-white/10 hover:text-white'}`}
-                            >
-                                <link.icon size={24} strokeWidth={isActive ? 2.5 : 2} className="flex-shrink-0" />
-                                <span className={`text-base ${isActive ? 'font-semibold' : 'font-medium'} flex-grow overflow-hidden text-ellipsis whitespace-nowrap`}>{link.label}</span>
-                            </Link>
+                            isCreate ? (
+                                <button
+                                    key={link.label}
+                                    onClick={(e) => handleNavClick(e, link)}
+                                    aria-label={link.label}
+                                    className={`flex justify-start gap-3 p-3 flex items-center w-full text-white rounded-lg transition-all duration-200 pointer-events-auto
+                                                hover:bg-white/10 hover:text-white`}
+                                >
+                                    <link.icon size={24} strokeWidth={2} className="flex-shrink-0" />
+                                    <span className="text-base font-medium flex-grow overflow-hidden text-ellipsis whitespace-nowrap">{link.label}</span>
+                                </button>
+                            ) : (
+                                <Link
+                                    key={link.label}
+                                    to={link.to}
+                                    onClick={(e) => handleNavClick(e, link)}
+                                    aria-label={link.label}
+                                    className={`flex justify-start gap-3 p-3 flex items-center w-full text-white rounded-lg transition-all duration-200 pointer-events-auto
+                                                ${isActive ? 'text-white font-bold' : 'hover:bg-white/10 hover:text-white'}`}
+                                >
+                                    <link.icon size={24} strokeWidth={isActive ? 2.5 : 2} className="flex-shrink-0" />
+                                    <span className={`text-base ${isActive ? 'font-semibold' : 'font-medium'} flex-grow overflow-hidden text-ellipsis whitespace-nowrap`}>{link.label}</span>
+                                </Link>
+                            )
                         );
                     })}
                 </div>
@@ -72,18 +85,32 @@ function BottomNavbar() {
         <nav className="fixed bottom-0 left-0 right-0 z-40 flex justify-around items-center p-2 bg-background-secondary border-t border-border-primary animated-gradient">
             {navLinks.map((link) => {
                 const isActive = location.pathname === link.to;
+                const isCreate = link.label === "Create";
                 return (
-                    <Link
-                        key={link.label}
-                        to={link.to}
-                        onClick={(e) => handleNavClick(e, link)}
-                        aria-label={link.label}
-                        className={`flex flex-col items-center justify-center gap-1 text-white p-2 rounded-lg transition-all duration-200
-                                    ${isActive ? 'text-primary' : 'hover:bg-primary/10 hover:text-text-primary'}`}
-                    >
-                        <link.icon size={24} strokeWidth={isActive ? 2.5 : 2} />
-                        <span className={`text-xs font-medium ${isActive ? 'font-semibold' : ''}`}>{link.label}</span>
-                    </Link>
+                    isCreate ? (
+                        <button
+                            key={link.label}
+                            onClick={(e) => handleNavClick(e, link)}
+                            aria-label={link.label}
+                            className={`flex flex-col items-center justify-center gap-1 text-white p-2 rounded-lg transition-all duration-200
+                                        hover:bg-primary/10 hover:text-text-primary`}
+                        >
+                            <link.icon size={24} strokeWidth={2} />
+                            <span className="text-xs font-medium">{link.label}</span>
+                        </button>
+                    ) : (
+                        <Link
+                            key={link.label}
+                            to={link.to}
+                            onClick={(e) => handleNavClick(e, link)}
+                            aria-label={link.label}
+                            className={`flex flex-col items-center justify-center gap-1 text-white p-2 rounded-lg transition-all duration-200
+                                        ${isActive ? 'text-primary' : 'hover:bg-primary/10 hover:text-text-primary'}`}
+                        >
+                            <link.icon size={24} strokeWidth={isActive ? 2.5 : 2} />
+                            <span className={`text-xs font-medium ${isActive ? 'font-semibold' : ''}`}>{link.label}</span>
+                        </Link>
+                    )
                 );
             })}
         </nav>

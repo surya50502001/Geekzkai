@@ -61,7 +61,7 @@ const Resizable = ({ children }) => {
 
 
     return (
-        <div style={{ width: `${width}px`, height: `${height}px` }} className="relative">
+        <div style={{ position: 'fixed', left: 0, top: '64px', width: `${width}px`, height: `${height}px` }} className="relative">
             <div style={{ width: '100%', height: '100%', overflow: 'auto' }}>
                 {React.Children.map(children, child =>
                     React.cloneElement(child, { width, height })
