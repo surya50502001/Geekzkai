@@ -23,7 +23,7 @@ function App() {
                 <div className="min-h-screen bg-background-primary text-text-primary transition-colors duration-500">
                     <Navbar />
                     <Sidebar />
-                    <main style={{ marginLeft: 'var(--sidebar-width)' }}>
+                    <main style={{ marginLeft: 'var(--sidebar-width, 0px)' }}>
                         <Routes>
                             <Route path="/" element={<Home />} />
                             <Route path="/login" element={<Login />} />
