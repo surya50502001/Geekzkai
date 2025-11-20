@@ -1,7 +1,13 @@
 @import "tailwindcss";
 
 :root {
-    --sidebar-width: 0px;
+    --sidebar-width: 300px;
+}
+
+@media (max-width: 768px) {
+    :root {
+        --sidebar-width: 0px;
+    }
 }
 
 [data-theme="light"] {

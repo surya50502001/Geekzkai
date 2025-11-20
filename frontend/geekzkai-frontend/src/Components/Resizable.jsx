@@ -24,7 +24,9 @@ const Resizable = ({ children, minWidth = 200, maxWidth = 600 }) => {
     };
 
     useEffect(() => {
-        document.documentElement.style.setProperty('--sidebar-width', `${width}px`);
+        if (window.innerWidth >= 768) {
+            document.documentElement.style.setProperty('--sidebar-width', `${width}px`);
+        }
     }, [width]);
 
     useEffect(() => {
