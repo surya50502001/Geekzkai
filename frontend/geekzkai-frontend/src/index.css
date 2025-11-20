@@ -45,7 +45,7 @@ html[data-theme="dark"] {
     --text-primary: #ffffff;
     --text-secondary: #e6e6e6;
     --background-primary: #000000;
-    --background-secondary: #2a2a2a;
+    --background-secondary: #211d1d;
     --primary: #4f46e5;
     --primary-dark: #3c36b3;
     --border-primary: #444444;
@@ -68,7 +68,7 @@ html[data-theme="dark"] {
     html[data-theme="dark"] input,
     html[data-theme="dark"] textarea,
     html[data-theme="dark"] select {
-        background-color: #ffffff !important;
+        background-color: #211d1d !important;
         color: #000000 !important;
         border-color: #444444;
     }

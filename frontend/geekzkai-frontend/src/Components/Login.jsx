@@ -28,14 +28,14 @@ function Login() {
                         placeholder="Email"
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
-                        className="p-3 bg-background-secondary border border-border-primary rounded-lg text-text-primary focus:outline-none focus:ring-2 focus:ring-primary"
+                        className="p-3 bg-background-secondary border border-border-primary rounded-lg text-text-primary focus:outline-none text-black  focus:ring-2 focus:ring-primary"
                     />
                     <input
                         type="password"
                         placeholder="Password"
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
-                        className="p-3 bg-background-secondary border border-border-primary rounded-lg text-text-primary focus:outline-none focus:ring-2 focus:ring-primary"
+                        className="p-3 bg-background-secondary border border-border-primary rounded-lg text-text-primary focus:outline-none text-black  focus:ring-2 focus:ring-primary"
                     />
                     <button type="submit" className="p-3 bg-primary text-white rounded-lg hover:bg-primary-dark transition-colors animated-gradient">
                         Login

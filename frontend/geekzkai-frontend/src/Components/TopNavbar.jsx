@@ -3,7 +3,7 @@ import ThemeToggle from "./ThemeToggle";
 
 export default function TopNavbar() {
     return (
-        <nav className="bg-background-secondary border-b border-border-primary p-4 flex items-center" style={{ marginLeft: 'var(--sidebar-width, 0px)' }}>
+        <nav className=" border-b border-border-primary p-4 flex items-center" style={{ marginLeft: 'var(--sidebar-width, 0px)' }}>
             <div className="flex-1 text-center">
                 <div className="text-xl font-bold text-text-primary">GeekZkai</div>
             </div>
@@ -13,7 +13,7 @@ export default function TopNavbar() {
                     <input
                         type="text"
                         placeholder="Search..."
-                        className="bg-transparent focus:outline-none text-text-primary"
+                        className="bg-transparent focus:outline-none text-black dark:text-gray/50"
                     />
                 </div>
                 <ThemeToggle />
