@@ -51,7 +51,7 @@ const Resizable = ({ children, minWidth = 0, maxWidth }) => {
             {children}
             <div
                 onMouseDown={handleMouseDown}
-                className="absolute right-0 top-0 h-full w-2 bg-transparent cursor-col-resize hover:bg-primary/20 transition-colors flex items-center justify-center"
+                className="absolute right-0 top-0 h-full w-2 bg-transparent cursor-col-resize hover:bg-primary/20 transition-colors flex items-center justify-center z-50"
             >
                 <div className="w-0.5 h-8 bg-border-primary rounded-full opacity-50 hover:opacity-100 transition-opacity" />
             </div>

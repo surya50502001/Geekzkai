@@ -15,7 +15,7 @@ export default function Sidebar() {
         { to: "/", icon: Home, label: "Home" },
         { to: "/settings", icon: Settings, label: "Settings" },
         { to: "/profile", icon: User, label: "Profile" },
-        { to: "/create", icon: Plus, label: "Create", action: openModal },
+        { to: "/create", icon: Plus, label: "Create", action: openModal || (() => {}) },
     ];
 
     return (
@@ -53,7 +53,6 @@ export default function Sidebar() {
                     </nav>
                 </aside>
             </Resizable>
-            <CreatePostModal isOpen={isModalOpen} onClose={closeModal} />
         </>
     );
 }

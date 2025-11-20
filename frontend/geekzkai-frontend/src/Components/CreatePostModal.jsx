@@ -58,7 +58,7 @@ export default function CreatePostModal({ isOpen, onClose }) {
     return (
         <div
             onClick={handleOverlayClick}   // ⭐ listen for outside clicks
-            className="fixed inset-0 bg-black bg-opacity-60 backdrop-blur-sm flex items-center justify-center z-50"
+            className="fixed top-16 left-0 right-0 bottom-0 bg-white bg-opacity-60 backdrop-blur-sm flex items-center justify-center z-50"
         >
             <div className="bg-background-secondary w-80 rounded-xl shadow-xl p-6 relative animate-fadeIn border border-border-primary">
 
