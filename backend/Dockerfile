@@ -3,11 +3,11 @@ FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /app
 
 # Copy the project file and restore dependencies
-COPY GeekzKai.csproj ./
+COPY backend/GeekzKai/GeekzKai.csproj ./
 RUN dotnet restore GeekzKai.csproj
 
 # Copy all source code
-COPY . .
+COPY backend/GeekzKai/. .
 
 # Publish the project
 RUN dotnet publish GeekzKai.csproj -c Release -o /publish
