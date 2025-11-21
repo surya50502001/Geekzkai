@@ -1,9 +1,7 @@
-﻿﻿import { useTheme } from "../Context/ThemeContext";
 import { useState } from "react";
 import { useAuth } from "../Context/AuthContext";
 
-function Home() {
-    const { theme } = useTheme();
+export default function CreatePostPage() {
     const { token } = useAuth();
     const [title, setTitle] = useState("");
     const [content, setContent] = useState("");
@@ -33,7 +31,7 @@ function Home() {
                 setTitle("");
                 setContent("");
                 setImage(null);
-                window.location.reload();
+                // Optionally redirect to home or posts page
             } else {
                 alert("Failed to create post");
             }
@@ -52,14 +50,8 @@ function Home() {
     return (
         <div className="text-text-primary px-6 py-10">
             <div className="max-w-4xl mx-auto">
-                <h1 className="text-4xl font-bold mb-4">Welcome to GeekzKai 👾</h1>
-                <p className="text-text-secondary text-lg mb-8">
-                    Your space to discuss anime theories, post “what if” ideas, and vibe with other fans!
-                </p>
-                <p className="mt-4 mb-6">Current theme: <span className="font-semibold text-primary">{theme}</span></p>
-
-                <div className="bg-bg-secondary p-6 rounded-lg shadow-lg mb-8">
-                    <h2 className="text-xl font-bold mb-4 text-text-primary">Create a New Post</h2>
+                <h1 className="text-4xl font-bold mb-4">Create a New Post</h1>
+                <div className="bg-bg-secondary p-6 rounded-lg shadow-lg">
                     <form onSubmit={handleSubmit}>
                         <div className="mb-4">
                             <label className="block text-text-primary mb-2">Title</label>
@@ -105,5 +97,3 @@ function Home() {
         </div>
     );
 }
-
-export default Home;

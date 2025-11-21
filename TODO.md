@@ -1,2 +1,8 @@
-- [ ] Edit BottomNavbar.jsx to change Create link to a button to prevent navigation issues and ensure modal opens properly.
-- [ ] Test the Home and Create functionality after changes.
+# Task: Integrate CreatePostModal into Home Page
+
+## Steps to Complete:
+- [ ] Modify Home.jsx to include the create post form directly on the page
+- [ ] Remove CreatePostModal usage from App.jsx (remove modal state and component)
+- [ ] Update Sidebar.jsx to remove Create button and modal functionality
+- [ ] Update BottomNavbar.jsx to remove Create button and modal functionality
+- [ ] Test the integration to ensure the form works on the Home page

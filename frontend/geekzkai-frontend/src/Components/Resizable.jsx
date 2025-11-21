@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect, useCallback } from "react";
 
 const Resizable = ({ children, minWidth = 80, maxWidth = 400 }) => {
     const [width, setWidth] = useState(260);
@@ -10,27 +10,28 @@ const Resizable = ({ children, minWidth = 80, maxWidth = 400 }) => {
         e.preventDefault();
     };
 
-    const handleMouseMove = (e) => {
-        if (!isResizing.current) return;
+    const handleMouseMove = useCallback(
+        (e) => {
+            if (!isResizing.current) return;
 
-        let newWidth = e.clientX;
+            let newWidth = e.clientX;
 
-        // Boundaries
-        if (newWidth < minWidth) newWidth = minWidth;
-        if (newWidth > maxWidth) newWidth = maxWidth;
+            // Boundaries
+            if (newWidth < minWidth) newWidth = minWidth;
+            if (newWidth > maxWidth) newWidth = maxWidth;
 
-        setWidth(newWidth);
+            setWidth(newWidth);
+        },
+        [minWidth, maxWidth]
+    );
 
-        // Update CSS variable for rest of layout
-        document.documentElement.style.setProperty(
-            "--sidebar-width",
-            `${newWidth}px`
-        );
-    };
-
-    const handleMouseUp = () => {
+    const handleMouseUp = useCallback(() => {
         isResizing.current = false;
-    };
+    }, []);
+
+    useEffect(() => {
+        document.documentElement.style.setProperty("--sidebar-width", `${width}px`);
+    }, [width]);
 
     useEffect(() => {
         document.addEventListener("mousemove", handleMouseMove);
@@ -40,7 +41,7 @@ const Resizable = ({ children, minWidth = 80, maxWidth = 400 }) => {
             document.removeEventListener("mousemove", handleMouseMove);
             document.removeEventListener("mouseup", handleMouseUp);
         };
-    }, []);
+    }, [handleMouseMove, handleMouseUp]);
 
     return (
         <div
