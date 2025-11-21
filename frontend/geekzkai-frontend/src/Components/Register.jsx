@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useAuth } from "../Context/AuthContext";
 import { useNavigate, Link } from "react-router-dom";
 
@@ -8,14 +8,19 @@ function Register() {
     const [password, setPassword] = useState("");
     const [link, setLink] = useState("");
     const [isYoutuber, setIsYoutuber] = useState(false);
-    const { register } = useAuth();
+    const { register, user } = useAuth();
     const navigate = useNavigate();
+
+    useEffect(() => {
+        if (user) {
+            navigate("/profile");
+        }
+    }, [user, navigate]);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
             await register(username, email, password, isYoutuber ? link : null);
-            navigate("/profile");
         } catch (error) {
             alert(error.message);
         }

@@ -69,7 +69,7 @@ html[data-theme="dark"] {
     html[data-theme="dark"] textarea,
     html[data-theme="dark"] select {
         background-color: #211d1d !important;
-        color: #000000 !important;
+        color: #ffffff !important;
         border-color: #444444;
     }
 

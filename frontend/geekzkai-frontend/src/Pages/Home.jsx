@@ -58,49 +58,6 @@ function Home() {
                 </p>
                 <p className="mt-4 mb-6">Current theme: <span className="font-semibold text-primary">{theme}</span></p>
 
-                <div className="bg-bg-secondary p-6 rounded-lg shadow-lg mb-8">
-                    <h2 className="text-xl font-bold mb-4 text-text-primary">Create a New Post</h2>
-                    <form onSubmit={handleSubmit}>
-                        <div className="mb-4">
-                            <label className="block text-text-primary mb-2">Title</label>
-                            <input
-                                type="text"
-                                value={title}
-                                onChange={(e) => setTitle(e.target.value)}
-                                className="w-full p-2 border border-border rounded bg-bg-primary text-text-primary"
-                                required
-                            />
-                        </div>
-                        <div className="mb-4">
-                            <label className="block text-text-primary mb-2">Content</label>
-                            <textarea
-                                value={content}
-                                onChange={(e) => setContent(e.target.value)}
-                                className="w-full p-2 border border-border rounded bg-bg-primary text-text-primary"
-                                rows="4"
-                                required
-                            />
-                        </div>
-                        <div className="mb-4">
-                            <label className="block text-text-primary mb-2">Image (optional)</label>
-                            <input
-                                type="file"
-                                accept="image/*"
-                                onChange={handleImageChange}
-                                className="w-full p-2 border border-border rounded bg-bg-primary text-text-primary"
-                            />
-                        </div>
-                        <div className="flex justify-end">
-                            <button
-                                type="submit"
-                                disabled={loading}
-                                className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 disabled:opacity-50"
-                            >
-                                {loading ? "Creating..." : "Create Post"}
-                            </button>
-                        </div>
-                    </form>
-                </div>
             </div>
         </div>
     );

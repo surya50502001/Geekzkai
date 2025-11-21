@@ -54,7 +54,7 @@ export const AuthProvider = ({ children }) => {
 
         const data = await res.json();
         // Optionally, auto-login after registration
-        // await login(email, password);
+        await login(email, password);
         return data;
     };
 

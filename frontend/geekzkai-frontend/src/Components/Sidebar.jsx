@@ -7,10 +7,12 @@ export default function Sidebar() {
 
     const navItems = [
         { to: "/", icon: Home, label: "Home" },
-        { to: "/create", icon: Plus, label: "Create" },
+        { to: "/create", icon: Plus, label: "Create" }, // FIXED
         { to: "/settings", icon: Settings, label: "Settings" },
         { to: "/profile", icon: User, label: "Profile" },
     ];
+
+
 
     return (
         <Resizable minWidth={80} maxWidth={window.innerWidth / 2}>

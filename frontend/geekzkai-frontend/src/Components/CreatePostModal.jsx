@@ -4,10 +4,10 @@ import { useAuth } from "../Context/AuthContext";
 
 export default function CreatePostModal({ isOpen, onClose }) {
     const { token } = useAuth();
+    const [title, setTitle] = useState("");
     const [content, setContent] = useState("");
-    const [anime, setAnime] = useState("");
+    const [image, setImage] = useState(null);
     const [loading, setLoading] = useState(false);
-    const [message, setMessage] = useState("");
 
     const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:5131/api";
 
@@ -16,36 +16,41 @@ export default function CreatePostModal({ isOpen, onClose }) {
     const handleSubmit = async (e) => {
         e.preventDefault();
         setLoading(true);
-        setMessage("");
+
+        const formData = new FormData();
+        formData.append("title", title);
+        formData.append("content", content);
+        if (image) formData.append("image", image);
 
         try {
-            const res = await fetch(`${API_BASE_URL}/post`, {
+            const response = await fetch(`${API_BASE_URL}/posts`, {
                 method: "POST",
                 headers: {
-                    "Content-Type": "application/json",
                     Authorization: `Bearer ${token}`,
                 },
-                body: JSON.stringify({
-                    question: content,
-                    anime: anime,
-                    userId: null, // Assuming userId is set on backend from token
-                }),
+                body: formData,
             });
 
-            if (res.ok) {
-                setMessage("Post created successfully!");
+            if (response.ok) {
+                alert("Post created successfully!");
+                setTitle("");
                 setContent("");
-                setAnime("");
+                setImage(null);
                 onClose();
+                window.location.reload();
             } else {
-                const errorData = await res.json();
-                setMessage(errorData.message || "Failed to create post");
+                alert("Failed to create post");
             }
         } catch (error) {
-            setMessage("An error occurred while creating the post");
+            console.error("Error creating post:", error);
+            alert("An error occurred while creating the post");
         } finally {
             setLoading(false);
         }
+    };
+
+    const handleImageChange = (e) => {
+        setImage(e.target.files[0]);
     };
 
     // ✨ Close when clicking outside the box
@@ -58,12 +63,9 @@ export default function CreatePostModal({ isOpen, onClose }) {
     return (
         <div
             onClick={handleOverlayClick}
-            className="ml-[var(--sidebar-width)]  bg-opacity-60 backdrop-blur-sm flex items-center justify-center z-50"
+            className="fixed inset-0 bg-black bg-opacity-60 backdrop-blur-sm flex items-center justify-center z-50"
         >
-
-            <div className="bg-background-secondary w-80 rounded-xl shadow-xl p-6 relative animate-fadeIn border border-border-primary">
-
-                {/* Close button */}
+            <div className="bg-background-secondary w-full max-w-md rounded-xl shadow-xl p-6 relative animate-fadeIn border border-border-primary">
                 <button
                     onClick={onClose}
                     className="absolute right-3 top-3 text-text-secondary hover:text-text-primary"
@@ -71,51 +73,49 @@ export default function CreatePostModal({ isOpen, onClose }) {
                     <X size={22} />
                 </button>
 
-                <h2 className="text-xl font-bold mb-4 text-text-primary">Create Post</h2>
-
-                <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-
-                    {/* Content input */}
-                    <textarea
-                        className="border border-border-primary bg-background-primary p-3 rounded-md h-28 text-text-primary focus:outline-none focus:ring-2 focus:ring-primary"
-                        placeholder="Write your theory..."
-                        value={content}
-                        onChange={(e) => setContent(e.target.value)}
-                    />
-
-                    {/* Anime dropdown */}
-                    <select
-                        className="border border-border-primary bg-background-primary p-2 rounded-md text-text-primary focus:outline-none focus:ring-2 focus:ring-primary"
-                        value={anime}
-                        onChange={(e) => setAnime(e.target.value)}
-                        required
-                    >
-                        <option value="">Select Anime</option>
-                        <option value="Naruto">Naruto</option>
-                        <option value="One Piece">One Piece</option>
-                        <option value="Jujutsu Kaisen">JJK</option>
-                        <option value="Attack On Titan">AOT</option>
-                    </select>
-
-                    {/* Submit button */}
-                    <button
-                        type="submit"
-                        disabled={loading || content.length < 3 || !anime}
-                        className={`p-2 rounded-md text-white transition-all ${
-                            loading || content.length < 3 || !anime ? "bg-gray-400" : "bg-primary hover:bg-primary-dark"
-                        }`}
-                    >
-                        {loading ? "Posting..." : "Post"}
-                    </button>
-
-                    {message && (
-                        <div className={`mt-4 p-2 rounded-md ${message.includes("successfully") ? "bg-green-100 text-green-800" : "bg-red-100 text-red-800"}`}>
-                            {message}
-                        </div>
-                    )}
-
+                <h2 className="text-xl font-bold mb-4 text-text-primary">Create a New Post</h2>
+                <form onSubmit={handleSubmit}>
+                    <div className="mb-4">
+                        <label className="block text-text-primary mb-2">Title</label>
+                        <input
+                            type="text"
+                            value={title}
+                            onChange={(e) => setTitle(e.target.value)}
+                            className="w-full p-2 border border-border rounded  text-text-primary"
+                            required
+                        />
+                    </div>
+                    <div className="mb-4">
+                        <label className="block text-text-primary mb-2">Content</label>
+                        <textarea
+                            value={content}
+                            onChange={(e) => setContent(e.target.value)}
+                            className="w-full p-2 border border-border rounded  text-text-primary"
+                            rows="4"
+                            required
+                        />
+                    </div>
+                    <div className="mb-4">
+                        <label className="block text-text-primary mb-2">Image (optional)</label>
+                        <input
+                            type="file"
+                            accept="image/*"
+                            onChange={handleImageChange}
+                            className="w-full p-2 border border-border rounded  text-text-primary"
+                        />
+                    </div>
+                    <div className="flex justify-end">
+                        <button
+                            type="submit"
+                            disabled={loading}
+                            className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 disabled:opacity-50"
+                        >
+                            {loading ? "Creating..." : "Create Post"}
+                        </button>
+                    </div>
                 </form>
             </div>
         </div>
     );
 }
+
