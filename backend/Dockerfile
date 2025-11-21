@@ -1,20 +1,20 @@
 # Build Stage
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
-WORKDIR /src
+WORKDIR /app
 
 # Copy the project file and restore dependencies
-COPY GeekzKai.csproj ./  
+COPY GeekzKai.csproj ./
 RUN dotnet restore GeekzKai.csproj
 
 # Copy all source code
-COPY . .  
+COPY . .
 
 # Publish the project
-RUN dotnet publish GeekzKai.csproj -c Release -o /app/publish
+RUN dotnet publish GeekzKai.csproj -c Release -o /publish
 
 # Runtime Stage
 FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS final
 WORKDIR /app
-COPY --from=build /app/publish .
+COPY --from=build /publish .
 EXPOSE 8080
 ENTRYPOINT ["dotnet", "GeekzKai.dll"]
