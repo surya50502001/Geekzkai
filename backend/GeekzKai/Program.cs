@@ -81,7 +81,7 @@ if (app.Environment.IsDevelopment())
 
 // Middleware
 app.UseRouting();
-app.UseCors(MyCors);
+app.UseCors(corsPolicy);
 app.UseAuthentication();
 app.UseAuthorization();
 
