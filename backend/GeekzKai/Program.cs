@@ -71,12 +71,17 @@ builder.Services.AddDbContext<AppdbContext>(options =>
 
 var app = builder.Build();
 
-// Swagger (show always)
-app.UseSwagger();
-app.UseSwaggerUI();
+// Enable Swagger in development mode
+if (app.Environment.IsDevelopment())
+{
+    app.UseSwagger();
+    app.UseSwaggerUI();
+};
 
+
+// Middleware
 app.UseRouting();
-app.UseCors(corsPolicy);
+app.UseCors(MyCors);
 app.UseAuthentication();
 app.UseAuthorization();
 
