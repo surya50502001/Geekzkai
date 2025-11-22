@@ -2,10 +2,10 @@
 
 const AuthContext = createContext();
 
-// 🔥 Your deployed backend URL
+// 🔥 Backend base URL ALWAYS including /api
 const API_BASE_URL =
     import.meta.env.VITE_API_BASE_URL ||
-    "https://geekzkai.onrender.com";
+    "https://geekzkai.onrender.com/api";
 
 export const AuthProvider = ({ children }) => {
     const [user, setUser] = useState(null);
@@ -50,11 +50,13 @@ export const AuthProvider = ({ children }) => {
         });
 
         if (!res.ok) {
-            const errorData = await res.json();
+            const errorData = await res.json().catch(() => ({ message: "Registration failed" }));
             throw new Error(errorData.message || "Registration failed");
         }
 
         const data = await res.json();
+
+        // Auto login after successful register
         await login(email, password);
         return data;
     };
