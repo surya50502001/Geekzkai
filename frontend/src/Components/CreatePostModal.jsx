@@ -9,7 +9,7 @@ export default function CreatePostModal({ isOpen, onClose }) {
     const [image, setImage] = useState(null);
     const [loading, setLoading] = useState(false);
 
-    const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:5131/api";
+    const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "https://geekzkai.onrender.com";
 
     if (!isOpen) return null;
 
