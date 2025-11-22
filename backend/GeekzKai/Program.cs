@@ -69,11 +69,10 @@ builder.Services.AddDbContext<AppdbContext>(options =>
 var app = builder.Build();
 
 // Enable Swagger in development mode
-if (app.Environment.IsDevelopment())
-{
+
     app.UseSwagger();
     app.UseSwaggerUI();
-}
+
 
 // Middleware
 app.UseRouting();
