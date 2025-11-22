@@ -16,16 +16,23 @@ builder.Services.AddControllers()
     });
 
 // CORS for your frontend
+var MyCors = "_myCors";
+
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("AllowSpecific", policy =>
-    {
-        policy.WithOrigins("https://geekzkai-1.onrender.com")
-               .AllowAnyMethod()
-               .AllowAnyHeader()
-               .AllowCredentials();
-    });
+    options.AddPolicy(name: MyCors,
+        policy =>
+        {
+            policy.WithOrigins(
+                "https://geekzkai-1.onrender.com", // your frontend URL
+                "http://localhost:5173" // dev frontend
+            )
+            .AllowAnyHeader()
+            .AllowAnyMethod()
+            .AllowCredentials();
+        });
 });
+
 
 // Swagger
 builder.Services.AddEndpointsApiExplorer();
@@ -79,7 +86,7 @@ app.UseRouting();
 app.UseCors("AllowSpecific");
 app.UseAuthentication();
 app.UseAuthorization();
-
+app.UseCors(MyCors);
 app.MapControllers();
 
 app.Run();
