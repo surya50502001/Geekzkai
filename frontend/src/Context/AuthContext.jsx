@@ -5,7 +5,7 @@ const AuthContext = createContext();
 // 🔥 Your deployed backend URL
 const API_BASE_URL =
     import.meta.env.VITE_API_BASE_URL ||
-    "https://geekzkai.onrender.com/api";
+    "https://geekzkai.onrender.com";
 
 export const AuthProvider = ({ children }) => {
     const [user, setUser] = useState(null);
