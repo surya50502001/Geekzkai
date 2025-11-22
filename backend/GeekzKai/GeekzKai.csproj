@@ -5,23 +5,15 @@
 		<Nullable>enable</Nullable>
 		<ImplicitUsings>enable</ImplicitUsings>
 	</PropertyGroup>
-
 	<ItemGroup>
-		<!-- EF Core packages -->
 		<PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.1" />
 		<PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.1" />
 		<PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="9.0.1" />
 		<PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="9.0.1" />
 		<PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="9.0.4" />
 
-		<!-- REQUIRED for JWT Authentication -->
-		<PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.0" />
-
-		<!-- REQUIRED for IdentityModel namespaces -->
-		<PackageReference Include="IdentityModel" Version="6.0.0" />
-
-		<!-- REQUIRED if you use JwtSecurityToken, TokenValidationParameters, SymmetricSecurityKey -->
-		<PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="7.2.0" />
+		<!-- ADD THIS -->
+		<PackageReference Include="BCrypt.Net-Next" Version="4.0.3" />
 	</ItemGroup>
 
 
