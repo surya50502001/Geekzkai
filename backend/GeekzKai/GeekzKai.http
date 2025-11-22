@@ -1,4 +1,4 @@
-﻿@baseUrl = https://geekzkai.onrender.com
+﻿@baseUrl = https://geekzkai.onrender.com/api
 
 ### 👤 Create User
 POST {{baseUrl}}/user

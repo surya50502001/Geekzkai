@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useAuth } from "../Context/AuthContext";
 import { X } from "lucide-react";
 
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "https://geekzkai.onrender.com";
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "https://geekzkai.onrender.com/api";
 
 function UpdateProfile({ isOpen, onClose }) {
     const { user, token } = useAuth();
