@@ -1,5 +1,6 @@
 import { Home, User, Settings, Plus } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
+import ThemeToggle from "./ThemeToggle";
 
 export default function BottomNavbar() {
     const location = useLocation();
@@ -30,6 +31,7 @@ export default function BottomNavbar() {
                     </Link>
                 );
             })}
+            <ThemeToggle />
         </nav>
     );
 }

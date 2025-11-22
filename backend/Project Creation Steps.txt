@@ -1,0 +1,6 @@
+1.dotnet new webapi -n yourprojectname
+2. cd yourprojectname
+3.  dotnet add package Microsoft.EntityFrameworkCore
+dotnet add package Microsoft.EntityFrameworkCore.SqlServer
+dotnet add package Microsoft.EntityFrameworkCore.Tools
+dotnet add package Microsoft.EntityFrameworkCore.Design
