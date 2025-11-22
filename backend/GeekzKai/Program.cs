@@ -6,7 +6,7 @@ using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add controllers
+// Controllers + JSON settings
 builder.Services.AddControllers()
     .AddJsonOptions(options =>
     {
@@ -15,44 +15,40 @@ builder.Services.AddControllers()
         options.JsonSerializerOptions.WriteIndented = true;
     });
 
-// CORS for your frontend
-var MyCors = "_myCors";
+// CORS POLICY
+var corsPolicy = "AllowFrontend";
 
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy(name: MyCors,
-        policy =>
-        {
-            policy.WithOrigins(
-                "https://geekzkai-1.onrender.com", // your frontend URL
-                "http://localhost:5173" // dev frontend
+    options.AddPolicy(corsPolicy, policy =>
+    {
+        policy.WithOrigins(
+                "https://geekzkai-1.onrender.com",
+                "http://localhost:5173"
             )
             .AllowAnyHeader()
             .AllowAnyMethod()
             .AllowCredentials();
-        });
+    });
 });
-
 
 // Swagger
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-// ⚠️ Read JWT values from Render env vars
+// LOAD ENV VARS (Render injects these)
 var jwtKey = builder.Configuration["Jwt:Key"];
 var jwtIssuer = builder.Configuration["Jwt:Issuer"];
 var jwtAudience = builder.Configuration["Jwt:Audience"];
+var dbConnection = builder.Configuration["DefaultConnection"];
 
-if (string.IsNullOrEmpty(jwtKey))
-    throw new Exception("JWT Key missing! Add Jwt:Key in Render Environment Variables.");
+// VALIDATE ENV VARS
+if (string.IsNullOrEmpty(jwtKey)) throw new Exception("JWT Key missing");
+if (string.IsNullOrEmpty(jwtIssuer)) throw new Exception("JWT Issuer missing");
+if (string.IsNullOrEmpty(jwtAudience)) throw new Exception("JWT Audience missing");
+if (string.IsNullOrEmpty(dbConnection)) throw new Exception("Database connection missing");
 
-if (string.IsNullOrEmpty(jwtIssuer))
-    throw new Exception("JWT Issuer missing! Add Jwt:Issuer in Render Environment Variables.");
-
-if (string.IsNullOrEmpty(jwtAudience))
-    throw new Exception("JWT Audience missing! Add Jwt:Audience in Render Environment Variables.");
-
-// JWT Authentication
+// JWT AUTH
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {
@@ -68,25 +64,22 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         };
     });
 
-// ⚠️ Use PostgreSQL from Render
+// PostgreSQL
 builder.Services.AddDbContext<AppdbContext>(options =>
-    options.UseNpgsql(builder.Configuration["DefaultConnection"])
+    options.UseNpgsql(dbConnection)
 );
 
 var app = builder.Build();
 
-// Enable Swagger in development mode
+// Swagger (show always)
+app.UseSwagger();
+app.UseSwaggerUI();
 
-    app.UseSwagger();
-    app.UseSwaggerUI();
-
-
-// Middleware
 app.UseRouting();
-app.UseCors("AllowSpecific");
+app.UseCors(corsPolicy);
 app.UseAuthentication();
 app.UseAuthorization();
-app.UseCors(MyCors);
+
 app.MapControllers();
 
 app.Run();
