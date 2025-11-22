@@ -3,6 +3,7 @@ using geekzKai.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
@@ -13,18 +14,19 @@ using System.Text;
 using System.Threading.Tasks;
 using BCrypt.Net;
 
-
 namespace geekzKai.Controllers
 {
     [ApiController]
-    [Route("api/[Controller]")]
+    [Route("api/[controller]")]
     public class UserController : ControllerBase
     {
         private readonly AppdbContext _context;
+        private readonly IConfiguration _configuration;
 
-        public UserController(AppdbContext context)
+        public UserController(AppdbContext context, IConfiguration configuration)
         {
             _context = context;
+            _configuration = configuration;
         }
 
         [HttpGet]
@@ -33,8 +35,9 @@ namespace geekzKai.Controllers
             return await _context.Users
                 .Include(u => u.Posts)
                 .Include(u => u.Comments)
-               .ToListAsync();
+                .ToListAsync();
         }
+
         [HttpGet("{id}")]
         public async Task<IActionResult> GetUser(int id)
         {
@@ -48,12 +51,13 @@ namespace geekzKai.Controllers
             }
             return Ok(user);
         }
+
         [HttpPost]
         public async Task<IActionResult> CreateUser(User user)
         {
-            var ExistingUser = await _context.Users.FirstOrDefaultAsync(u => u.Username == user.Username || u.Email == user.Email);
+            var existingUser = await _context.Users.FirstOrDefaultAsync(u => u.Username == user.Username || u.Email == user.Email);
 
-            if (ExistingUser != null)
+            if (existingUser != null)
             {
                 return BadRequest(new { message = "Username or Email already taken." });
             }
@@ -65,7 +69,6 @@ namespace geekzKai.Controllers
 
             return CreatedAtAction(nameof(GetUser), new { id = user.Id }, user);
         }
-
 
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateUser(int id, User updateUser)
@@ -107,7 +110,6 @@ namespace geekzKai.Controllers
             await _context.SaveChangesAsync();
 
             return NoContent();
-
         }
 
         [HttpPost("login")]
@@ -126,12 +128,12 @@ namespace geekzKai.Controllers
                 new Claim(ClaimTypes.Name, user.Username)
             };
 
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("YourSuperSecretKeyHere12345678901234567890"));
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]));
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
             var token = new JwtSecurityToken(
-                issuer: "GeekzKai",
-                audience: "GeekzKaiUsers",
+                issuer: _configuration["Jwt:Issuer"],
+                audience: _configuration["Jwt:Audience"],
                 claims: claims,
                 expires: DateTime.Now.AddDays(7),
                 signingCredentials: creds
