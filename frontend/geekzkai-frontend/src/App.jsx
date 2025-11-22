@@ -21,8 +21,10 @@ function App() {
         <Router>
         <div className="min-h-screen text-text-primary transition-colors duration-500" style={{ background: 'var(--background-primary)' }}>
                 <Navbar />
-                <Sidebar />
-                <main style={{ marginLeft: 'var(--sidebar-width, 0px)' }}>
+                <div className="hidden md:block">
+                    <Sidebar />
+                </div>
+                <main className="md:ml-[var(--sidebar-width,0px)]">
                     <Routes>
                         <Route path="/" element={<Home />} />
                         <Route path="/login" element={<Login />} />

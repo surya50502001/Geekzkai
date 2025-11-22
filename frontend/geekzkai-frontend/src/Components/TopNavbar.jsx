@@ -3,7 +3,7 @@ import ThemeToggle from "./ThemeToggle";
 
 export default function TopNavbar() {
     return (
-        <nav className=" border-b border-border-primary p-4 flex items-center" style={{ marginLeft: 'var(--sidebar-width, 0px)' }}>
+        <nav className="hidden md:flex border-b border-border-primary p-4 items-center" style={{ marginLeft: 'var(--sidebar-width, 0px)' }}>
             <div className="flex-1 text-center">
                 <div className="text-xl font-bold text-text-primary">GeekZkai</div>
             </div>
