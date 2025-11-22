@@ -2,7 +2,10 @@
 
 const AuthContext = createContext();
 
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:5131/api";
+// 🔥 Your deployed backend URL
+const API_BASE_URL =
+    import.meta.env.VITE_API_BASE_URL ||
+    "https://geekzkai.onrender.com/api";
 
 export const AuthProvider = ({ children }) => {
     const [user, setUser] = useState(null);
@@ -10,13 +13,12 @@ export const AuthProvider = ({ children }) => {
 
     useEffect(() => {
         if (token) {
-            // ✅ fetch user info using token
             fetch(`${API_BASE_URL}/user/me`, {
                 headers: {
                     Authorization: `Bearer ${token}`,
                 },
             })
-                .then((res) => res.ok ? res.json() : null)
+                .then((res) => (res.ok ? res.json() : null))
                 .then((data) => setUser(data))
                 .catch(() => setUser(null));
         }
@@ -53,7 +55,6 @@ export const AuthProvider = ({ children }) => {
         }
 
         const data = await res.json();
-        // Optionally, auto-login after registration
         await login(email, password);
         return data;
     };
