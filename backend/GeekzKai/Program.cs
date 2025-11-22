@@ -32,12 +32,18 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 // ⚠️ Read JWT values from Render env vars
-var jwtKey = builder.Configuration["Jwt__Key"];
-var jwtIssuer = builder.Configuration["Jwt__Issuer"];
-var jwtAudience = builder.Configuration["Jwt__Audience"];
+var jwtKey = builder.Configuration["Jwt:Key"];
+var jwtIssuer = builder.Configuration["Jwt:Issuer"];
+var jwtAudience = builder.Configuration["Jwt:Audience"];
 
 if (string.IsNullOrEmpty(jwtKey))
-    throw new Exception("JWT Key missing! Add Jwt__Key in Render Environment Variables.");
+    throw new Exception("JWT Key missing! Add Jwt:Key in Render Environment Variables.");
+
+if (string.IsNullOrEmpty(jwtIssuer))
+    throw new Exception("JWT Issuer missing! Add Jwt:Issuer in Render Environment Variables.");
+
+if (string.IsNullOrEmpty(jwtAudience))
+    throw new Exception("JWT Audience missing! Add Jwt:Audience in Render Environment Variables.");
 
 // JWT Authentication
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
