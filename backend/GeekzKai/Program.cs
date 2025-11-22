@@ -20,7 +20,7 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowSpecific", policy =>
     {
-        policy.WithOrigins("http://localhost:5173", "https://your-frontend-domain.com", "https://geekzkai.onrender.com")
+        policy.WithOrigins("http://localhost:5173", "https://geekzkai-1.onrender.com", "https://geekzkai.onrender.com")
                .AllowAnyMethod()
                .AllowAnyHeader()
                .AllowCredentials();
