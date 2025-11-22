@@ -55,32 +55,19 @@ namespace geekzKai.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateUser(User user)
         {
-            try
+            var existingUser = await _context.Users.FirstOrDefaultAsync(u => u.Username == user.Username || u.Email == user.Email);
+
+            if (existingUser != null)
             {
-                var existingUser = await _context.Users.FirstOrDefaultAsync(u => u.Username == user.Username || u.Email == user.Email);
-
-                if (existingUser != null)
-                {
-                    return BadRequest(new { message = "Username or Email already taken." });
-                }
-
-                user.PasswordHash = BCrypt.Net.BCrypt.HashPassword(user.PasswordHash);
-                user.CreatedAt = DateTime.UtcNow;
-                _context.Users.Add(user);
-                await _context.SaveChangesAsync();
-
-                return CreatedAtAction(nameof(GetUser), new { id = user.Id }, user);
+                return BadRequest(new { message = "Username or Email already taken." });
             }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"An error occurred in CreateUser: {ex}");
-                // Log inner exception if it exists, as it often contains the real database error.
-                if (ex.InnerException != null)
-                {
-                    Console.WriteLine($"Inner exception: {ex.InnerException}");
-                }
-                return StatusCode(500, "An internal server error occurred. Please try again later.");
-            }
+
+            user.PasswordHash = BCrypt.Net.BCrypt.HashPassword(user.PasswordHash);
+            user.CreatedAt = DateTime.UtcNow;
+            _context.Users.Add(user);
+            await _context.SaveChangesAsync();
+
+            return CreatedAtAction(nameof(GetUser), new { id = user.Id }, user);
         }
 
         [HttpPut("{id}")]
