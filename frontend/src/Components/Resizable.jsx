@@ -54,7 +54,6 @@ const Resizable = ({ children, minWidth = 80, maxWidth = 400 }) => {
                 border-r border-border-primary
                 z-30 hidden md:block 
                 overflow-hidden 
-                transition-[width] duration-150
             "
         >
             {children(width)}
