@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 namespace geekzKai.Controllers
 {
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("api/posts")]  // 👈 fixed route to match frontend
     public class PostController : ControllerBase
     {
         private readonly AppDbContext _context;
@@ -19,7 +19,7 @@ namespace geekzKai.Controllers
             _context = context;
         }
 
-        // GET: api/Post
+        // GET: api/posts
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Post>>> GetPosts()
         {
@@ -29,7 +29,7 @@ namespace geekzKai.Controllers
                 .ToListAsync();
         }
 
-        // GET: api/Post/{id}
+        // GET: api/posts/{id}
         [HttpGet("{id}")]
         public async Task<ActionResult<Post>> GetPost(int id)
         {
@@ -39,27 +39,29 @@ namespace geekzKai.Controllers
                 .FirstOrDefaultAsync(p => p.Id == id);
 
             if (post == null)
-                return NotFound();
+                return NotFound(new { message = "Post not found" });
 
-            return post;
+            return Ok(post);
         }
 
+        // POST: api/posts
         [HttpPost]
-        public async Task<IActionResult> CreatePost(Post post)
+        public async Task<IActionResult> CreatePost([FromBody] Post post) // 👈 FromBody added
         {
             if (string.IsNullOrWhiteSpace(post.Question))
                 return BadRequest(new { message = "Question cannot be empty." });
 
             post.CreatedAt = DateTime.UtcNow;
+
             _context.Posts.Add(post);
             await _context.SaveChangesAsync();
 
             return CreatedAtAction(nameof(GetPost), new { id = post.Id }, post);
         }
 
-        // PUT: api/Post/{id}
+        // PUT: api/posts/{id}
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdatePost(int id, Post post)
+        public async Task<IActionResult> UpdatePost(int id, [FromBody] Post post)
         {
             if (id != post.Id)
                 return BadRequest();
@@ -70,13 +72,14 @@ namespace geekzKai.Controllers
             return NoContent();
         }
 
-        // DELETE: api/Post/{id}
+        // DELETE: api/posts/{id}
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeletePost(int id)
         {
             var post = await _context.Posts.FindAsync(id);
+
             if (post == null)
-                return NotFound();
+                return NotFound(new { message = "Post not found" });
 
             _context.Posts.Remove(post);
             await _context.SaveChangesAsync();
