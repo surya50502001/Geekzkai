@@ -42,12 +42,19 @@ export const AuthProvider = ({ children }) => {
         setUser(data.user);
     };
 
-    const register = async (username, email, password, channelLink = null) => {
+    const register = async (
+        username,
+        email,
+        password,
+        isYoutuber,
+        youtubeChannelLink = null
+    ) => {
         const payload = {
             username,
             email,
-            passwordHash: password,   // backend expects passwordHash
-            channelLink: channelLink, // backend expects channelLink
+            password,
+            isYoutuber,
+            youTubeChannelLink: youtubeChannelLink,
         };
 
         const res = await fetch(`${API_BASE_URL}/user`, {
