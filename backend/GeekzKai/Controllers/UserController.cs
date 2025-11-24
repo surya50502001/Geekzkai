@@ -20,10 +20,10 @@ namespace geekzKai.Controllers
     [Route("api/[controller]")]
     public class UserController : ControllerBase
     {
-        private readonly AppdbContext _context;
+        private readonly AppDbContext _context;
         private readonly IConfiguration _configuration;
 
-        public UserController(AppdbContext context, IConfiguration configuration)
+        public UserController(AppDbContext context, IConfiguration configuration)
         {
             _context = context;
             _configuration = configuration;

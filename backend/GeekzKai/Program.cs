@@ -76,7 +76,7 @@ if (string.IsNullOrEmpty(jwtAudience)) throw new Exception("JWT Audience missing
 if (string.IsNullOrEmpty(dbConnection)) throw new Exception("Database connection missing");
 
 // DB
-builder.Services.AddDbContext<AppdbContext>(options =>
+builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseNpgsql(dbConnection)
 );
 
@@ -98,16 +98,35 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 
 var app = builder.Build();
 
+// Auto-apply any pending EF migrations at startup
+using (var scope = app.Services.CreateScope())
+{
+    var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+    db.Database.Migrate();
+}
+
 // ENABLE SWAGGER ALWAYS (for debugging)
 app.UseSwagger();
 app.UseSwaggerUI();
 
+
+
 // Middleware
+
 app.UseRouting();
+
 app.UseCors(corsPolicy);
+
 app.UseAuthentication();
+
 app.UseAuthorization();
+
+
 
 app.MapControllers();
 
+
+
 app.Run();
+
+

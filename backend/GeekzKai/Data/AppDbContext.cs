@@ -5,9 +5,9 @@ using System.Security.Cryptography.X509Certificates;
 
 namespace geekzKai.Data
 {
-    public class AppdbContext : DbContext
+    public class AppDbContext : DbContext
     {
-        public AppdbContext(DbContextOptions<AppdbContext> options) : base(options)
+        public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
         {
 
         }

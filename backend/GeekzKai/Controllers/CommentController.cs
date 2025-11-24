@@ -12,9 +12,9 @@ namespace geekzKai.Controllers
     [Route("api/[controller]")]
     public class CommentController : ControllerBase
     {
-        private readonly AppdbContext _context;
+        private readonly AppDbContext _context;
 
-        public CommentController(AppdbContext context)
+        public CommentController(AppDbContext context)
         {
             _context = context;
         }

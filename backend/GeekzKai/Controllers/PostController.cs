@@ -12,9 +12,9 @@ namespace geekzKai.Controllers
     [Route("api/[controller]")]
     public class PostController : ControllerBase
     {
-        private readonly AppdbContext _context;
+        private readonly AppDbContext _context;
 
-        public PostController(AppdbContext context)
+        public PostController(AppDbContext context)
         {
             _context = context;
         }
@@ -44,7 +44,6 @@ namespace geekzKai.Controllers
             return post;
         }
 
-        // ✅ POST: api/Post
         [HttpPost]
         public async Task<IActionResult> CreatePost(Post post)
         {

@@ -11,9 +11,9 @@ namespace geekzKai.Controllers
     [Route("api/[controller]")]
     public class UpvoteController : ControllerBase
     {
-        private readonly AppdbContext _context; // ✅ fixed typo: readnly → readonly
+        private readonly AppDbContext _context; 
 
-        public UpvoteController(AppdbContext context)
+        public UpvoteController(AppDbContext context)
         {
             _context = context;
         }
@@ -29,7 +29,7 @@ namespace geekzKai.Controllers
 
             // check if already upvoted
             var existingUpvote = await _context.Upvotes
-                .FirstOrDefaultAsync(u => u.PostId == upvote.PostId && u.UserId == upvote.UserId); // ✅ fixed typo: FirstOrdDefaultAsync → FirstOrDefaultAsync
+                .FirstOrDefaultAsync(u => u.PostId == upvote.PostId && u.UserId == upvote.UserId);
 
             // if exists, remove upvote
             if (existingUpvote != null)
