@@ -11,7 +11,6 @@ using BCrypt.Net;
 
 namespace geekzKai.Controllers
 {
-    [Authorize]
     [ApiController]
     [Route("api/[controller]")]
     public class UserController : ControllerBase
@@ -122,7 +121,7 @@ namespace geekzKai.Controllers
         }
 
         // GET: api/User/me
-       
+        [Authorize]
         [HttpGet("me")]
         public async Task<IActionResult> GetMe()
         {
