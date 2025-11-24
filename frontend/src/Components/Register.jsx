@@ -28,6 +28,7 @@ function Register() {
                 username,
                 email,
                 password,
+                isYoutuber,
                 isYoutuber ? link : null
             );
         } catch (error) {

@@ -42,11 +42,17 @@ export const AuthProvider = ({ children }) => {
         setUser(data.user);
     };
 
-    const register = async (username, email, password, channelLink = null) => {
+    const register = async (username, email, password, isYoutuber, youtubeChannelLink = null) => {
         const res = await fetch(`${API_BASE_URL}/user`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ username, email, passwordHash: password, channelLink }),
+            body: JSON.stringify({
+                username,
+                email,
+                password,
+                isYoutuber,
+                youtubeChannelLink,
+            }),
         });
 
         if (!res.ok) {
