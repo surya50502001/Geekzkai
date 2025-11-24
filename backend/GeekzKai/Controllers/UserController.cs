@@ -3,15 +3,10 @@ using geekzKai.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
-using System;
-using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
-using System.Linq;
 using System.Security.Claims;
 using System.Text;
-using System.Threading.Tasks;
 using BCrypt.Net;
 
 namespace geekzKai.Controllers
@@ -21,23 +16,27 @@ namespace geekzKai.Controllers
     public class UserController : ControllerBase
     {
         private readonly AppDbContext _context;
-        private readonly IConfiguration _configuration;
+        private readonly IConfiguration _config;
 
-        public UserController(AppDbContext context, IConfiguration configuration)
+        public UserController(AppDbContext context, IConfiguration config)
         {
             _context = context;
-            _configuration = configuration;
+            _config = config;
         }
 
+        // GET: api/User
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<User>>> GetUsers()
+        public async Task<IActionResult> GetUsers()
         {
-            return await _context.Users
+            var users = await _context.Users
                 .Include(u => u.Posts)
                 .Include(u => u.Comments)
                 .ToListAsync();
+
+            return Ok(users);
         }
 
+        // GET: api/User/5
         [HttpGet("{id}")]
         public async Task<IActionResult> GetUser(int id)
         {
@@ -45,111 +44,101 @@ namespace geekzKai.Controllers
                 .Include(u => u.Posts)
                 .Include(u => u.Comments)
                 .FirstOrDefaultAsync(u => u.Id == id);
-            if (user == null)
-            {
-                return NotFound(new { message = "User not found" });
-            }
-            return Ok(user);
+
+            return user == null
+                ? NotFound(new { message = "User not found" })
+                : Ok(user);
         }
 
+        // POST: api/User
         [HttpPost]
-        public async Task<IActionResult> CreateUser([FromBody] RegisterRequest registerRequest)
+        public async Task<IActionResult> Register([FromBody] RegisterRequest request)
         {
             if (!ModelState.IsValid)
-            {
                 return BadRequest(ModelState);
-            }
 
-            var existingUser = await _context.Users.FirstOrDefaultAsync(u => u.Username == registerRequest.Username || u.Email == registerRequest.Email);
-            if (existingUser != null)
-            {
+            var exists = await _context.Users
+                .AnyAsync(u => u.Username == request.Username || u.Email == request.Email);
+
+            if (exists)
                 return BadRequest(new { message = "Username or Email already taken." });
-            }
 
-            var user = new User
+            var newUser = new User
             {
-                Username = registerRequest.Username,
-                Email = registerRequest.Email,
-                PasswordHash = BCrypt.Net.BCrypt.HashPassword(registerRequest.Password),
+                Username = request.Username,
+                Email = request.Email,
+                PasswordHash = BCrypt.Net.BCrypt.HashPassword(request.Password),
                 CreatedAt = DateTime.UtcNow,
-                IsYoutuber = registerRequest.IsYoutuber,
-                YouTubeChannelLink = registerRequest.YouTubeChannelLink,
+                IsYoutuber = request.IsYoutuber,
+                YouTubeChannelLink = request.YouTubeChannelLink
             };
 
-            _context.Users.Add(user);
+            await _context.Users.AddAsync(newUser);
             await _context.SaveChangesAsync();
 
-            // Manually create the user object to be returned, excluding the password hash
-            var userResponse = new
-            {                user.Id,
-                user.Username,
-                user.Email,
-                user.CreatedAt,
-                user.IsActive,
-                user.IsYoutuber,
-                user.IsAdmin,
-                user.YouTubeChannelLink,
-                user.Bio,
-                user.ProfilePictureUrl,
-                user.FollowersCount,
-                user.FollowingCount,
-                user.Posts,
-                user.Comments
-            };
-
-            return CreatedAtAction(nameof(GetUser), new { id = user.Id }, userResponse);
+            return CreatedAtAction(nameof(GetUser), new { id = newUser.Id }, newUser);
         }
 
+        // PUT: api/User/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateUser(int id, User updateUser)
+        public async Task<IActionResult> Update(int id, [FromBody] User update)
         {
-            if (id != updateUser.Id)
-            {
-                return BadRequest();
-            }
-
             var user = await _context.Users.FindAsync(id);
-            if (user == null)
-            {
-                return NotFound(new { message = "User not found" });
-            }
-            user.Username = updateUser.Username ?? user.Username;
-            user.Email = updateUser.Email ?? user.Email;
-            if (!string.IsNullOrEmpty(updateUser.PasswordHash))
-            {
-                user.PasswordHash = BCrypt.Net.BCrypt.HashPassword(updateUser.PasswordHash);
-            }
+            if (user == null) return NotFound(new { message = "User not found" });
 
-            _context.Entry(user).State = EntityState.Modified;
+            user.Username = update.Username ?? user.Username;
+            user.Email = update.Email ?? user.Email;
+
+            if (!string.IsNullOrEmpty(update.PasswordHash))
+                user.PasswordHash = BCrypt.Net.BCrypt.HashPassword(update.PasswordHash);
+
             await _context.SaveChangesAsync();
-
             return NoContent();
         }
 
+        // DELETE: api/User/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteUser(int id)
+        public async Task<IActionResult> Delete(int id)
         {
             var user = await _context.Users.FindAsync(id);
-
-            if (user == null)
-            {
-                return NotFound(new { message = "User not found" });
-            }
+            if (user == null) return NotFound(new { message = "User not found" });
 
             _context.Users.Remove(user);
             await _context.SaveChangesAsync();
-
             return NoContent();
         }
 
+        // POST: api/User/login
         [HttpPost("login")]
-        public async Task<IActionResult> Login([FromBody] LoginRequest loginRequest)
+        public async Task<IActionResult> Login([FromBody] LoginRequest request)
         {
-            var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == loginRequest.Email);
-            if (user == null || !BCrypt.Net.BCrypt.Verify(loginRequest.Password, user.PasswordHash))
-            {
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == request.Email);
+            if (user == null || !BCrypt.Net.BCrypt.Verify(request.Password, user.PasswordHash))
                 return Unauthorized(new { message = "Invalid email or password" });
-            }
+
+            var token = GenerateJwtToken(user);
+            return Ok(new { token, user = new { user.Id, user.Username, user.Email } });
+        }
+
+        // GET: api/User/me
+        [Authorize]
+        [HttpGet("me")]
+        public async Task<IActionResult> GetMe()
+        {
+            var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+
+            var user = await _context.Users
+                .Include(u => u.Posts)
+                .Include(u => u.Comments)
+                .FirstOrDefaultAsync(u => u.Id == userId);
+
+            return user == null ? NotFound(new { message = "User not found" }) : Ok(user);
+        }
+
+        private string GenerateJwtToken(User user)
+        {
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Jwt:Key"]!));
+            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
             var claims = new[]
             {
@@ -158,50 +147,15 @@ namespace geekzKai.Controllers
                 new Claim(ClaimTypes.Name, user.Username)
             };
 
-            var jwtKey = _configuration["Jwt:Key"];
-            if (string.IsNullOrEmpty(jwtKey))
-            {
-                // This should not happen if the app startup validation is working,
-                // but it's a good practice to have a safeguard.
-                return StatusCode(500, "JWT Key is not configured.");
-            }
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtKey));
-            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
-
             var token = new JwtSecurityToken(
-                issuer: _configuration["Jwt:Issuer"],
-                audience: _configuration["Jwt:Audience"],
+                issuer: _config["Jwt:Issuer"],
+                audience: _config["Jwt:Audience"],
                 claims: claims,
                 expires: DateTime.Now.AddDays(7),
                 signingCredentials: creds
             );
 
-            var tokenString = new JwtSecurityTokenHandler().WriteToken(token);
-
-            return Ok(new { token = tokenString, user = new { user.Id, user.Username, user.Email } });
-        }
-
-        [Authorize]
-        [HttpGet("me")]
-        public async Task<IActionResult> GetMe()
-        {
-            var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier);
-            if (userIdClaim == null || !int.TryParse(userIdClaim.Value, out var userId))
-            {
-                return Unauthorized(new { message = "Invalid token" });
-            }
-
-            var user = await _context.Users
-                .Include(u => u.Posts)
-                .Include(u => u.Comments)
-                .FirstOrDefaultAsync(u => u.Id == userId);
-
-            if (user == null)
-            {
-                return NotFound(new { message = "User not found" });
-            }
-
-            return Ok(user);
+            return new JwtSecurityTokenHandler().WriteToken(token);
         }
     }
 }
