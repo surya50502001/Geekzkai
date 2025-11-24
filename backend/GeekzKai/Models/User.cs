@@ -13,7 +13,7 @@ namespace geekzKai.Models
         public Boolean IsActive { get; set; } = true;
         public Boolean IsYoutuber { get; set; } = false;
         public Boolean IsAdmin { get; set; } = false;
-        public string? YouTubeChannellink { get; set; }
+        public string? YouTubeChannelLink { get; set; }
 
         public string? Bio { get; set; }                  // short about text
         public string? ProfilePictureUrl { get; set; }    // for avatar image
