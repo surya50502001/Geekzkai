@@ -70,11 +70,13 @@ var jwtAudience = builder.Configuration["Jwt:Audience"];
 var dbConnection = builder.Configuration["ConnectionStrings:DefaultConnection"];
 
 // VALIDATE
-if (string.IsNullOrEmpty(jwtKey)) throw new Exception("JWT Key missing");
-if (string.IsNullOrEmpty(jwtIssuer)) throw new Exception("JWT Issuer missing");
-if (string.IsNullOrEmpty(jwtAudience)) throw new Exception("JWT Audience missing");
-if (string.IsNullOrEmpty(dbConnection)) throw new Exception("Database connection missing");
-
+if (builder.Environment.IsProduction())
+{
+    if (string.IsNullOrEmpty(jwtKey)) throw new Exception("JWT Key missing");
+    if (string.IsNullOrEmpty(jwtIssuer)) throw new Exception("JWT Issuer missing");
+    if (string.IsNullOrEmpty(jwtAudience)) throw new Exception("JWT Audience missing");
+    if (string.IsNullOrEmpty(dbConnection)) throw new Exception("Database connection missing");
+}
 // DB
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseNpgsql(dbConnection)
