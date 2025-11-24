@@ -56,8 +56,9 @@ export const AuthProvider = ({ children }) => {
         });
 
         if (!res.ok) {
-            const errorData = await res.json().catch(() => ({ message: "Registration failed" }));
-            throw new Error(errorData.message || "Registration failed");
+            const errorData = await res.json().catch(() => ({ message: `Request failed with status ${res.status}` }));
+            console.error("Registration error response:", errorData);
+            throw errorData;
         }
 
         const data = await res.json();
