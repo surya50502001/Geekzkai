@@ -17,9 +17,9 @@ export default function CreatePostModal({ isOpen, onClose }) {
         setLoading(true);
 
         const payload = {
-            Question: title,
-            Description: content,
-            UserId: user.id   // 👈 dynamic from logged-in user
+            question: title,
+            description: content,
+            userId: user.id   // 👈 dynamic from logged-in user
         };
 
         try {
