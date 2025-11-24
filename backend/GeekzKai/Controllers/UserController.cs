@@ -53,21 +53,45 @@ namespace geekzKai.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateUser(User user)
+        public async Task<IActionResult> CreateUser([FromBody] RegisterRequest registerRequest)
         {
-            var existingUser = await _context.Users.FirstOrDefaultAsync(u => u.Username == user.Username || u.Email == user.Email);
-
+            var existingUser = await _context.Users.FirstOrDefaultAsync(u => u.Username == registerRequest.Username || u.Email == registerRequest.Email);
             if (existingUser != null)
             {
                 return BadRequest(new { message = "Username or Email already taken." });
             }
 
-            user.PasswordHash = BCrypt.Net.BCrypt.HashPassword(user.PasswordHash);
-            user.CreatedAt = DateTime.UtcNow;
+            var user = new User
+            {
+                Username = registerRequest.Username,
+                Email = registerRequest.Email,
+                PasswordHash = BCrypt.Net.BCrypt.HashPassword(registerRequest.Password),
+                CreatedAt = DateTime.UtcNow
+            };
+
             _context.Users.Add(user);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction(nameof(GetUser), new { id = user.Id }, user);
+            // Manually create the user object to be returned, excluding the password hash
+            var userResponse = new
+            {
+                user.Id,
+                user.Username,
+                user.Email,
+                user.CreatedAt,
+                user.IsActive,
+                user.IsYoutuber,
+                user.IsAdmin,
+                user.YouTubeChannellink,
+                user.Bio,
+                user.ProfilePictureUrl,
+                user.FollowersCount,
+                user.FollowingCount,
+                user.Posts,
+                user.Comments
+            };
+
+            return CreatedAtAction(nameof(GetUser), new { id = user.Id }, userResponse);
         }
 
         [HttpPut("{id}")]
