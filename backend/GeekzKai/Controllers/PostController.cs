@@ -46,18 +46,19 @@ namespace geekzKai.Controllers
 
         // POST: api/posts
         [HttpPost]
-        public async Task<IActionResult> CreatePost([FromBody] Post post) // 👈 FromBody added
+        public async Task<IActionResult> CreatePost([FromBody] Post post)
         {
-            if (string.IsNullOrWhiteSpace(post.Question))
-                return BadRequest(new { message = "Question cannot be empty." });
+            if (post == null)
+                return BadRequest("Invalid post data");
 
             post.CreatedAt = DateTime.UtcNow;
 
             _context.Posts.Add(post);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction(nameof(GetPost), new { id = post.Id }, post);
+            return Ok(post);
         }
+
 
         // PUT: api/posts/{id}
         [HttpPut("{id}")]
