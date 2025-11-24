@@ -68,7 +68,7 @@ namespace geekzKai.Controllers
                 PasswordHash = BCrypt.Net.BCrypt.HashPassword(registerRequest.Password),
                 CreatedAt = DateTime.UtcNow,
                 IsYoutuber = registerRequest.IsYoutuber,
-                YouTubeChannellink = registerRequest.YouTubeChannelLink,
+                YouTubeChannelLink = registerRequest.YouTubeChannelLink,
             };
 
             _context.Users.Add(user);
