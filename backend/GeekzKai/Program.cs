@@ -35,6 +35,34 @@ builder.Services.AddCors(options =>
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+// Log all configuration keys for debugging
+Console.WriteLine("--- All Configuration Keys ---");
+var configuration = builder.Configuration as IConfigurationRoot;
+if (configuration != null)
+{
+    foreach (var provider in configuration.Providers)
+    {
+        Console.WriteLine($"Provider: {provider.GetType().Name}");
+        var keys = provider.GetChildKeys(Enumerable.Empty<string>(), null);
+        foreach (var key in keys)
+        {
+            if (provider.TryGet(key, out var value))
+            {
+                // Be careful not to log sensitive values in a real production environment
+                if (key.ToLower().Contains("key") || key.ToLower().Contains("password") || key.ToLower().Contains("connection"))
+                {
+                    Console.WriteLine($"{key}: [REDACTED]");
+                }
+                else
+                {
+                    Console.WriteLine($"{key}: {value}");
+                }
+            }
+        }
+    }
+}
+Console.WriteLine("-----------------------------");
+
 // LOAD ENV VARS
 var jwtKey = builder.Configuration["Jwt:Key"];
 var jwtIssuer = builder.Configuration["Jwt:Issuer"];

@@ -55,6 +55,11 @@ namespace geekzKai.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateUser([FromBody] RegisterRequest registerRequest)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
             var existingUser = await _context.Users.FirstOrDefaultAsync(u => u.Username == registerRequest.Username || u.Email == registerRequest.Email);
             if (existingUser != null)
             {
@@ -76,8 +81,7 @@ namespace geekzKai.Controllers
 
             // Manually create the user object to be returned, excluding the password hash
             var userResponse = new
-            {
-                user.Id,
+            {                user.Id,
                 user.Username,
                 user.Email,
                 user.CreatedAt,
