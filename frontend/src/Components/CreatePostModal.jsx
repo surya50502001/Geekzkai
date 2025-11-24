@@ -3,11 +3,9 @@ import { useState } from "react";
 import { useAuth } from "../Context/AuthContext";
 
 export default function CreatePostModal({ isOpen, onClose }) {
-    const { token, user } = useAuth();   // <-- add user here
-
+    const { token, user } = useAuth();
     const [title, setTitle] = useState("");
     const [content, setContent] = useState("");
-    const [image, setImage] = useState(null);
     const [loading, setLoading] = useState(false);
 
     const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "https://geekzkai.onrender.com/api";
@@ -21,7 +19,7 @@ export default function CreatePostModal({ isOpen, onClose }) {
         const payload = {
             question: title,
             description: content,
-            userId: user.id   // <-- REAL logged-in user ID
+            userId: user.id   // 👈 dynamic from logged-in user
         };
 
         try {
@@ -43,7 +41,6 @@ export default function CreatePostModal({ isOpen, onClose }) {
             }
         } catch (error) {
             console.error("Error creating post:", error);
-            alert("Something went wrong!");
         } finally {
             setLoading(false);
         }
@@ -54,18 +51,19 @@ export default function CreatePostModal({ isOpen, onClose }) {
             onClick={(e) => e.target === e.currentTarget && onClose()}
             className="fixed inset-0 bg-black bg-opacity-60 backdrop-blur-sm flex items-center justify-center z-50"
         >
-            <div className="bg-background-secondary w-full max-w-md rounded-xl shadow-xl p-6 relative border border-border-primary">
+            <div className="bg-background-secondary w-full max-w-md rounded-xl shadow-xl p-6 relative">
                 <button onClick={onClose} className="absolute right-3 top-3">
                     <X size={22} />
                 </button>
 
                 <h2 className="text-xl font-bold mb-4">Create a New Post</h2>
+
                 <form onSubmit={handleSubmit}>
                     <input
                         type="text"
                         value={title}
                         onChange={(e) => setTitle(e.target.value)}
-                        placeholder="Title"
+                        placeholder="Post Title"
                         className="w-full p-2 border rounded mb-4"
                         required
                     />
@@ -73,9 +71,9 @@ export default function CreatePostModal({ isOpen, onClose }) {
                     <textarea
                         value={content}
                         onChange={(e) => setContent(e.target.value)}
-                        placeholder="Content"
-                        rows="4"
+                        placeholder="Description"
                         className="w-full p-2 border rounded mb-4"
+                        rows={4}
                         required
                     />
 
