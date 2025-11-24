@@ -3,7 +3,8 @@ import { useState } from "react";
 import { useAuth } from "../Context/AuthContext";
 
 export default function CreatePostModal({ isOpen, onClose }) {
-    const { token } = useAuth();
+    const { token, user } = useAuth();   // <-- add user here
+
     const [title, setTitle] = useState("");
     const [content, setContent] = useState("");
     const [image, setImage] = useState(null);
@@ -20,7 +21,7 @@ export default function CreatePostModal({ isOpen, onClose }) {
         const payload = {
             question: title,
             description: content,
-            userId: 1 // <-- or user.id from context
+            userId: user.id   // <-- REAL logged-in user ID
         };
 
         try {
@@ -42,79 +43,51 @@ export default function CreatePostModal({ isOpen, onClose }) {
             }
         } catch (error) {
             console.error("Error creating post:", error);
+            alert("Something went wrong!");
         } finally {
             setLoading(false);
         }
     };
 
-
-    const handleImageChange = (e) => {
-        setImage(e.target.files[0]);
-    };
-
-    // ✨ Close when clicking outside the box
-    const handleOverlayClick = (e) => {
-        if (e.target === e.currentTarget) {
-            onClose();
-        }
-    };
-
     return (
         <div
-            onClick={handleOverlayClick}
+            onClick={(e) => e.target === e.currentTarget && onClose()}
             className="fixed inset-0 bg-black bg-opacity-60 backdrop-blur-sm flex items-center justify-center z-50"
         >
-            <div className="bg-background-secondary w-full max-w-md rounded-xl shadow-xl p-6 relative animate-fadeIn border border-border-primary">
-                <button
-                    onClick={onClose}
-                    className="absolute right-3 top-3 text-text-secondary hover:text-text-primary"
-                >
+            <div className="bg-background-secondary w-full max-w-md rounded-xl shadow-xl p-6 relative border border-border-primary">
+                <button onClick={onClose} className="absolute right-3 top-3">
                     <X size={22} />
                 </button>
 
-                <h2 className="text-xl font-bold mb-4 text-text-primary">Create a New Post</h2>
+                <h2 className="text-xl font-bold mb-4">Create a New Post</h2>
                 <form onSubmit={handleSubmit}>
-                    <div className="mb-4">
-                        <label className="block text-text-primary mb-2">Title</label>
-                        <input
-                            type="text"
-                            value={title}
-                            onChange={(e) => setTitle(e.target.value)}
-                            className="w-full p-2 border border-border rounded  text-text-primary"
-                            required
-                        />
-                    </div>
-                    <div className="mb-4">
-                        <label className="block text-text-primary mb-2">Content</label>
-                        <textarea
-                            value={content}
-                            onChange={(e) => setContent(e.target.value)}
-                            className="w-full p-2 border border-border rounded  text-text-primary"
-                            rows="4"
-                            required
-                        />
-                    </div>
-                    <div className="mb-4">
-                        <label className="block text-text-primary mb-2">Image (optional)</label>
-                        <input
-                            type="file"
-                            accept="image/*"
-                            onChange={handleImageChange}
-                            className="w-full p-2 border border-border rounded  text-text-primary"
-                        />
-                    </div>
-                    <div className="flex justify-end">
-                        <button
-                            type="submit"
-                            disabled={loading}
-                            className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 disabled:opacity-50"
-                        >
-                            {loading ? "Creating..." : "Create Post"}
-                        </button>
-                    </div>
+                    <input
+                        type="text"
+                        value={title}
+                        onChange={(e) => setTitle(e.target.value)}
+                        placeholder="Title"
+                        className="w-full p-2 border rounded mb-4"
+                        required
+                    />
+
+                    <textarea
+                        value={content}
+                        onChange={(e) => setContent(e.target.value)}
+                        placeholder="Content"
+                        rows="4"
+                        className="w-full p-2 border rounded mb-4"
+                        required
+                    />
+
+                    <button
+                        type="submit"
+                        disabled={loading}
+                        className="px-4 py-2 bg-blue-500 text-white rounded w-full"
+                    >
+                        {loading ? "Creating..." : "Create Post"}
+                    </button>
                 </form>
             </div>
         </div>
     );
 }
-
