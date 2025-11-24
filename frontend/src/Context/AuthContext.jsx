@@ -54,7 +54,7 @@ export const AuthProvider = ({ children }) => {
             email,
             password,
             isYoutuber,
-            youTubeChannelLink: youtubeChannelLink,
+            YouTubeChannelLink: youtubeChannelLink,
         };
 
         const res = await fetch(`${API_BASE_URL}/user`, {
