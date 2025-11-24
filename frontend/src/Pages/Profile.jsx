@@ -10,6 +10,8 @@ export default function Profile() {
     const [fullUser, setFullUser] = useState(null);
     const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false);
     const [loading, setLoading] = useState(true);
+    const [posts, setPosts] = useState([]);
+
 
     const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "https://geekzkai.onrender.com/api";
 
@@ -21,6 +23,16 @@ export default function Profile() {
                 .then((res) => res.ok ? res.json() : null)
                 .then((data) => {
                     setFullUser(data);
+
+                    // 👉 Fetch posts and filter only those from this user
+                    return fetch(`${API_BASE_URL}/posts`, {
+                        headers: { Authorization: `Bearer ${token}` },
+                    });
+                })
+                .then(res => res.json())
+                .then(allPosts => {
+                    const myPosts = allPosts.filter(p => p.userId === user.id);
+                    setPosts(myPosts);
                     setLoading(false);
                 })
                 .catch(() => setLoading(false));
@@ -28,6 +40,7 @@ export default function Profile() {
             setLoading(false);
         }
     }, [token]);
+
 
     const handleLogout = () => {
         logout();
@@ -137,6 +150,26 @@ export default function Profile() {
                             </span>
                         )}
                     </div>
+                </div>
+
+                <div className="bg-[#16161a] border border-[#1f1f23] rounded-lg p-6 shadow-lg">
+                    <h3 className="text-lg font-semibold mb-4">Posts</h3>
+                    <div className="space-y-3 text-gray-300">
+                        {posts.length === 0 ? (
+                            <p className="text-gray-500">No posts yet.</p>
+                        ) : (
+                            posts.map((post) => (
+                                <div key={post.id} className="border border-[#2a2a2f] p-4 rounded-lg bg-[#1c1c20]">
+                                    <h4 className="font-semibold text-white">{post.question}</h4>
+                                    <p className="text-gray-400 text-sm">{post.description}</p>
+                                    <p className="text-xs text-gray-500">
+                                        {new Date(post.createdAt).toLocaleString()}
+                                    </p>
+                                </div>
+                            ))
+                        )}
+                    </div>
+
                 </div>
             </div>
 
