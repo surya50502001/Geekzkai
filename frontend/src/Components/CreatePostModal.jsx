@@ -17,25 +17,24 @@ export default function CreatePostModal({ isOpen, onClose }) {
         e.preventDefault();
         setLoading(true);
 
-        const formData = new FormData();
-        formData.append("title", title);
-        formData.append("content", content);
-        if (image) formData.append("image", image);
+        const payload = {
+            question: title,
+            description: content,
+            userId: 1 // <-- or user.id from context
+        };
 
         try {
             const response = await fetch(`${API_BASE_URL}/posts`, {
                 method: "POST",
                 headers: {
+                    "Content-Type": "application/json",
                     Authorization: `Bearer ${token}`,
                 },
-                body: formData,
+                body: JSON.stringify(payload),
             });
 
             if (response.ok) {
                 alert("Post created successfully!");
-                setTitle("");
-                setContent("");
-                setImage(null);
                 onClose();
                 window.location.reload();
             } else {
@@ -43,11 +42,11 @@ export default function CreatePostModal({ isOpen, onClose }) {
             }
         } catch (error) {
             console.error("Error creating post:", error);
-            alert("An error occurred while creating the post");
         } finally {
             setLoading(false);
         }
     };
+
 
     const handleImageChange = (e) => {
         setImage(e.target.files[0]);
