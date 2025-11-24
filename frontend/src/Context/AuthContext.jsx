@@ -2,7 +2,7 @@
 
 const AuthContext = createContext();
 
-// 🔥 Backend base URL ALWAYS including /api
+// API base
 const API_BASE_URL =
     import.meta.env.VITE_API_BASE_URL ||
     "https://geekzkai.onrender.com/api";
@@ -42,29 +42,31 @@ export const AuthProvider = ({ children }) => {
         setUser(data.user);
     };
 
-    const register = async (username, email, password, isYoutuber, youtubeChannelLink = null) => {
+    const register = async (username, email, password, channelLink = null) => {
+        const payload = {
+            username,
+            email,
+            passwordHash: password,   // backend expects passwordHash
+            channelLink: channelLink, // backend expects channelLink
+        };
+
         const res = await fetch(`${API_BASE_URL}/user`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-                username,
-                email,
-                password,
-                isYoutuber,
-                youtubeChannelLink,
-            }),
+            body: JSON.stringify(payload),
         });
 
         if (!res.ok) {
-            const errorData = await res.json().catch(() => ({ message: `Request failed with status ${res.status}` }));
-            console.error("Registration error response:", errorData);
+            const errorData = await res.json().catch(() => ({ message: `Request failed ${res.status}` }));
+            console.error("Registration error:", errorData);
             throw errorData;
         }
 
         const data = await res.json();
 
-        // Auto login after successful register
+        // Auto-login
         await login(email, password);
+
         return data;
     };
 
