@@ -60,11 +60,18 @@ namespace geekzKai.Controllers
 
         // POST: api/posts
         [HttpPost]
+        [Microsoft.AspNetCore.Authorization.Authorize]
         public async Task<IActionResult> CreatePost([FromBody] Post post)
         {
             if (post == null)
                 return BadRequest("Invalid post data");
 
+            var userId = User.Claims.FirstOrDefault(c => c.Type == "uid")?.Value;
+
+            if (string.IsNullOrEmpty(userId))
+                return Unauthorized();
+
+            post.UserId = int.Parse(userId);
             post.CreatedAt = DateTime.UtcNow;
 
             _context.Posts.Add(post);
