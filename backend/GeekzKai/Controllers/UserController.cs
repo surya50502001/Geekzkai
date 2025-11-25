@@ -24,7 +24,7 @@ namespace geekzKai.Controllers
             _config = config;
         }
 
-        // GET: api/User
+        // GET ALL USERS
         [HttpGet]
         public async Task<IActionResult> GetUsers()
         {
@@ -36,21 +36,21 @@ namespace geekzKai.Controllers
             return Ok(users);
         }
 
-        // GET: api/User/5
+        // GET SINGLE USER
         [HttpGet("{id}")]
         public async Task<IActionResult> GetUser(int id)
         {
             var user = await _context.Users
                 .Include(u => u.Posts)
                 .Include(u => u.Comments)
-                .FirstOrDefaultAsync(u => u.Id == id);
+                .FirstOrDefaultAsync(u => u.User_Id == id);
 
             return user == null
                 ? NotFound(new { message = "User not found" })
                 : Ok(user);
         }
 
-        // POST: api/User
+        // REGISTER
         [HttpPost]
         public async Task<IActionResult> Register([FromBody] RegisterRequest request)
         {
@@ -58,7 +58,7 @@ namespace geekzKai.Controllers
                 return BadRequest(ModelState);
 
             var exists = await _context.Users
-                .AnyAsync(u => u.Username == request.Username || u.Email == request.Email);
+                .AnyAsync(u => u.Username == request.Username || u.User_Email == request.Email);
 
             if (exists)
                 return BadRequest(new { message = "Username or Email already taken." });
@@ -66,61 +66,86 @@ namespace geekzKai.Controllers
             var newUser = new User
             {
                 Username = request.Username,
-                Email = request.Email,
-                PasswordHash = BCrypt.Net.BCrypt.HashPassword(request.Password),
-                CreatedAt = DateTime.UtcNow,
+                User_Email = request.Email,
+                User_Password = BCrypt.Net.BCrypt.HashPassword(request.Password),
+                User_CreatedAt = DateTime.UtcNow,
                 IsYoutuber = request.IsYoutuber,
-                YouTubeChannelLink = request.YouTubeChannelLink
+                YouTubeChannellink = request.YouTubeChannelLink,
+                AuthProvider = "local"
             };
 
             await _context.Users.AddAsync(newUser);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction(nameof(GetUser), new { id = newUser.Id }, newUser);
+            return CreatedAtAction(nameof(GetUser), new { id = newUser.User_Id }, newUser);
         }
 
-        // PUT: api/User/5
+        // UPDATE USER
         [HttpPut("{id}")]
         public async Task<IActionResult> Update(int id, [FromBody] User update)
         {
             var user = await _context.Users.FindAsync(id);
-            if (user == null) return NotFound(new { message = "User not found" });
+            if (user == null)
+                return NotFound(new { message = "User not found" });
 
             user.Username = update.Username ?? user.Username;
-            user.Email = update.Email ?? user.Email;
+            user.User_Email = update.User_Email ?? user.User_Email;
 
-            if (!string.IsNullOrEmpty(update.PasswordHash))
-                user.PasswordHash = BCrypt.Net.BCrypt.HashPassword(update.PasswordHash);
+            if (!string.IsNullOrEmpty(update.User_Password))
+                user.User_Password = BCrypt.Net.BCrypt.HashPassword(update.User_Password);
+
+            user.Bio = update.Bio ?? user.Bio;
+            user.ProfilePictureUrl = update.ProfilePictureUrl ?? user.ProfilePictureUrl;
+            user.YouTubeChannellink = update.YouTubeChannellink ?? user.YouTubeChannellink;
 
             await _context.SaveChangesAsync();
             return NoContent();
         }
 
-        // DELETE: api/User/5
+        // DELETE USER
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
             var user = await _context.Users.FindAsync(id);
-            if (user == null) return NotFound(new { message = "User not found" });
+            if (user == null)
+                return NotFound(new { message = "User not found" });
 
             _context.Users.Remove(user);
             await _context.SaveChangesAsync();
             return NoContent();
         }
 
-        // POST: api/User/login
+        // LOGIN
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] LoginRequest request)
         {
-            var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == request.Email);
-            if (user == null || !BCrypt.Net.BCrypt.Verify(request.Password, user.PasswordHash))
+            var user = await _context.Users
+                .FirstOrDefaultAsync(u => u.User_Email == request.Email);
+
+            if (user == null || string.IsNullOrEmpty(user.User_Password))
                 return Unauthorized(new { message = "Invalid email or password" });
 
+            if (!BCrypt.Net.BCrypt.Verify(request.Password, user.User_Password))
+                return Unauthorized(new { message = "Invalid email or password" });
+
+            user.LastLoginAt = DateTime.UtcNow;
+            await _context.SaveChangesAsync();
+
             var token = GenerateJwtToken(user);
-            return Ok(new { token, user = new { user.Id, user.Username, user.Email } });
+
+            return Ok(new
+            {
+                token,
+                user = new
+                {
+                    user.User_Id,
+                    user.Username,
+                    user.User_Email
+                }
+            });
         }
 
-        // GET: api/User/me
+        // GET LOGGED IN USER
         [Authorize]
         [HttpGet("me")]
         public async Task<IActionResult> GetMe()
@@ -130,11 +155,12 @@ namespace geekzKai.Controllers
             var user = await _context.Users
                 .Include(u => u.Posts)
                 .Include(u => u.Comments)
-                .FirstOrDefaultAsync(u => u.Id == userId);
+                .FirstOrDefaultAsync(u => u.User_Id == userId);
 
             return user == null ? NotFound(new { message = "User not found" }) : Ok(user);
         }
 
+        // JWT GENERATOR
         private string GenerateJwtToken(User user)
         {
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Jwt:Key"]!));
@@ -142,8 +168,8 @@ namespace geekzKai.Controllers
 
             var claims = new[]
             {
-                new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
-                new Claim(ClaimTypes.Email, user.Email),
+                new Claim(ClaimTypes.NameIdentifier, user.User_Id.ToString()),
+                new Claim(ClaimTypes.Email, user.User_Email),
                 new Claim(ClaimTypes.Name, user.Username)
             };
 

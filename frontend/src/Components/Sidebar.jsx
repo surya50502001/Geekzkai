@@ -1,4 +1,4 @@
-import { Home, User, Settings, Plus } from "lucide-react";
+import { Home, User, Settings, Plus, TrendingUp } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 import Resizable from "./Resizable";
 
@@ -10,6 +10,7 @@ export default function Sidebar() {
         { to: "/create", icon: Plus, label: "Create" }, // FIXED
         { to: "/settings", icon: Settings, label: "Settings" },
         { to: "/profile", icon: User, label: "Profile" },
+        { to: "/trending", icon: TrendingUp, label: "Trending" },
     ];
 
 

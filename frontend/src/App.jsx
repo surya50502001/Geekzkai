@@ -3,6 +3,7 @@ import Navbar from "./Components/Navbar"
 import Home from "./Pages/Home"
 import Login from "./Components/Login";
 import Register from "./Components/Register";
+import Trending from "./Pages/Trending";
 
 import { Navigate } from "react-router-dom";
 import { useAuth } from "./Context/AuthContext";
@@ -10,6 +11,8 @@ import Settings from "./Pages/Settings";
 import Profile from "./Pages/Profile";
 import CreatePostPage from "./Pages/CreatePostPage";
 import Sidebar from "./Components/Sidebar";
+
+
 
 
 function PrivateRoute({ children }) {
@@ -32,6 +35,8 @@ function App() {
                         <Route path="/create" element={<PrivateRoute><CreatePostPage /></PrivateRoute>} />
                         <Route path="/profile" element={<PrivateRoute><Profile /></PrivateRoute>} />
                         <Route path="/settings" element={<PrivateRoute><Settings /></PrivateRoute>} />
+                        <Route path="/trending" element={<Trending /> } />
+
                     </Routes>
                 </main>
             </div>

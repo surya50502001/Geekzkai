@@ -1,25 +1,46 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;   // <-- REQUIRED for [Key], [Required], [MaxLength], etc.
+using geekzKai.Models;                       // <-- Makes sure Post and Comment resolve
 
 namespace geekzKai.Models
 {
     public class User
     {
-        public int Id { get; set; }
-        public string Username { get; set; } = string.Empty;
-        public string Email { get; set; } = string.Empty;
-        public string PasswordHash { get; set; } = string.Empty;
-        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
-        public Boolean IsActive { get; set; } = true;
-        public Boolean IsYoutuber { get; set; } = false;
-        public Boolean IsAdmin { get; set; } = false;
-        public string? YouTubeChannelLink { get; set; }
+        [Key]
+        public int User_Id { get; set; }
 
-        public string? Bio { get; set; }                  // short about text
-        public string? ProfilePictureUrl { get; set; }    // for avatar image
-        public int FollowersCount { get; set; } = 0;      // follower metrics
+        [Required]
+        [MaxLength(50)]
+        public string Username { get; set; } = string.Empty;
+
+        [Required]
+        [EmailAddress]
+        public string User_Email { get; set; } = string.Empty;
+
+        public string? User_Password { get; set; }
+
+        public DateTime User_CreatedAt { get; set; } = DateTime.UtcNow;
+
+        [MaxLength(200)]
+        public string? Bio { get; set; }
+
+        public int FollowersCount { get; set; } = 0;
         public int FollowingCount { get; set; } = 0;
-        // Navigation properties
+
+        public bool IsActive { get; set; } = true;
+        public bool IsAdmin { get; set; } = false;
+        public bool IsYoutuber { get; set; } = false;
+
+        public string? ProfilePictureUrl { get; set; }
+        public string? YouTubeChannellink { get; set; }
+
+        [Required]
+        public string AuthProvider { get; set; } = "local";
+
+        public DateTime? LastLoginAt { get; set; }
+
+        // Navigation
         public List<Post> Posts { get; set; } = new();
         public List<Comment> Comments { get; set; } = new();
     }
