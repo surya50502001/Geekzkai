@@ -1,4 +1,4 @@
-﻿using geekzKai.Data;
+using geekzKai.Data;
 using geekzKai.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -22,7 +22,7 @@ namespace geekzKai.Controllers
         public async Task<IActionResult> ToggleUpvote([FromBody] Upvote upvote)
         {
             // find the post
-            var post = await _context.Posts.FindAsync(upvote.PostId);
+            var post = await _context.Posts.Include(p => p.Upvotes).FirstOrDefaultAsync(p => p.Id == upvote.PostId);
 
             if (post == null)
                 return NotFound(new { message = "Post not found" });
@@ -35,17 +35,12 @@ namespace geekzKai.Controllers
             if (existingUpvote != null)
             {
                 _context.Upvotes.Remove(existingUpvote);
-
-                if (post.Upvotes > 0)
-                    post.Upvotes--;
-
                 await _context.SaveChangesAsync();
                 return Ok(new { message = "Upvote removed." });
             }
 
             // if not, add new upvote
             _context.Upvotes.Add(upvote);
-            post.Upvotes++;
             await _context.SaveChangesAsync();
 
             return Ok(new { message = "Upvoted successfully!" });
@@ -54,11 +49,11 @@ namespace geekzKai.Controllers
         [HttpGet("post/{postId}")]
         public async Task<IActionResult> GetUpvoteCount(int postId)
         {
-            var post = await _context.Posts.FindAsync(postId);
+            var post = await _context.Posts.Include(p => p.Upvotes).FirstOrDefaultAsync(p => p.Id == postId);
             if (post == null)
                 return NotFound(new { message = "Post not found" });
 
-            return Ok(new { postId = postId, upvotes = post.Upvotes });
+            return Ok(new { postId = postId, upvotes = post.Upvotes.Count });
         }
     }
 }

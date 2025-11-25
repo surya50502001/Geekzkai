@@ -29,6 +29,20 @@ namespace geekzKai.Controllers
                 .ToListAsync();
         }
 
+        // GET: api/posts/trending
+        [HttpGet("trending")]
+        public async Task<ActionResult<IEnumerable<Post>>> GetTrendingPosts()
+        {
+            var trendingPosts = await _context.Posts
+                .Include(p => p.User)
+                .Include(p => p.Comments)
+                .OrderByDescending(p => p.Upvotes.Count(uv => uv.VotedAt > DateTime.UtcNow.AddDays(-7)))
+                .Take(10)
+                .ToListAsync();
+
+            return Ok(trendingPosts);
+        }
+
         // GET: api/posts/{id}
         [HttpGet("{id}")]
         public async Task<ActionResult<Post>> GetPost(int id)

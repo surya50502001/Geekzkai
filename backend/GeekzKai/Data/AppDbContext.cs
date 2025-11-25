@@ -24,7 +24,6 @@ namespace geekzKai.Data
                 entity.Property(p => p.Id).HasColumnName("Post_Id");
                 entity.Property(p => p.Question).HasColumnName("Post_Question");
                 entity.Property(p => p.Description).HasColumnName("Post_Description");
-                entity.Property(p => p.Upvotes).HasColumnName("Post_Upvotes");
                 entity.Property(p => p.CreatedAt).HasColumnName("Post_CreatedAt");
                 entity.Property(p => p.UserId).HasColumnName("Post_UserId");
             });
@@ -113,7 +112,7 @@ namespace geekzKai.Data
             // UPVOTE — POST
             modelBuilder.Entity<Upvote>()
                 .HasOne(u => u.Post)
-                .WithMany()
+                .WithMany(p => p.Upvotes)
                 .HasForeignKey(u => u.PostId)
                 .OnDelete(DeleteBehavior.Cascade);
         }
