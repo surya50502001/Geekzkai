@@ -21,13 +21,9 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy(corsPolicy, policy =>
     {
-        policy.WithOrigins(
-            "https://geekzkai-1.onrender.com",
-            "http://localhost:5173"
-        )
+        policy.AllowAnyOrigin()
         .AllowAnyHeader()
-        .AllowAnyMethod()
-        .AllowCredentials();
+        .AllowAnyMethod();
     });
 });
 
