@@ -43,7 +43,7 @@ namespace geekzKai.Controllers
             var user = await _context.Users
                 .Include(u => u.Posts)
                 .Include(u => u.Comments)
-                .FirstOrDefaultAsync(u => u.User_Id == id);
+                .FirstOrDefaultAsync(u => u.Id == id);
 
             return user == null
                 ? NotFound(new { message = "User not found" })
@@ -58,7 +58,7 @@ namespace geekzKai.Controllers
                 return BadRequest(ModelState);
 
             var exists = await _context.Users
-                .AnyAsync(u => u.Username == request.Username || u.User_Email == request.Email);
+                .AnyAsync(u => u.Username == request.Username || u.Email == request.Email);
 
             if (exists)
                 return BadRequest(new { message = "Username or Email already taken." });
@@ -66,18 +66,18 @@ namespace geekzKai.Controllers
             var newUser = new User
             {
                 Username = request.Username,
-                User_Email = request.Email,
-                User_Password = BCrypt.Net.BCrypt.HashPassword(request.Password),
-                User_CreatedAt = DateTime.UtcNow,
+                Email = request.Email,
+                Password = BCrypt.Net.BCrypt.HashPassword(request.Password),
+                CreatedAt = DateTime.UtcNow,
                 IsYoutuber = request.IsYoutuber,
-                YouTubeChannellink = request.YouTubeChannelLink,
+                YouTubeChannelLink = request.YouTubeChannelLink,
                 AuthProvider = "local"
             };
 
             await _context.Users.AddAsync(newUser);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction(nameof(GetUser), new { id = newUser.User_Id }, newUser);
+            return CreatedAtAction(nameof(GetUser), new { id = newUser.Id }, newUser);
         }
 
         // UPDATE USER
@@ -89,14 +89,14 @@ namespace geekzKai.Controllers
                 return NotFound(new { message = "User not found" });
 
             user.Username = update.Username ?? user.Username;
-            user.User_Email = update.User_Email ?? user.User_Email;
+            user.Email = update.Email ?? user.Email;
 
-            if (!string.IsNullOrEmpty(update.User_Password))
-                user.User_Password = BCrypt.Net.BCrypt.HashPassword(update.User_Password);
+            if (!string.IsNullOrEmpty(update.Password))
+                user.Password = BCrypt.Net.BCrypt.HashPassword(update.Password);
 
             user.Bio = update.Bio ?? user.Bio;
             user.ProfilePictureUrl = update.ProfilePictureUrl ?? user.ProfilePictureUrl;
-            user.YouTubeChannellink = update.YouTubeChannellink ?? user.YouTubeChannellink;
+            user.YouTubeChannelLink = update.YouTubeChannelLink ?? user.YouTubeChannelLink;
 
             await _context.SaveChangesAsync();
             return NoContent();
@@ -120,12 +120,12 @@ namespace geekzKai.Controllers
         public async Task<IActionResult> Login([FromBody] LoginRequest request)
         {
             var user = await _context.Users
-                .FirstOrDefaultAsync(u => u.User_Email == request.Email);
+                .FirstOrDefaultAsync(u => u.Email == request.Email);
 
-            if (user == null || string.IsNullOrEmpty(user.User_Password))
+            if (user == null || string.IsNullOrEmpty(user.Password))
                 return Unauthorized(new { message = "Invalid email or password" });
 
-            if (!BCrypt.Net.BCrypt.Verify(request.Password, user.User_Password))
+            if (!BCrypt.Net.BCrypt.Verify(request.Password, user.Password))
                 return Unauthorized(new { message = "Invalid email or password" });
 
             user.LastLoginAt = DateTime.UtcNow;
@@ -138,9 +138,9 @@ namespace geekzKai.Controllers
                 token,
                 user = new
                 {
-                    user.User_Id,
+                    user.Id,
                     user.Username,
-                    user.User_Email
+                    user.Email
                 }
             });
         }
@@ -155,7 +155,7 @@ namespace geekzKai.Controllers
             var user = await _context.Users
                 .Include(u => u.Posts)
                 .Include(u => u.Comments)
-                .FirstOrDefaultAsync(u => u.User_Id == userId);
+                .FirstOrDefaultAsync(u => u.Id == userId);
 
             return user == null ? NotFound(new { message = "User not found" }) : Ok(user);
         }
@@ -168,8 +168,8 @@ namespace geekzKai.Controllers
 
             var claims = new[]
             {
-                new Claim(ClaimTypes.NameIdentifier, user.User_Id.ToString()),
-                new Claim(ClaimTypes.Email, user.User_Email),
+                new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
+                new Claim(ClaimTypes.Email, user.Email),
                 new Claim(ClaimTypes.Name, user.Username)
             };
 

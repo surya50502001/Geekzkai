@@ -33,11 +33,11 @@ namespace geekzKai.Data
             // --------------------------
             modelBuilder.Entity<User>(entity =>
             {
-                entity.Property(u => u.User_Id).HasColumnName("User_Id");
+                entity.Property(u => u.Id).HasColumnName("User_Id");
                 entity.Property(u => u.Username).HasColumnName("Username");
-                entity.Property(u => u.User_Email).HasColumnName("User_Email");
-                entity.Property(u => u.User_Password).HasColumnName("User_Password");
-                entity.Property(u => u.User_CreatedAt).HasColumnName("User_CreatedAt");
+                entity.Property(u => u.Email).HasColumnName("User_Email");
+                entity.Property(u => u.Password).HasColumnName("User_Password");
+                entity.Property(u => u.CreatedAt).HasColumnName("User_CreatedAt");
                 entity.Property(u => u.Bio).HasColumnName("User_Bio");
                 entity.Property(u => u.FollowersCount).HasColumnName("FollowersCount");
                 entity.Property(u => u.FollowingCount).HasColumnName("FollowingCount");
@@ -45,7 +45,7 @@ namespace geekzKai.Data
                 entity.Property(u => u.IsAdmin).HasColumnName("IsAdmin");
                 entity.Property(u => u.IsYoutuber).HasColumnName("IsYoutuber");
                 entity.Property(u => u.ProfilePictureUrl).HasColumnName("ProfilePictureUrl");
-                entity.Property(u => u.YouTubeChannellink).HasColumnName("YouTubeChannellink");
+                entity.Property(u => u.YouTubeChannelLink).HasColumnName("YouTubeChannellink");
                 entity.Property(u => u.AuthProvider).HasColumnName("AuthProvider");
                 entity.Property(u => u.LastLoginAt).HasColumnName("LastLoginAt");
             });
