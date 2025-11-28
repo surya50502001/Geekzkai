@@ -66,7 +66,7 @@ namespace geekzKai.Controllers
             if (post == null)
                 return BadRequest("Invalid post data");
 
-            var userId = User.Claims.FirstOrDefault(c => c.Type == "uid")?.Value;
+            var userId = User.FindFirstValue(System.Security.Claims.ClaimTypes.NameIdentifier);
 
             if (string.IsNullOrEmpty(userId))
                 return Unauthorized();
