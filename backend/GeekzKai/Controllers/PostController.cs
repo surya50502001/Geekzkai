@@ -83,12 +83,24 @@ namespace geekzKai.Controllers
 
         // PUT: api/posts/{id}
         [HttpPut("{id}")]
+        [Microsoft.AspNetCore.Authorization.Authorize]
         public async Task<IActionResult> UpdatePost(int id, [FromBody] Post post)
         {
             if (id != post.Id)
                 return BadRequest();
 
-            _context.Entry(post).State = EntityState.Modified;
+            var userId = User.FindFirstValue(System.Security.Claims.ClaimTypes.NameIdentifier);
+            var postToUpdate = await _context.Posts.FindAsync(id);
+
+            if (postToUpdate == null)
+                return NotFound(new { message = "Post not found" });
+
+            if (postToUpdate.UserId.ToString() != userId)
+                return Forbid();
+
+            postToUpdate.Question = post.Question;
+            postToUpdate.Description = post.Description;
+
             await _context.SaveChangesAsync();
 
             return NoContent();
@@ -96,12 +108,17 @@ namespace geekzKai.Controllers
 
         // DELETE: api/posts/{id}
         [HttpDelete("{id}")]
+        [Microsoft.AspNetCore.Authorization.Authorize]
         public async Task<IActionResult> DeletePost(int id)
         {
+            var userId = User.FindFirstValue(System.Security.Claims.ClaimTypes.NameIdentifier);
             var post = await _context.Posts.FindAsync(id);
 
             if (post == null)
                 return NotFound(new { message = "Post not found" });
+
+            if (post.UserId.ToString() != userId)
+                return Forbid();
 
             _context.Posts.Remove(post);
             await _context.SaveChangesAsync();
