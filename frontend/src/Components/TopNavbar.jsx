@@ -9,7 +9,7 @@ export default function TopNavbar() {
     return (
         <nav className="hidden md:flex border-b border-gray-200 dark:border-gray-700 bg-white/80 dark:bg-gray-900/80 backdrop-blur-md p-4 items-center sticky top-0 z-40" style={{ marginLeft: 'var(--sidebar-width, 0px)' }}>
             <div className="flex-1">
-                <Link to="/" className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+                <Link to="/" className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-teal-500 bg-clip-text text-transparent">
                     GeekzKai
                 </Link>
             </div>
@@ -39,7 +39,7 @@ export default function TopNavbar() {
                                 to="/profile" 
                                 className="flex items-center gap-2 p-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors"
                             >
-                                <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center">
+                                <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-teal-500 rounded-full flex items-center justify-center">
                                     <User size={16} className="text-white" />
                                 </div>
                                 <span className="text-sm font-medium text-gray-700 dark:text-gray-300">{user.username}</span>
@@ -62,7 +62,7 @@ export default function TopNavbar() {
                         </Link>
                         <Link 
                             to="/register" 
-                            className="px-4 py-2 bg-gradient-to-r from-blue-500 to-purple-600 text-white rounded-lg hover:from-blue-600 hover:to-purple-700 transition-all duration-200 font-medium"
+                            className="px-4 py-2 bg-gradient-to-r from-blue-500 to-teal-500 text-white rounded-lg hover:from-blue-600 hover:to-teal-600 transition-all duration-200 font-medium"
                         >
                             Sign Up
                         </Link>

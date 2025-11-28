@@ -57,7 +57,7 @@ export default function CreatePostModal({ isOpen, onClose }) {
         >
             <div className="bg-white dark:bg-gray-900 w-full max-w-lg rounded-2xl shadow-2xl border border-gray-200 dark:border-gray-700 overflow-hidden animate-in zoom-in-95 duration-200">
                 {/* Header */}
-                <div className="bg-gradient-to-r from-blue-500 to-purple-600 p-6 text-white relative">
+                <div className="bg-gradient-to-r from-blue-500 to-teal-500 p-6 text-white relative">
                     <button 
                         onClick={onClose} 
                         className="absolute right-4 top-4 p-2 hover:bg-white/20 rounded-full transition-colors"
@@ -124,7 +124,7 @@ export default function CreatePostModal({ isOpen, onClose }) {
                             <button
                                 type="submit"
                                 disabled={loading || !title.trim() || !content.trim()}
-                                className="flex-1 px-6 py-3 bg-gradient-to-r from-blue-500 to-purple-600 text-white rounded-xl hover:from-blue-600 hover:to-purple-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 font-medium flex items-center justify-center gap-2"
+                                className="flex-1 px-6 py-3 bg-gradient-to-r from-blue-500 to-teal-500 text-white rounded-xl hover:from-blue-600 hover:to-teal-600 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 font-medium flex items-center justify-center gap-2"
                             >
                                 {loading ? (
                                     <>

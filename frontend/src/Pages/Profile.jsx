@@ -80,9 +80,9 @@ export default function Profile() {
     }
 
     return (
-        <div className="min-h-screen bg-yellow-50 dark:bg-purple-900">
+        <div className="min-h-screen bg-slate-50 dark:bg-slate-900">
             {/* Header */}
-            <div className="bg-white dark:bg-purple-800 border-b border-yellow-200 dark:border-purple-700 sticky top-0 z-20">
+            <div className="bg-white dark:bg-slate-800 border-b border-slate-200 dark:border-slate-700 sticky top-0 z-20">
                 <div className="px-4 py-3 flex justify-between items-center">
                     <h1 className="text-xl font-semibold text-gray-900 dark:text-white">{fullUser.username}</h1>
                     <button
@@ -207,7 +207,7 @@ export default function Profile() {
                             </span>
                         )}
                         {fullUser.isAdmin && (
-                            <span className="inline-flex items-center px-2 py-1 rounded text-xs font-medium bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-400">
+                            <span className="inline-flex items-center px-2 py-1 rounded text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400">
                                 Admin
                             </span>
                         )}
