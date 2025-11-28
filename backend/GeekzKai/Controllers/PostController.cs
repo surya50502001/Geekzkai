@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace geekzKai.Controllers
@@ -66,7 +67,7 @@ namespace geekzKai.Controllers
             if (post == null)
                 return BadRequest("Invalid post data");
 
-            var userId = User.FindFirstValue(System.Security.Claims.ClaimTypes.NameIdentifier);
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
             if (string.IsNullOrEmpty(userId))
                 return Unauthorized();
@@ -89,7 +90,7 @@ namespace geekzKai.Controllers
             if (id != post.Id)
                 return BadRequest();
 
-            var userId = User.FindFirstValue(System.Security.Claims.ClaimTypes.NameIdentifier);
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             var postToUpdate = await _context.Posts.FindAsync(id);
 
             if (postToUpdate == null)
@@ -111,7 +112,7 @@ namespace geekzKai.Controllers
         [Microsoft.AspNetCore.Authorization.Authorize]
         public async Task<IActionResult> DeletePost(int id)
         {
-            var userId = User.FindFirstValue(System.Security.Claims.ClaimTypes.NameIdentifier);
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             var post = await _context.Posts.FindAsync(id);
 
             if (post == null)
