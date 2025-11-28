@@ -15,7 +15,7 @@ function Register() {
 
     useEffect(() => {
         if (user) {
-            navigate("/profile");
+            navigate("/");
         }
     }, [user, navigate]);
 

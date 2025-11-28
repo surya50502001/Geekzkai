@@ -16,30 +16,36 @@ export default function Profile() {
     const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "https://geekzkai.onrender.com/api";
 
     useEffect(() => {
-        if (token) {
+        if (token && user) {
             fetch(`${API_BASE_URL}/user/me`, {
                 headers: { Authorization: `Bearer ${token}` },
             })
-                .then((res) => res.ok ? res.json() : null)
+                .then((res) => {
+                    if (!res.ok) throw new Error('Failed to fetch user');
+                    return res.json();
+                })
                 .then((data) => {
                     setFullUser(data);
-
-                    // 👉 Fetch posts and filter only those from this user
-                    return fetch(`${API_BASE_URL}/posts`, {
-                        headers: { Authorization: `Bearer ${token}` },
-                    });
+                    return fetch(`${API_BASE_URL}/posts`);
                 })
-                .then(res => res.json())
+                .then(res => {
+                    if (!res.ok) throw new Error('Failed to fetch posts');
+                    return res.json();
+                })
                 .then(allPosts => {
                     const myPosts = allPosts.filter(p => p.userId === user.id);
                     setPosts(myPosts);
-                    setLoading(false);
                 })
-                .catch(() => setLoading(false));
+                .catch((error) => {
+                    console.error('Profile fetch error:', error);
+                })
+                .finally(() => setLoading(false));
+        } else if (!token) {
+            navigate('/login');
         } else {
             setLoading(false);
         }
-    }, [token]);
+    }, [token, user, navigate]);
 
 
     const handleLogout = () => {
@@ -47,8 +53,32 @@ export default function Profile() {
         navigate("/login");
     };
 
-    if (loading) return <div className="flex justify-center items-center h-screen text-text-primary">Loading...</div>;
-    if (!fullUser) return <div className="flex justify-center items-center h-screen text-text-primary">Unable to load profile</div>;
+    if (loading) {
+        return (
+            <div className="flex justify-center items-center h-screen">
+                <div className="text-center">
+                    <div className="w-8 h-8 border-2 border-blue-500 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+                    <p className="text-gray-600 dark:text-gray-400">Loading profile...</p>
+                </div>
+            </div>
+        );
+    }
+    
+    if (!fullUser) {
+        return (
+            <div className="flex justify-center items-center h-screen">
+                <div className="text-center">
+                    <p className="text-gray-600 dark:text-gray-400 mb-4">Unable to load profile</p>
+                    <button 
+                        onClick={() => navigate('/')}
+                        className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors"
+                    >
+                        Go Home
+                    </button>
+                </div>
+            </div>
+        );
+    }
 
     return (
         <div className="w-full min-h-screen bg-[#0f0f11] text-white">
