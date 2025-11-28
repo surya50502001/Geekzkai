@@ -27,7 +27,7 @@ function PrivateRoute({ children }) {
 function App() {
     return (
         <Router>
-        <div className="min-h-screen text-text-primary transition-colors duration-500" style={{ background: 'var(--background-primary)' }}>
+        <div className="min-h-screen bg-yellow-50 dark:bg-purple-900 text-gray-900 dark:text-white transition-colors duration-500">
                 <Navbar />
                 <div className="hidden md:block">
                     <Sidebar />

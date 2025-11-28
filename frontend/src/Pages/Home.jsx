@@ -31,7 +31,7 @@ function Home() {
     };
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
+        <div className="min-h-screen bg-gradient-to-br from-yellow-50 via-white to-yellow-100 dark:from-purple-900 dark:via-purple-800 dark:to-purple-900">
             {/* Hero Section */}
             <div className="relative overflow-hidden">
                 <div className="absolute inset-0 bg-gradient-to-r from-blue-600/10 to-purple-600/10 dark:from-blue-400/5 dark:to-purple-400/5" />

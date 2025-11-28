@@ -80,9 +80,9 @@ export default function Profile() {
     }
 
     return (
-        <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+        <div className="min-h-screen bg-yellow-50 dark:bg-purple-900">
             {/* Header */}
-            <div className="bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800 sticky top-0 z-20">
+            <div className="bg-white dark:bg-purple-800 border-b border-yellow-200 dark:border-purple-700 sticky top-0 z-20">
                 <div className="px-4 py-3 flex justify-between items-center">
                     <h1 className="text-xl font-semibold text-gray-900 dark:text-white">{fullUser.username}</h1>
                     <button
