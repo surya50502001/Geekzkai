@@ -6,6 +6,34 @@
 
 :root {
     --sidebar-width: 300px;
+    
+    /* Light theme colors */
+    --text-primary: #1f2937;
+    --text-secondary: #6b7280;
+    --background-primary: #ffffff;
+    --background-secondary: #f9fafb;
+    --primary: #3b82f6;
+    --primary-dark: #2563eb;
+    --secondary: #e5e7eb;
+    --border-primary: #d1d5db;
+    --success: #10b981;
+    --error: #ef4444;
+    --background-color: #ffffff;
+}
+
+.dark {
+    /* Dark theme colors */
+    --text-primary: #f9fafb;
+    --text-secondary: #9ca3af;
+    --background-primary: #111827;
+    --background-secondary: #1f2937;
+    --primary: #60a5fa;
+    --primary-dark: #3b82f6;
+    --secondary: #374151;
+    --border-primary: #4b5563;
+    --success: #34d399;
+    --error: #f87171;
+    --background-color: #111827;
 }
 
 @media (max-width: 768px) {
@@ -15,7 +43,7 @@
 }
 
 /* ============================
-   ANIMATED GRADIENT
+   ANIMATIONS
 ============================ */
 
 .animated-gradient {
@@ -25,27 +53,83 @@
 }
 
 @keyframes flowingGradient {
-    0% {
-        background-position: 0% 50%;
-    }
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
 
-    50% {
-        background-position: 100% 50%;
-    }
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
 
-    100% {
-        background-position: 0% 50%;
-    }
+@keyframes slideUp {
+    from { transform: translateY(20px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
+
+@keyframes zoomIn {
+    from { transform: scale(0.95); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+}
+
+.animate-in {
+    animation-fill-mode: both;
+}
+
+.fade-in {
+    animation: fadeIn 0.2s ease-out;
+}
+
+.slide-up {
+    animation: slideUp 0.3s ease-out;
+}
+
+.zoom-in-95 {
+    animation: zoomIn 0.2s ease-out;
 }
 
 /* ============================
-   OPTIONAL GLOBAL BASE
+   GLOBAL STYLES
 ============================ */
 
 body {
-    @apply bg-white text-black transition-colors duration-200 ease-in-out;
+    @apply transition-colors duration-300 ease-in-out;
+    background-color: var(--background-primary);
+    color: var(--text-primary);
 }
 
-.dark body {
-    @apply bg-black text-white;
+/* Custom scrollbar */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--background-secondary);
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--border-primary);
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--text-secondary);
+}
+
+/* Focus styles */
+.focus-ring {
+    @apply focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2;
+}
+
+/* Glass effect */
+.glass {
+    backdrop-filter: blur(10px);
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.dark .glass {
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.1);
 }
