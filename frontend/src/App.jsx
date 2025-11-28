@@ -32,7 +32,7 @@ function App() {
                 <div className="hidden md:block">
                     <Sidebar />
                 </div>
-                <main className="md:ml-[var(--sidebar-width,0px)]">
+                <main className="md:ml-[var(--sidebar-width,0px)] pb-20 md:pb-0">
                     <Routes>
                         <Route path="/" element={<Home />} />
                         <Route path="/login" element={<Login />} />
