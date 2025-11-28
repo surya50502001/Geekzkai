@@ -16,7 +16,12 @@ import Sidebar from "./Components/Sidebar";
 
 
 function PrivateRoute({ children }) {
-    const { user } = useAuth();
+    const { user, loading } = useAuth();
+    
+    if (loading) {
+        return <div className="flex justify-center items-center min-h-screen">Loading...</div>;
+    }
+    
     return user ? children : <Navigate to="/login" />;
 }
 function App() {

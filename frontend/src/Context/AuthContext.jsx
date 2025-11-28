@@ -10,9 +10,11 @@ const API_BASE_URL =
 export const AuthProvider = ({ children }) => {
     const [user, setUser] = useState(null);
     const [token, setToken] = useState(localStorage.getItem("token") || null);
+    const [loading, setLoading] = useState(!!token);
 
     useEffect(() => {
         if (token) {
+            setLoading(true);
             fetch(`${API_BASE_URL}/user/me`, {
                 headers: {
                     Authorization: `Bearer ${token}`,
@@ -20,7 +22,10 @@ export const AuthProvider = ({ children }) => {
             })
                 .then((res) => (res.ok ? res.json() : null))
                 .then((data) => setUser(data))
-                .catch(() => setUser(null));
+                .catch(() => setUser(null))
+                .finally(() => setLoading(false));
+        } else {
+            setLoading(false);
         }
     }, [token]);
 
@@ -84,7 +89,7 @@ export const AuthProvider = ({ children }) => {
     };
 
     return (
-        <AuthContext.Provider value={{ user, token, login, logout, register }}>
+        <AuthContext.Provider value={{ user, token, login, logout, register, loading }}>
             {children}
         </AuthContext.Provider>
     );
