@@ -1,14 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;   // <-- REQUIRED for [Key], [Required], [MaxLength], etc.
-using geekzKai.Models;                       // <-- Makes sure Post and Comment resolve
+using System.ComponentModel.DataAnnotations;
 
 namespace geekzKai.Models
 {
     public class User
     {
         [Key]
-        public int User_Id { get; set; }
+        public int Id { get; set; }
 
         [Required]
         [MaxLength(50)]
@@ -16,11 +15,11 @@ namespace geekzKai.Models
 
         [Required]
         [EmailAddress]
-        public string User_Email { get; set; } = string.Empty;
+        public string Email { get; set; } = string.Empty;
 
-        public string? User_Password { get; set; }
+        public string? Password { get; set; }
 
-        public DateTime User_CreatedAt { get; set; } = DateTime.UtcNow;
+        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
         [MaxLength(200)]
         public string? Bio { get; set; }
@@ -33,15 +32,16 @@ namespace geekzKai.Models
         public bool IsYoutuber { get; set; } = false;
 
         public string? ProfilePictureUrl { get; set; }
-        public string? YouTubeChannellink { get; set; }
+        public string? YouTubeChannelLink { get; set; } // Corrected typo: Channellink -> ChannelLink
 
         [Required]
         public string AuthProvider { get; set; } = "local";
 
         public DateTime? LastLoginAt { get; set; }
 
-        // Navigation
+        // Navigation properties
         public List<Post> Posts { get; set; } = new();
         public List<Comment> Comments { get; set; } = new();
+        public List<Upvote> Upvotes { get; set; } = new();
     }
 }

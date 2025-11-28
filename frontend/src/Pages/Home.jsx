@@ -20,7 +20,7 @@ function Home() {
         if (image) formData.append("image", image);
 
         try {
-            const response = await fetch("http://localhost:5000/api/posts", {
+            const response = await fetch("/api/posts", {
                 method: "POST",
                 headers: {
                     Authorization: `Bearer ${token}`,
