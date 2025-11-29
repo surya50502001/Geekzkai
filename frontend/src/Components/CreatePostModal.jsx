@@ -57,20 +57,20 @@ export default function CreatePostModal({ isOpen, onClose }) {
         >
             <div className="bg-white dark:bg-gray-900 w-full max-w-lg rounded-2xl shadow-2xl border border-gray-200 dark:border-gray-700 overflow-hidden animate-in zoom-in-95 duration-200">
                 {/* Header */}
-                <div className="bg-gradient-to-r from-blue-500 to-teal-500 p-6 text-white relative">
+                <div className="bg-black dark:bg-white p-6 text-white dark:text-black relative">
                     <button 
                         onClick={onClose} 
-                        className="absolute right-4 top-4 p-2 hover:bg-white/20 rounded-full transition-colors"
+                        className="absolute right-4 top-4 p-2 hover:bg-white/20 dark:hover:bg-black/20 rounded-full transition-colors"
                     >
                         <X size={20} />
                     </button>
                     <div className="flex items-center gap-3">
-                        <div className="p-2 bg-white/20 rounded-lg">
+                        <div className="p-2 bg-white/20 dark:bg-black/20 rounded-lg">
                             <PenTool size={24} />
                         </div>
                         <div>
                             <h2 className="text-2xl font-bold">Create New Post</h2>
-                            <p className="text-blue-100 text-sm">Share your thoughts with the community</p>
+                            <p className="text-gray-200 dark:text-gray-800 text-sm">Share your thoughts with the community</p>
                         </div>
                     </div>
                 </div>
@@ -96,7 +96,7 @@ export default function CreatePostModal({ isOpen, onClose }) {
                                 value={title}
                                 onChange={(e) => setTitle(e.target.value)}
                                 placeholder="What's your question or topic?"
-                                className="w-full p-4 border border-gray-300 dark:border-gray-600 rounded-xl bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
+                                className="w-full p-4 border border-gray-300 dark:border-gray-600 rounded-xl bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:ring-2 focus:ring-black dark:focus:ring-white focus:border-transparent transition-all duration-200"
                                 required
                             />
                         </div>
@@ -107,7 +107,7 @@ export default function CreatePostModal({ isOpen, onClose }) {
                                 value={content}
                                 onChange={(e) => setContent(e.target.value)}
                                 placeholder="Provide more details about your post..."
-                                className="w-full p-4 border border-gray-300 dark:border-gray-600 rounded-xl bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 resize-none"
+                                className="w-full p-4 border border-gray-300 dark:border-gray-600 rounded-xl bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:ring-2 focus:ring-black dark:focus:ring-white focus:border-transparent transition-all duration-200 resize-none"
                                 rows={5}
                                 required
                             />
@@ -124,7 +124,7 @@ export default function CreatePostModal({ isOpen, onClose }) {
                             <button
                                 type="submit"
                                 disabled={loading || !title.trim() || !content.trim()}
-                                className="flex-1 px-6 py-3 bg-gradient-to-r from-blue-500 to-teal-500 text-white rounded-xl hover:from-blue-600 hover:to-teal-600 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 font-medium flex items-center justify-center gap-2"
+                                className="flex-1 px-6 py-3 bg-black dark:bg-white text-white dark:text-black rounded-xl hover:bg-gray-800 dark:hover:bg-gray-200 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 font-medium flex items-center justify-center gap-2"
                             >
                                 {loading ? (
                                     <>

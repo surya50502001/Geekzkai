@@ -1,45 +1,7 @@
 @import "tailwindcss";
 
-/* ============================
-   GLOBAL ROOT VARIABLES
-============================ */
-
 :root {
     --sidebar-width: 300px;
-    
-    /* Light theme colors */
-    --text-primary: #1f2937;
-    --text-secondary: #6b7280;
-    --background-primary: #ffffff;
-    --background-secondary: #f8fafc;
-    --background-tertiary: #f1f5f9;
-    --primary: #0ea5e9;
-    --primary-dark: #0284c7;
-    --secondary: #e2e8f0;
-    --border-primary: #cbd5e1;
-    --success: #059669;
-    --error: #dc2626;
-    --accent: #f97316;
-    --accent-light: #fed7aa;
-    --background-color: #ffffff;
-}
-
-.dark {
-    /* Dark theme colors */
-    --text-primary: #f8fafc;
-    --text-secondary: #94a3b8;
-    --background-primary: #0f172a;
-    --background-secondary: #1e293b;
-    --background-tertiary: #334155;
-    --primary: #38bdf8;
-    --primary-dark: #0ea5e9;
-    --secondary: #475569;
-    --border-primary: #64748b;
-    --success: #10b981;
-    --error: #f87171;
-    --accent: #fb923c;
-    --accent-light: #fed7aa;
-    --background-color: #0f172a;
 }
 
 @media (max-width: 768px) {
@@ -101,8 +63,6 @@
 
 body {
     @apply transition-colors duration-300 ease-in-out;
-    background-color: var(--background-primary);
-    color: var(--text-primary);
 }
 
 /* Custom scrollbar */
@@ -111,16 +71,16 @@ body {
 }
 
 ::-webkit-scrollbar-track {
-    background: var(--background-secondary);
+    @apply bg-gray-100 dark:bg-gray-800;
 }
 
 ::-webkit-scrollbar-thumb {
-    background: var(--border-primary);
+    @apply bg-gray-400 dark:bg-gray-600;
     border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-    background: var(--text-secondary);
+    @apply bg-gray-500 dark:bg-gray-500;
 }
 
 /* Focus styles */

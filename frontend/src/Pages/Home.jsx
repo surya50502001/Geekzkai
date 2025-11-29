@@ -31,20 +31,20 @@ function Home() {
     };
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-teal-50 dark:from-gray-900 dark:via-slate-800 dark:to-gray-900">
+        <div className="min-h-screen">
             {/* Hero Section */}
             <div className="relative overflow-hidden">
-                <div className="absolute inset-0 bg-gradient-to-r from-blue-600/10 to-teal-500/10 dark:from-blue-400/5 dark:to-teal-400/5" />
+
                 <div className="relative max-w-7xl mx-auto px-6 py-20">
                     <div className="text-center">
-                        <div className="inline-flex items-center gap-2 bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 px-4 py-2 rounded-full text-sm font-medium mb-6">
-                            <Star size={16} className="text-yellow-500" />
+                        <div className="inline-flex items-center gap-2 bg-white dark:bg-black border border-black dark:border-white text-black dark:text-white px-4 py-2 rounded-full text-sm font-medium mb-6">
+                            <Star size={16} className="text-black dark:text-white" />
                             Welcome to GeekzKai Community
                         </div>
-                        <h1 className="text-5xl md:text-6xl font-bold bg-gradient-to-r from-blue-600 to-teal-500 bg-clip-text text-transparent mb-6">
+                        <h1 className="text-5xl md:text-6xl font-bold text-black dark:text-white mb-6">
                             GeekzKai 👾
                         </h1>
-                        <p className="text-xl text-gray-600 dark:text-gray-300 mb-8 max-w-2xl mx-auto leading-relaxed">
+                        <p className="text-xl text-black dark:text-white mb-8 max-w-2xl mx-auto leading-relaxed">
                             Your ultimate space to discuss anime theories, share "what if" ideas, and connect with fellow otaku from around the world!
                         </p>
                         
@@ -52,14 +52,14 @@ function Home() {
                             <div className="flex flex-col sm:flex-row gap-4 justify-center">
                                 <Link 
                                     to="/create" 
-                                    className="inline-flex items-center gap-2 bg-gradient-to-r from-blue-500 to-teal-500 text-white px-8 py-4 rounded-xl font-semibold hover:from-blue-600 hover:to-teal-600 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-1"
+                                    className="inline-flex items-center gap-2 bg-black dark:bg-white text-white dark:text-black px-8 py-4 rounded-xl font-semibold hover:bg-gray-800 dark:hover:bg-gray-200 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-1"
                                 >
                                     <Plus size={20} />
                                     Create Post
                                 </Link>
                                 <Link 
                                     to="/trending" 
-                                    className="inline-flex items-center gap-2 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 px-8 py-4 rounded-xl font-semibold border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-1"
+                                    className="inline-flex items-center gap-2 bg-white dark:bg-black text-black dark:text-white px-8 py-4 rounded-xl font-semibold border border-black dark:border-white hover:bg-white dark:hover:bg-black transition-all duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-1"
                                 >
                                     <TrendingUp size={20} />
                                     Trending
@@ -69,13 +69,13 @@ function Home() {
                             <div className="flex flex-col sm:flex-row gap-4 justify-center">
                                 <Link 
                                     to="/login" 
-                                    className="inline-flex items-center gap-2 bg-gradient-to-r from-blue-500 to-teal-500 text-white px-8 py-4 rounded-xl font-semibold hover:from-blue-600 hover:to-teal-600 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-1"
+                                    className="inline-flex items-center gap-2 bg-black dark:bg-white text-white dark:text-black px-8 py-4 rounded-xl font-semibold hover:bg-gray-800 dark:hover:bg-gray-200 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-1"
                                 >
                                     Get Started
                                 </Link>
                                 <Link 
                                     to="/register" 
-                                    className="inline-flex items-center gap-2 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 px-8 py-4 rounded-xl font-semibold border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-1"
+                                    className="inline-flex items-center gap-2 bg-white dark:bg-black text-black dark:text-white px-8 py-4 rounded-xl font-semibold border border-black dark:border-white hover:bg-white dark:hover:bg-black transition-all duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-1"
                                 >
                                     Join Community
                                 </Link>
@@ -88,26 +88,26 @@ function Home() {
             {/* Stats Section */}
             <div className="max-w-7xl mx-auto px-6 py-16">
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                    <div className="text-center p-8 bg-white dark:bg-gray-800 rounded-2xl shadow-lg border border-gray-100 dark:border-gray-700">
-                        <div className="w-16 h-16 bg-blue-100 dark:bg-blue-900/30 rounded-full flex items-center justify-center mx-auto mb-4">
-                            <Users className="text-blue-600 dark:text-blue-400" size={32} />
+                    <div className="text-center p-8 bg-white dark:bg-gray-800 rounded-2xl shadow-lg border border-gray-200 dark:border-gray-700">
+                        <div className="w-16 h-16 bg-gray-100 dark:bg-gray-700 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <Users className="text-black dark:text-white" size={32} />
                         </div>
-                        <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">Active Community</h3>
-                        <p className="text-gray-600 dark:text-gray-400">Connect with passionate anime fans worldwide</p>
+                        <h3 className="text-2xl font-bold text-black dark:text-white mb-2">Active Community</h3>
+                        <p className="text-gray-600 dark:text-gray-300">Connect with passionate anime fans worldwide</p>
                     </div>
-                    <div className="text-center p-8 bg-white dark:bg-gray-800 rounded-2xl shadow-lg border border-gray-100 dark:border-gray-700">
-                        <div className="w-16 h-16 bg-orange-100 dark:bg-orange-900/30 rounded-full flex items-center justify-center mx-auto mb-4">
-                            <MessageCircle className="text-orange-600 dark:text-orange-400" size={32} />
+                    <div className="text-center p-8 bg-white dark:bg-gray-800 rounded-2xl shadow-lg border border-gray-200 dark:border-gray-700">
+                        <div className="w-16 h-16 bg-gray-100 dark:bg-gray-700 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <MessageCircle className="text-black dark:text-white" size={32} />
                         </div>
-                        <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">Rich Discussions</h3>
-                        <p className="text-gray-600 dark:text-gray-400">Dive deep into anime theories and analysis</p>
+                        <h3 className="text-2xl font-bold text-black dark:text-white mb-2">Rich Discussions</h3>
+                        <p className="text-gray-600 dark:text-gray-300">Dive deep into anime theories and analysis</p>
                     </div>
-                    <div className="text-center p-8 bg-white dark:bg-gray-800 rounded-2xl shadow-lg border border-gray-100 dark:border-gray-700">
-                        <div className="w-16 h-16 bg-green-100 dark:bg-green-900/30 rounded-full flex items-center justify-center mx-auto mb-4">
-                            <TrendingUp className="text-green-600 dark:text-green-400" size={32} />
+                    <div className="text-center p-8 bg-white dark:bg-gray-800 rounded-2xl shadow-lg border border-gray-200 dark:border-gray-700">
+                        <div className="w-16 h-16 bg-gray-100 dark:bg-gray-700 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <TrendingUp className="text-black dark:text-white" size={32} />
                         </div>
-                        <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">Trending Content</h3>
-                        <p className="text-gray-600 dark:text-gray-400">Stay updated with the hottest anime topics</p>
+                        <h3 className="text-2xl font-bold text-black dark:text-white mb-2">Trending Content</h3>
+                        <p className="text-gray-600 dark:text-gray-300">Stay updated with the hottest anime topics</p>
                     </div>
                 </div>
             </div>
@@ -116,14 +116,14 @@ function Home() {
             {posts.length > 0 && (
                 <div className="max-w-7xl mx-auto px-6 py-16">
                     <div className="text-center mb-12">
-                        <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">Latest Discussions</h2>
-                        <p className="text-gray-600 dark:text-gray-400">Check out what the community is talking about</p>
+                        <h2 className="text-3xl font-bold text-black dark:text-white mb-4">Latest Discussions</h2>
+                        <p className="text-black dark:text-white">Check out what the community is talking about</p>
                     </div>
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                         {posts.map((post) => (
-                            <div key={post.id} className="bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-100 dark:border-gray-700 p-6 hover:shadow-xl transition-all duration-200 transform hover:-translate-y-1">
-                                <h3 className="font-semibold text-gray-900 dark:text-white mb-2 line-clamp-2">{post.question}</h3>
-                                <p className="text-gray-600 dark:text-gray-400 text-sm mb-4 line-clamp-3">{post.description}</p>
+                            <div key={post.id} className="bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 p-6 hover:shadow-xl transition-all duration-200 transform hover:-translate-y-1">
+                                <h3 className="font-semibold text-black dark:text-white mb-2 line-clamp-2">{post.question}</h3>
+                                <p className="text-gray-600 dark:text-gray-300 text-sm mb-4 line-clamp-3">{post.description}</p>
                                 <div className="flex items-center justify-between text-xs text-gray-500 dark:text-gray-400">
                                     <span>By {post.user?.username || 'Anonymous'}</span>
                                     <span>{new Date(post.createdAt).toLocaleDateString()}</span>
@@ -134,7 +134,7 @@ function Home() {
                     <div className="text-center mt-8">
                         <Link 
                             to="/trending" 
-                            className="inline-flex items-center gap-2 text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 font-medium"
+                            className="inline-flex items-center gap-2 text-black dark:text-white hover:text-black dark:hover:text-white font-medium"
                         >
                             View All Posts
                             <TrendingUp size={16} />

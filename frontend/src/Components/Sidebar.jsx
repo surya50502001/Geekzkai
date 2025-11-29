@@ -19,7 +19,7 @@ export default function Sidebar() {
         <Resizable minWidth={80} maxWidth={window.innerWidth / 2}>
             {(width) => (
                 <aside
-                    className="h-full bg-background-primary p-4 flex flex-col transition-all"
+                    className="h-full bg-white dark:bg-black border-r border-gray-200 dark:border-gray-800 p-4 flex flex-col transition-all"
                     style={{
                         width: "100%",
                         opacity: width < 80 ? 1 : 1, // still visible
@@ -35,7 +35,7 @@ export default function Sidebar() {
                                     key={item.label}
                                     to={item.to}
                                     className={`flex items-center p-3 rounded-lg transition-colors mb-2
-                            ${isActive ? "text-primary bg-background-tertiary" : "text-text-secondary hover:text-primary hover:bg-background-tertiary"}
+                            ${isActive ? "text-black dark:text-white bg-gray-100 dark:bg-gray-800" : "text-gray-600 dark:text-gray-400 hover:text-black dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-800"}
                             ${width < 110 ? "justify-center" : ""}`}
                                 >
                                     <Icon size={20} />

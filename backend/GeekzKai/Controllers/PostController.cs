@@ -126,5 +126,54 @@ namespace geekzKai.Controllers
 
             return NoContent();
         }
+
+        // GET: api/posts/theme/{mode}
+        [HttpGet("theme/{mode}")]
+        public IActionResult GetTheme(string mode)
+        {
+            var theme = mode.ToLower() == "dark" 
+                ? new { 
+                    background = "#000000", 
+                    text = "#ffffff", 
+                    primary = "#1a1a1a", 
+                    secondary = "#333333",
+                    accent = "#007bff",
+                    border = "#444444"
+                }
+                : new { 
+                    background = "#ffffff", 
+                    text = "#000000", 
+                    primary = "#f8f9fa", 
+                    secondary = "#e9ecef",
+                    accent = "#007bff",
+                    border = "#dee2e6"
+                };
+            
+            return Ok(theme);
+        }
+
+        // GET: api/posts/themes
+        [HttpGet("themes")]
+        public IActionResult GetAllThemes()
+        {
+            return Ok(new {
+                dark = new { 
+                    background = "#000000", 
+                    text = "#ffffff", 
+                    primary = "#1a1a1a", 
+                    secondary = "#333333",
+                    accent = "#007bff",
+                    border = "#444444"
+                },
+                light = new { 
+                    background = "#ffffff", 
+                    text = "#000000", 
+                    primary = "#f8f9fa", 
+                    secondary = "#e9ecef",
+                    accent = "#007bff",
+                    border = "#dee2e6"
+                }
+            });
+        }
     }
 }

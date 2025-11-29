@@ -1,41 +1,34 @@
-import { createContext, useContext, useEffect, useState } from "react";
+import { createContext, useContext, useState, useEffect } from 'react';
 
 const ThemeContext = createContext();
 
-export function ThemeProvider({ children }) {
-  const [theme, setTheme] = useState("dark");
+export const useTheme = () => useContext(ThemeContext);
 
-  useEffect(() => {
-    const savedTheme = localStorage.getItem("theme") || "dark";
-    setTheme(savedTheme);
-    if (savedTheme === "dark") {
-      document.documentElement.classList.add("dark");
-    } else {
-      document.documentElement.classList.remove("dark");
-    }
-  }, []);
+export const ThemeProvider = ({ children }) => {
+    const [isDark, setIsDark] = useState(() => 
+        localStorage.getItem('theme') === 'dark' || 
+        (!localStorage.getItem('theme') && window.matchMedia('(prefers-color-scheme: dark)').matches)
+    );
 
-  const nextTheme = () => {
-    const themes = ["light", "dark"];
-    const currentIndex = themes.indexOf(theme);
-    const nextIndex = (currentIndex + 1) % themes.length;
-    const newTheme = themes[nextIndex];
-    setTheme(newTheme);
-    localStorage.setItem("theme", newTheme);
-    if (newTheme === "dark") {
-      document.documentElement.classList.add("dark");
-    } else {
-      document.documentElement.classList.remove("dark");
-    }
-  };
+    useEffect(() => {
+        document.documentElement.classList.toggle('dark', isDark);
+        localStorage.setItem('theme', isDark ? 'dark' : 'light');
+        // Remove any hard-coded backgrounds
+        const mainElement = document.querySelector('main');
+        if (mainElement) {
+            mainElement.style.backgroundColor = '';
+            mainElement.classList.remove('bg-white');
+        }
+    }, [isDark]);
 
-  return (
-    <ThemeContext.Provider value={{ theme, nextTheme }}>
-      {children}
-    </ThemeContext.Provider>
-  );
-}
+    const toggleTheme = () => {
+        console.log('Toggle clicked, current isDark:', isDark);
+        setIsDark(!isDark);
+    };
 
-export function useTheme() {
-  return useContext(ThemeContext);
-}
+    return (
+        <ThemeContext.Provider value={{ isDark, toggleTheme }}>
+            {children}
+        </ThemeContext.Provider>
+    );
+};

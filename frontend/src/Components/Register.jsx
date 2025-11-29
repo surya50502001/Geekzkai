@@ -39,9 +39,9 @@ function Register() {
     };
 
     return (
-        <div className="min-h-screen flex flex-col items-center justify-center bg-background-primary p-4">
-            <div className="bg-background-secondary bg-opacity-80 p-8 rounded-xl shadow-lg w-full max-w-xs">
-                <h2 className="text-3xl font-bold mb-6 text-center text-text-primary">
+        <div className="min-h-screen flex flex-col items-center justify-center p-4">
+            <div className="bg-white dark:bg-gray-900 p-8 rounded-xl shadow-lg w-full max-w-xs border border-gray-200 dark:border-gray-700 transition-colors">
+                <h2 className="text-3xl font-bold mb-6 text-center text-black dark:text-white">
                     Register
                 </h2>
 
@@ -51,7 +51,7 @@ function Register() {
                         placeholder="Username"
                         value={username}
                         onChange={(e) => setUsername(e.target.value)}
-                        className="p-3 bg-background-secondary border border-border-primary rounded-lg text-text-primary focus:outline-none focus:ring-2 focus:ring-primary"
+                        className="p-3 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg text-black dark:text-white focus:outline-none focus:ring-2 focus:ring-black dark:focus:ring-white"
                         required
                     />
 
@@ -60,7 +60,7 @@ function Register() {
                         placeholder="Email"
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
-                        className="p-3 bg-background-secondary border border-border-primary rounded-lg text-text-primary focus:outline-none focus:ring-2 focus:ring-primary"
+                        className="p-3 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg text-black dark:text-white focus:outline-none focus:ring-2 focus:ring-black dark:focus:ring-white"
                         required
                     />
 
@@ -69,13 +69,13 @@ function Register() {
                         placeholder="Password"
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
-                        className="p-3 bg-background-secondary border border-border-primary rounded-lg text-text-primary focus:outline-none focus:ring-2 focus:ring-primary"
+                        className="p-3 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg text-black dark:text-white focus:outline-none focus:ring-2 focus:ring-black dark:focus:ring-white"
                         required
                     />
 
                     {/* Youtuber Toggle */}
                     <div className="flex items-center justify-between">
-                        <span className="text-text-primary">Are you a YouTuber?</span>
+                        <span className="text-black dark:text-white">Are you a YouTuber?</span>
 
                         <label className="relative inline-flex items-center cursor-pointer">
                             <input
@@ -84,7 +84,7 @@ function Register() {
                                 onChange={() => setIsYoutuber(!isYoutuber)}
                                 className="sr-only peer"
                             />
-                            <div className="w-11 h-6 bg-gray-200 rounded-full peer peer-focus:ring-4 peer-focus:ring-primary-dark dark:peer-focus:ring-primary peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:bg-gray-700 peer-checked:bg-primary"></div>
+                            <div className="w-11 h-6 bg-gray-200 rounded-full peer peer-focus:ring-4 peer-focus:ring-black dark:peer-focus:ring-white peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:bg-gray-700 peer-checked:bg-black dark:peer-checked:bg-white"></div>
                         </label>
                     </div>
 
@@ -95,7 +95,7 @@ function Register() {
                             placeholder="YouTube Channel Link"
                             value={link}
                             onChange={(e) => setLink(e.target.value)}
-                            className="p-3 bg-background-secondary border border-border-primary rounded-lg text-text-primary focus:outline-none focus:ring-2 focus:ring-primary"
+                            className="p-3 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg text-black dark:text-white focus:outline-none focus:ring-2 focus:ring-black dark:focus:ring-white"
                             required
                         />
                     )}
@@ -103,15 +103,15 @@ function Register() {
                     <button
                         type="submit"
                         disabled={loading}
-                        className="p-3 bg-primary text-white rounded-lg hover:bg-primary-dark transition-colors disabled:opacity-50"
+                        className="p-3 bg-black dark:bg-white text-white dark:text-black rounded-lg hover:bg-gray-800 dark:hover:bg-gray-200 transition-colors disabled:opacity-50"
                     >
                         {loading ? "Registering..." : "Register"}
                     </button>
                 </form>
 
-                <p className="mt-6 text-center text-text-secondary">
+                <p className="mt-6 text-center text-gray-600 dark:text-gray-400">
                     Already have an account?{" "}
-                    <Link to="/login" className="text-primary hover:underline">
+                    <Link to="/login" className="text-black dark:text-white hover:underline">
                         Login here
                     </Link>
                 </p>
