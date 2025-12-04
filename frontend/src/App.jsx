@@ -11,6 +11,7 @@ import Settings from "./Pages/Settings";
 import Profile from "./Pages/Profile";
 import CreatePostPage from "./Pages/CreatePostPage";
 import Sidebar from "./Components/Sidebar";
+import AuthCallback from "./Pages/AuthCallback";
 
 
 
@@ -41,6 +42,7 @@ function App() {
                         <Route path="/profile" element={<PrivateRoute><Profile /></PrivateRoute>} />
                         <Route path="/settings" element={<PrivateRoute><Settings /></PrivateRoute>} />
                         <Route path="/trending" element={<Trending /> } />
+                        <Route path="/auth/callback" element={<AuthCallback />} />
                     </Routes>
                 </main>
             </Router>
