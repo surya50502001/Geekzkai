@@ -11,19 +11,16 @@ export const ThemeProvider = ({ children }) => {
     );
 
     useEffect(() => {
-        document.documentElement.classList.toggle('dark', isDark);
+        document.documentElement.style.colorScheme = isDark ? 'dark' : 'light';
         localStorage.setItem('theme', isDark ? 'dark' : 'light');
-        // Remove any hard-coded backgrounds
-        const mainElement = document.querySelector('main');
-        if (mainElement) {
-            mainElement.style.backgroundColor = '';
-            mainElement.classList.remove('bg-white');
-        }
     }, [isDark]);
 
     const toggleTheme = () => {
         console.log('Toggle clicked, current isDark:', isDark);
-        setIsDark(!isDark);
+        setIsDark(prev => {
+            console.log('Setting isDark to:', !prev);
+            return !prev;
+        });
     };
 
     return (

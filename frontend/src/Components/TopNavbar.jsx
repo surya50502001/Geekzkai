@@ -7,29 +7,30 @@ export default function TopNavbar() {
     const { user, logout } = useAuth();
 
     return (
-        <nav className="hidden md:flex border-b border-black dark:border-white bg-white dark:bg-black backdrop-blur-md p-4 items-center sticky top-0 z-40" style={{ marginLeft: 'var(--sidebar-width, 0px)' }}>
+        <nav className="hidden md:flex border-b backdrop-blur-md p-4 items-center sticky top-0 z-40" style={{ marginLeft: 'var(--sidebar-width, 0px)', backgroundColor: 'var(--bg-primary)', borderColor: 'var(--border-color)' }}>
             <div className="flex-1">
-                <Link to="/" className="text-2xl font-bold text-black dark:text-white">
+                <Link to="/" className="text-2xl font-bold" style={{color: 'var(--text-primary)'}}>
                     GeekzKai
                 </Link>
             </div>
             
             <div className="flex items-center gap-4">
                 {/* Search Bar */}
-                <div className="flex items-center gap-2 bg-white dark:bg-black px-4 py-2 rounded-full border border-black dark:border-white focus-within:ring-2 focus-within:ring-black dark:focus-within:ring-white focus-within:border-transparent transition-all">
-                    <Search size={18} className="text-black dark:text-white" />
+                <div className="flex items-center gap-2 px-4 py-2 rounded-full border focus-within:ring-2 focus-within:border-transparent transition-all" style={{backgroundColor: 'var(--bg-primary)', borderColor: 'var(--border-color)'}}>
+                    <Search size={18} style={{color: 'var(--text-primary)'}} />
                     <input
                         type="text"
                         placeholder="Search discussions..."
-                        className="bg-transparent focus:outline-none text-black dark:text-white placeholder-black dark:placeholder-white w-64"
+                        className="bg-transparent focus:outline-none w-64"
+                        style={{color: 'var(--text-primary)'}}
                     />
                 </div>
 
                 {user ? (
                     <div className="flex items-center gap-3">
                         {/* Notifications */}
-                        <button className="p-2 hover:bg-white dark:hover:bg-black rounded-full transition-colors relative">
-                            <Bell size={20} className="text-black dark:text-white" />
+                        <button className="p-2 rounded-full transition-colors relative" style={{'&:hover': {backgroundColor: 'var(--bg-secondary)'}}}>
+                            <Bell size={20} style={{color: 'var(--text-primary)'}} />
                             <span className="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full"></span>
                         </button>
 
@@ -37,16 +38,17 @@ export default function TopNavbar() {
                         <div className="flex items-center gap-2">
                             <Link 
                                 to="/profile" 
-                                className="flex items-center gap-2 p-2 hover:bg-white dark:hover:bg-black rounded-lg transition-colors"
+                                className="flex items-center gap-2 p-2 rounded-lg transition-colors"
                             >
-                                <div className="w-8 h-8 bg-black dark:bg-white rounded-full flex items-center justify-center">
-                                    <User size={16} className="text-white dark:text-black" />
+                                <div className="w-8 h-8 rounded-full flex items-center justify-center" style={{backgroundColor: 'var(--text-primary)'}}>
+                                    <User size={16} style={{color: 'var(--bg-primary)'}} />
                                 </div>
-                                <span className="text-sm font-medium text-black dark:text-white">{user.username}</span>
+                                <span className="text-sm font-medium" style={{color: 'var(--text-primary)'}}>{user.username}</span>
                             </Link>
                             <button 
                                 onClick={logout}
-                                className="text-sm text-black dark:text-white hover:text-black dark:hover:text-white px-3 py-1 rounded transition-colors"
+                                className="text-sm px-3 py-1 rounded transition-colors"
+                                style={{color: 'var(--text-primary)'}}
                             >
                                 Logout
                             </button>
@@ -56,13 +58,15 @@ export default function TopNavbar() {
                     <div className="flex items-center gap-2">
                         <Link 
                             to="/login" 
-                            className="px-4 py-2 text-black dark:text-white hover:text-black dark:hover:text-white transition-colors"
+                            className="px-4 py-2 transition-colors"
+                            style={{color: 'var(--text-primary)'}}
                         >
                             Login
                         </Link>
                         <Link 
                             to="/register" 
-                            className="px-4 py-2 bg-black dark:bg-white text-white dark:text-black rounded-lg hover:bg-gray-800 dark:hover:bg-gray-200 transition-all duration-200 font-medium"
+                            className="px-4 py-2 rounded-lg transition-all duration-200 font-medium"
+                            style={{backgroundColor: 'var(--text-primary)', color: 'var(--bg-primary)'}}
                         >
                             Sign Up
                         </Link>

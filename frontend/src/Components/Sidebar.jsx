@@ -19,10 +19,12 @@ export default function Sidebar() {
         <Resizable minWidth={80} maxWidth={window.innerWidth / 2}>
             {(width) => (
                 <aside
-                    className="h-full bg-white dark:bg-black border-r border-gray-200 dark:border-gray-800 p-4 flex flex-col transition-all"
+                    className="h-full border-r p-4 flex flex-col transition-all"
                     style={{
                         width: "100%",
-                        opacity: width < 80 ? 1 : 1, // still visible
+                        opacity: width < 80 ? 1 : 1,
+                        backgroundColor: 'var(--bg-primary)',
+                        borderColor: 'var(--border-color)'
                     }}
                 >
                     <nav className="flex-1">
@@ -34,9 +36,11 @@ export default function Sidebar() {
                                 <Link
                                     key={item.label}
                                     to={item.to}
-                                    className={`flex items-center p-3 rounded-lg transition-colors mb-2
-                            ${isActive ? "text-black dark:text-white bg-gray-100 dark:bg-gray-800" : "text-gray-600 dark:text-gray-400 hover:text-black dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-800"}
-                            ${width < 110 ? "justify-center" : ""}`}
+                                    className={`flex items-center p-3 rounded-lg transition-colors mb-2 ${width < 110 ? "justify-center" : ""}`}
+                                    style={{
+                                        color: isActive ? 'var(--text-primary)' : 'var(--text-secondary)',
+                                        backgroundColor: isActive ? 'var(--bg-secondary)' : 'transparent'
+                                    }}
                                 >
                                     <Icon size={20} />
                                     {width > 130 && <span className="ml-3">{item.label}</span>}
