@@ -106,7 +106,12 @@ builder.Services.AddAuthentication(options =>
         options.DefaultScheme = "Cookies";
         options.DefaultChallengeScheme = "Google";
     })
-    .AddCookie("Cookies")
+    .AddCookie("Cookies", options =>
+    {
+        options.Cookie.SameSite = SameSiteMode.Lax;
+        options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+        options.Cookie.HttpOnly = true;
+    })
     .AddJwtBearer(options =>
     {
         options.TokenValidationParameters = new TokenValidationParameters
