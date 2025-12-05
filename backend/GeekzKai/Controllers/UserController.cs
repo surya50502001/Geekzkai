@@ -1,5 +1,6 @@
 ﻿using geekzKai.Data;
 using geekzKai.Models;
+using geekzKai.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
