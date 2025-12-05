@@ -43,7 +43,7 @@ namespace geekzKai.Controllers
             Console.WriteLine($"Request Host: {Request.Host}");
             Console.WriteLine($"Request Scheme: {Request.Scheme}");
             var properties = new AuthenticationProperties();
-            return Challenge(properties, GoogleDefaults.AuthenticationScheme);
+            return Challenge(properties, "Google");
         }
 
         [HttpGet("callback")]
@@ -52,7 +52,7 @@ namespace geekzKai.Controllers
             try
             {
                 Console.WriteLine("Google OAuth callback started");
-                var result = await HttpContext.AuthenticateAsync(GoogleDefaults.AuthenticationScheme);
+                var result = await HttpContext.AuthenticateAsync("Google");
                 
                 if (!result.Succeeded)
                 {
@@ -86,12 +86,18 @@ namespace geekzKai.Controllers
                         Username = name ?? email.Split('@')[0],
                         AuthProvider = "google",
                         ProfilePictureUrl = picture,
-                        Password = null
+                        Password = null,
+                        EmailVerified = true
                     };
                     
                     _context.Users.Add(user);
                     await _context.SaveChangesAsync();
                     Console.WriteLine($"New user created with ID: {user.Id}");
+                }
+                else
+                {
+                    user.EmailVerified = true;
+                    await _context.SaveChangesAsync();
                 }
                 else
                 {
