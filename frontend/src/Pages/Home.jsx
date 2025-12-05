@@ -1,21 +1,39 @@
 import { useTheme } from "../Context/ThemeContext";
 import { useState, useEffect } from "react";
 import { useAuth } from "../Context/AuthContext";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Plus, TrendingUp, Users, MessageCircle, Star } from "lucide-react";
 
 function Home() {
     const { theme } = useTheme();
-    const { user } = useAuth();
+    const { user, setUser } = useAuth();
     const [posts, setPosts] = useState([]);
     const [loading, setLoading] = useState(true);
+    const navigate = useNavigate();
 
     const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 
         (window.location.hostname === 'localhost' ? 'http://localhost:5131/api' : 'https://geekzkai.onrender.com/api');
 
     useEffect(() => {
+        // Handle OAuth token from URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const token = urlParams.get('token');
+        
+        if (token) {
+            localStorage.setItem('token', token);
+            const payload = JSON.parse(atob(token.split('.')[1]));
+            console.log('JWT Payload:', payload);
+            setUser({
+                id: payload.nameid || payload['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier'],
+                email: payload.email || payload['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress'],
+                username: payload.unique_name || payload['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name']
+            });
+            // Clean URL
+            window.history.replaceState({}, document.title, window.location.pathname);
+        }
+        
         fetchPosts();
-    }, []);
+    }, [setUser]);
 
     const fetchPosts = async () => {
         try {
