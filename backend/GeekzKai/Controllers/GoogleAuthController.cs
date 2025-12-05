@@ -51,27 +51,35 @@ namespace geekzKai.Controllers
         {
             try
             {
+                Console.WriteLine("Google OAuth callback started");
                 var result = await HttpContext.AuthenticateAsync(GoogleDefaults.AuthenticationScheme);
                 
                 if (!result.Succeeded)
                 {
                     var error = result.Failure?.Message ?? "Unknown authentication error";
+                    Console.WriteLine($"Authentication failed: {error}");
                     return Redirect($"https://geekzkai-1.onrender.com/auth/error?message={Uri.EscapeDataString(error)}");
                 }
 
+                Console.WriteLine("Authentication succeeded, extracting claims");
                 var email = result.Principal.FindFirst(ClaimTypes.Email)?.Value;
                 var name = result.Principal.FindFirst(ClaimTypes.Name)?.Value;
                 var picture = result.Principal.FindFirst("picture")?.Value;
 
+                Console.WriteLine($"Email: {email}, Name: {name}");
+
                 if (string.IsNullOrEmpty(email))
                 {
+                    Console.WriteLine("Email not provided by Google");
                     return Redirect($"https://geekzkai-1.onrender.com/auth/error?message={Uri.EscapeDataString("Email not provided by Google")}");
                 }
 
+                Console.WriteLine("Looking up user in database");
                 var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == email);
                 
                 if (user == null)
                 {
+                    Console.WriteLine("Creating new user");
                     user = new User
                     {
                         Email = email,
@@ -83,15 +91,23 @@ namespace geekzKai.Controllers
                     
                     _context.Users.Add(user);
                     await _context.SaveChangesAsync();
+                    Console.WriteLine($"New user created with ID: {user.Id}");
+                }
+                else
+                {
+                    Console.WriteLine($"Existing user found with ID: {user.Id}");
                 }
 
+                Console.WriteLine("Generating JWT token");
                 var token = GenerateJwtToken(user);
                 
-                // Redirect to frontend with token
+                Console.WriteLine("Redirecting to frontend with token");
                 return Redirect($"https://geekzkai-1.onrender.com/auth/callback?token={token}");
             }
             catch (Exception ex)
             {
+                Console.WriteLine($"Google OAuth callback error: {ex.Message}");
+                Console.WriteLine($"Stack trace: {ex.StackTrace}");
                 return Redirect($"https://geekzkai-1.onrender.com/auth/error?message={Uri.EscapeDataString(ex.Message)}");
             }
         }

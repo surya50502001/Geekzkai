@@ -37,6 +37,9 @@ namespace geekzKai.Models
         [Required]
         public string AuthProvider { get; set; } = "local";
 
+        public bool EmailVerified { get; set; } = false;
+        public string? EmailVerificationToken { get; set; }
+
         public DateTime? LastLoginAt { get; set; }
 
         // Navigation properties

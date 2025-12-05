@@ -63,6 +63,7 @@ namespace geekzKai.Controllers
             if (exists)
                 return BadRequest(new { message = "Username or Email already taken." });
 
+            var verificationToken = Guid.NewGuid().ToString();
             var newUser = new User
             {
                 Username = request.Username,
@@ -71,7 +72,8 @@ namespace geekzKai.Controllers
                 CreatedAt = DateTime.UtcNow,
                 IsYoutuber = request.IsYoutuber,
                 YouTubeChannelLink = request.YouTubeChannelLink,
-                AuthProvider = "local"
+                AuthProvider = "local",
+                EmailVerificationToken = verificationToken
             };
 
             await _context.Users.AddAsync(newUser);
@@ -128,6 +130,9 @@ namespace geekzKai.Controllers
             if (!BCrypt.Net.BCrypt.Verify(request.Password, user.Password))
                 return Unauthorized(new { message = "Invalid email or password" });
 
+            if (!user.EmailVerified)
+                return Unauthorized(new { message = "Please verify your email before logging in" });
+
             user.LastLoginAt = DateTime.UtcNow;
             await _context.SaveChangesAsync();
 
@@ -143,6 +148,23 @@ namespace geekzKai.Controllers
                     user.Email
                 }
             });
+        }
+
+        // VERIFY EMAIL
+        [HttpGet("verify-email")]
+        public async Task<IActionResult> VerifyEmail(string token)
+        {
+            var user = await _context.Users
+                .FirstOrDefaultAsync(u => u.EmailVerificationToken == token);
+
+            if (user == null)
+                return BadRequest(new { message = "Invalid verification token" });
+
+            user.EmailVerified = true;
+            user.EmailVerificationToken = null;
+            await _context.SaveChangesAsync();
+
+            return Ok(new { message = "Email verified successfully" });
         }
 
         // GET LOGGED IN USER
