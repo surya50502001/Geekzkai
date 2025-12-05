@@ -130,6 +130,7 @@ if (string.IsNullOrEmpty(googleClientId) || string.IsNullOrEmpty(googleClientSec
 
 var app = builder.Build();
 
+// Manual OAuth implementation - no Google middleware
 // Auto-apply any pending EF migrations at startup
 using (var scope = app.Services.CreateScope())
 {
