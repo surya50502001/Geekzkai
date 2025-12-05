@@ -96,12 +96,9 @@ namespace geekzKai.Controllers
                 }
                 else
                 {
+                    Console.WriteLine($"Existing user found with ID: {user.Id}");
                     user.EmailVerified = true;
                     await _context.SaveChangesAsync();
-                }
-                else
-                {
-                    Console.WriteLine($"Existing user found with ID: {user.Id}");
                 }
 
                 Console.WriteLine("Generating JWT token");
