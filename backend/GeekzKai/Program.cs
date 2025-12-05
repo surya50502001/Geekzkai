@@ -130,6 +130,8 @@ builder.Services.AddAuthentication(options =>
         options.ClientId = builder.Configuration["Google:ClientId"] ?? Environment.GetEnvironmentVariable("Google__ClientId");
         options.ClientSecret = builder.Configuration["Google:ClientSecret"] ?? Environment.GetEnvironmentVariable("Google__ClientSecret");
         options.CallbackPath = "/api/googleauth/callback";
+        options.CorrelationCookie.SameSite = SameSiteMode.Lax;
+        options.CorrelationCookie.SecurePolicy = CookieSecurePolicy.Always;
         
         Console.WriteLine($"Google ClientId configured: {!string.IsNullOrEmpty(options.ClientId)}");
         Console.WriteLine($"Google ClientSecret configured: {!string.IsNullOrEmpty(options.ClientSecret)}");
