@@ -17,11 +17,13 @@ namespace geekzKai.Controllers
     {
         private readonly AppDbContext _context;
         private readonly IConfiguration _config;
+        private readonly EmailService _emailService;
 
-        public UserController(AppDbContext context, IConfiguration config)
+        public UserController(AppDbContext context, IConfiguration config, EmailService emailService)
         {
             _context = context;
             _config = config;
+            _emailService = emailService;
         }
 
         // GET ALL USERS
@@ -79,7 +81,9 @@ namespace geekzKai.Controllers
             await _context.Users.AddAsync(newUser);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction(nameof(GetUser), new { id = newUser.Id }, newUser);
+            await _emailService.SendVerificationEmail(newUser.Email, verificationToken);
+
+            return CreatedAtAction(nameof(GetUser), new { id = newUser.Id }, new { message = "Registration successful. Please check your email to verify your account." });
         }
 
         // UPDATE USER
