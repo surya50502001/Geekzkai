@@ -40,7 +40,8 @@ namespace geekzKai.Controllers
         [HttpGet("signin")]
         public IActionResult SignIn()
         {
-            var redirectUrl = Url.Action("Callback", "GoogleAuth");
+            var redirectUrl = "https://geekzkai.onrender.com/api/googleauth/callback";
+            Console.WriteLine($"Google OAuth redirect URL: {redirectUrl}");
             var properties = new AuthenticationProperties { RedirectUri = redirectUrl };
             return Challenge(properties, GoogleDefaults.AuthenticationScheme);
         }

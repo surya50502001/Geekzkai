@@ -107,6 +107,9 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         options.ClientId = builder.Configuration["Google:ClientId"] ?? Environment.GetEnvironmentVariable("Google__ClientId");
         options.ClientSecret = builder.Configuration["Google:ClientSecret"] ?? Environment.GetEnvironmentVariable("Google__ClientSecret");
         
+        Console.WriteLine($"Google ClientId configured: {!string.IsNullOrEmpty(options.ClientId)}");
+        Console.WriteLine($"Google ClientSecret configured: {!string.IsNullOrEmpty(options.ClientSecret)}");
+        
         if (string.IsNullOrEmpty(options.ClientId) || string.IsNullOrEmpty(options.ClientSecret))
         {
             throw new Exception("Google OAuth credentials are missing. Check your configuration.");
