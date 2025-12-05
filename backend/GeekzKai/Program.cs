@@ -3,8 +3,12 @@ using geekzKai.Data;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using DotNetEnv;
 
 var builder = WebApplication.CreateBuilder(args);
+
+// Load .env file
+Env.Load();
 
 // Controllers
 builder.Services.AddControllers()
@@ -21,9 +25,14 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy(corsPolicy, policy =>
     {
-        policy.WithOrigins("https://geekzkai-1.onrender.com")
+        policy.WithOrigins(
+            "https://geekzkai-1.onrender.com",
+            "http://localhost:3000",
+            "https://localhost:3000"
+        )
         .AllowAnyHeader()
-        .AllowAnyMethod();
+        .AllowAnyMethod()
+        .AllowCredentials();
     });
 });
 
@@ -95,8 +104,13 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     })
     .AddGoogle(options =>
     {
-        options.ClientId = builder.Configuration["Google:ClientId"];
-        options.ClientSecret = builder.Configuration["Google:ClientSecret"];
+        options.ClientId = builder.Configuration["Google:ClientId"] ?? Environment.GetEnvironmentVariable("Google__ClientId");
+        options.ClientSecret = builder.Configuration["Google:ClientSecret"] ?? Environment.GetEnvironmentVariable("Google__ClientSecret");
+        
+        if (string.IsNullOrEmpty(options.ClientId) || string.IsNullOrEmpty(options.ClientSecret))
+        {
+            throw new Exception("Google OAuth credentials are missing. Check your configuration.");
+        }
     });
 
 var app = builder.Build();

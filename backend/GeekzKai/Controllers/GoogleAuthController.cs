@@ -24,6 +24,19 @@ namespace geekzKai.Controllers
             _configuration = configuration;
         }
 
+        [HttpGet("test-config")]
+        public IActionResult TestConfig()
+        {
+            var clientId = _configuration["Google:ClientId"] ?? Environment.GetEnvironmentVariable("Google__ClientId");
+            var hasClientSecret = !string.IsNullOrEmpty(_configuration["Google:ClientSecret"] ?? Environment.GetEnvironmentVariable("Google__ClientSecret"));
+            
+            return Ok(new {
+                ClientIdConfigured = !string.IsNullOrEmpty(clientId),
+                ClientSecretConfigured = hasClientSecret,
+                ClientIdPreview = clientId?.Substring(0, Math.Min(20, clientId.Length)) + "..."
+            });
+        }
+
         [HttpGet("signin")]
         public IActionResult SignIn()
         {
@@ -35,39 +48,51 @@ namespace geekzKai.Controllers
         [HttpGet("callback")]
         public async Task<IActionResult> Callback()
         {
-            var result = await HttpContext.AuthenticateAsync(GoogleDefaults.AuthenticationScheme);
-            
-            if (!result.Succeeded)
-                return BadRequest("Google authentication failed");
-
-            var email = result.Principal.FindFirst(ClaimTypes.Email)?.Value;
-            var name = result.Principal.FindFirst(ClaimTypes.Name)?.Value;
-            var picture = result.Principal.FindFirst("picture")?.Value;
-
-            if (string.IsNullOrEmpty(email))
-                return BadRequest("Email not provided by Google");
-
-            var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == email);
-            
-            if (user == null)
+            try
             {
-                user = new User
-                {
-                    Email = email,
-                    Username = name ?? email.Split('@')[0],
-                    AuthProvider = "google",
-                    ProfilePictureUrl = picture,
-                    Password = null
-                };
+                var result = await HttpContext.AuthenticateAsync(GoogleDefaults.AuthenticationScheme);
                 
-                _context.Users.Add(user);
-                await _context.SaveChangesAsync();
-            }
+                if (!result.Succeeded)
+                {
+                    var error = result.Failure?.Message ?? "Unknown authentication error";
+                    return Redirect($"https://geekzkai-1.onrender.com/auth/error?message={Uri.EscapeDataString(error)}");
+                }
 
-            var token = GenerateJwtToken(user);
-            
-            // Redirect to frontend with token
-            return Redirect($"https://geekzkai-1.onrender.com/auth/callback?token={token}");
+                var email = result.Principal.FindFirst(ClaimTypes.Email)?.Value;
+                var name = result.Principal.FindFirst(ClaimTypes.Name)?.Value;
+                var picture = result.Principal.FindFirst("picture")?.Value;
+
+                if (string.IsNullOrEmpty(email))
+                {
+                    return Redirect($"https://geekzkai-1.onrender.com/auth/error?message={Uri.EscapeDataString("Email not provided by Google")}");
+                }
+
+                var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == email);
+                
+                if (user == null)
+                {
+                    user = new User
+                    {
+                        Email = email,
+                        Username = name ?? email.Split('@')[0],
+                        AuthProvider = "google",
+                        ProfilePictureUrl = picture,
+                        Password = null
+                    };
+                    
+                    _context.Users.Add(user);
+                    await _context.SaveChangesAsync();
+                }
+
+                var token = GenerateJwtToken(user);
+                
+                // Redirect to frontend with token
+                return Redirect($"https://geekzkai-1.onrender.com/auth/callback?token={token}");
+            }
+            catch (Exception ex)
+            {
+                return Redirect($"https://geekzkai-1.onrender.com/auth/error?message={Uri.EscapeDataString(ex.Message)}");
+            }
         }
 
         private string GenerateJwtToken(User user)
