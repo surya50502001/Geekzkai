@@ -100,18 +100,8 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 // Email Service
 builder.Services.AddScoped<EmailService>();
 
-// JWT & Google OAuth
-builder.Services.AddAuthentication(options =>
-    {
-        options.DefaultScheme = "Cookies";
-        options.DefaultChallengeScheme = "Google";
-    })
-    .AddCookie("Cookies", options =>
-    {
-        options.Cookie.SameSite = SameSiteMode.Lax;
-        options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
-        options.Cookie.HttpOnly = true;
-    })
+// JWT Authentication
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {
         options.TokenValidationParameters = new TokenValidationParameters
@@ -124,24 +114,19 @@ builder.Services.AddAuthentication(options =>
             ValidAudience = jwtAudience,
             IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtKey))
         };
-    })
-    .AddGoogle("Google", options =>
-    {
-        options.ClientId = builder.Configuration["Google:ClientId"] ?? Environment.GetEnvironmentVariable("Google__ClientId");
-        options.ClientSecret = builder.Configuration["Google:ClientSecret"] ?? Environment.GetEnvironmentVariable("Google__ClientSecret");
-        options.CallbackPath = "/api/googleauth/callback";
-        options.CorrelationCookie.SameSite = SameSiteMode.Lax;
-        options.CorrelationCookie.SecurePolicy = CookieSecurePolicy.Always;
-        
-        Console.WriteLine($"Google ClientId configured: {!string.IsNullOrEmpty(options.ClientId)}");
-        Console.WriteLine($"Google ClientSecret configured: {!string.IsNullOrEmpty(options.ClientSecret)}");
-        Console.WriteLine($"Google CallbackPath: {options.CallbackPath}");
-        
-        if (string.IsNullOrEmpty(options.ClientId) || string.IsNullOrEmpty(options.ClientSecret))
-        {
-            throw new Exception("Google OAuth credentials are missing. Check your configuration.");
-        }
     });
+
+// Google OAuth configuration (for manual handling)
+var googleClientId = builder.Configuration["Google:ClientId"] ?? Environment.GetEnvironmentVariable("Google__ClientId");
+var googleClientSecret = builder.Configuration["Google:ClientSecret"] ?? Environment.GetEnvironmentVariable("Google__ClientSecret");
+
+Console.WriteLine($"Google ClientId configured: {!string.IsNullOrEmpty(googleClientId)}");
+Console.WriteLine($"Google ClientSecret configured: {!string.IsNullOrEmpty(googleClientSecret)}");
+
+if (string.IsNullOrEmpty(googleClientId) || string.IsNullOrEmpty(googleClientSecret))
+{
+    throw new Exception("Google OAuth credentials are missing. Check your configuration.");
+}
 
 var app = builder.Build();
 

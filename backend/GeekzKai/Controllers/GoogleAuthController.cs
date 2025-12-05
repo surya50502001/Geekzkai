@@ -40,52 +40,61 @@ namespace geekzKai.Controllers
         [HttpGet("signin")]
         public IActionResult SignIn()
         {
-            Console.WriteLine($"Request Host: {Request.Host}");
-            Console.WriteLine($"Request Scheme: {Request.Scheme}");
-            var properties = new AuthenticationProperties();
-            return Challenge(properties, "Google");
+            var clientId = _configuration["Google:ClientId"] ?? Environment.GetEnvironmentVariable("Google__ClientId");
+            var redirectUri = "https://geekzkai.onrender.com/api/googleauth/callback";
+            var scope = "openid email profile";
+            var state = Guid.NewGuid().ToString();
+            
+            var googleAuthUrl = $"https://accounts.google.com/o/oauth2/v2/auth?" +
+                $"client_id={clientId}&" +
+                $"redirect_uri={Uri.EscapeDataString(redirectUri)}&" +
+                $"scope={Uri.EscapeDataString(scope)}&" +
+                $"response_type=code&" +
+                $"state={state}";
+            
+            return Redirect(googleAuthUrl);
         }
 
         [HttpGet("callback")]
-        public async Task<IActionResult> Callback()
+        public async Task<IActionResult> Callback(string code, string state)
         {
             try
             {
                 Console.WriteLine("Google OAuth callback started");
-                var result = await HttpContext.AuthenticateAsync("Google");
                 
-                if (!result.Succeeded)
+                if (string.IsNullOrEmpty(code))
                 {
-                    var error = result.Failure?.Message ?? "Unknown authentication error";
-                    Console.WriteLine($"Authentication failed: {error}");
-                    return Redirect($"https://geekzkai-1.onrender.com/auth/error?message={Uri.EscapeDataString(error)}");
+                    return Redirect($"https://geekzkai-1.onrender.com/auth/error?message={Uri.EscapeDataString("No authorization code received")}");
                 }
 
-                Console.WriteLine("Authentication succeeded, extracting claims");
-                var email = result.Principal.FindFirst(ClaimTypes.Email)?.Value;
-                var name = result.Principal.FindFirst(ClaimTypes.Name)?.Value;
-                var picture = result.Principal.FindFirst("picture")?.Value;
-
-                Console.WriteLine($"Email: {email}, Name: {name}");
-
-                if (string.IsNullOrEmpty(email))
+                // Exchange code for access token
+                var tokenResponse = await ExchangeCodeForToken(code);
+                if (tokenResponse == null)
                 {
-                    Console.WriteLine("Email not provided by Google");
-                    return Redirect($"https://geekzkai-1.onrender.com/auth/error?message={Uri.EscapeDataString("Email not provided by Google")}");
+                    return Redirect($"https://geekzkai-1.onrender.com/auth/error?message={Uri.EscapeDataString("Failed to get access token")}");
                 }
 
-                Console.WriteLine("Looking up user in database");
-                var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == email);
+                // Get user info from Google
+                var userInfo = await GetGoogleUserInfo(tokenResponse.AccessToken);
+                if (userInfo == null)
+                {
+                    return Redirect($"https://geekzkai-1.onrender.com/auth/error?message={Uri.EscapeDataString("Failed to get user info")}");
+                }
+
+                Console.WriteLine($"Email: {userInfo.Email}, Name: {userInfo.Name}");
+
+                // Find or create user
+                var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == userInfo.Email);
                 
                 if (user == null)
                 {
                     Console.WriteLine("Creating new user");
                     user = new User
                     {
-                        Email = email,
-                        Username = name ?? email.Split('@')[0],
+                        Email = userInfo.Email,
+                        Username = userInfo.Name ?? userInfo.Email.Split('@')[0],
                         AuthProvider = "google",
-                        ProfilePictureUrl = picture,
+                        ProfilePictureUrl = userInfo.Picture,
                         Password = null,
                         EmailVerified = true
                     };
@@ -101,18 +110,74 @@ namespace geekzKai.Controllers
                     await _context.SaveChangesAsync();
                 }
 
-                Console.WriteLine("Generating JWT token");
                 var token = GenerateJwtToken(user);
-                
-                Console.WriteLine("Redirecting to frontend with token");
                 return Redirect($"https://geekzkai-1.onrender.com/auth/callback?token={token}");
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"Google OAuth callback error: {ex.Message}");
-                Console.WriteLine($"Stack trace: {ex.StackTrace}");
                 return Redirect($"https://geekzkai-1.onrender.com/auth/error?message={Uri.EscapeDataString(ex.Message)}");
             }
+        }
+
+        private async Task<TokenResponse> ExchangeCodeForToken(string code)
+        {
+            var clientId = _configuration["Google:ClientId"] ?? Environment.GetEnvironmentVariable("Google__ClientId");
+            var clientSecret = _configuration["Google:ClientSecret"] ?? Environment.GetEnvironmentVariable("Google__ClientSecret");
+            var redirectUri = "https://geekzkai.onrender.com/api/googleauth/callback";
+
+            var tokenRequest = new Dictionary<string, string>
+            {
+                ["client_id"] = clientId,
+                ["client_secret"] = clientSecret,
+                ["code"] = code,
+                ["grant_type"] = "authorization_code",
+                ["redirect_uri"] = redirectUri
+            };
+
+            using var httpClient = new HttpClient();
+            var response = await httpClient.PostAsync("https://oauth2.googleapis.com/token", 
+                new FormUrlEncodedContent(tokenRequest));
+
+            if (response.IsSuccessStatusCode)
+            {
+                var json = await response.Content.ReadAsStringAsync();
+                return System.Text.Json.JsonSerializer.Deserialize<TokenResponse>(json);
+            }
+
+            return null;
+        }
+
+        private async Task<GoogleUserInfo> GetGoogleUserInfo(string accessToken)
+        {
+            using var httpClient = new HttpClient();
+            httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", accessToken);
+            
+            var response = await httpClient.GetAsync("https://www.googleapis.com/oauth2/v2/userinfo");
+            
+            if (response.IsSuccessStatusCode)
+            {
+                var json = await response.Content.ReadAsStringAsync();
+                return System.Text.Json.JsonSerializer.Deserialize<GoogleUserInfo>(json);
+            }
+
+            return null;
+        }
+
+        public class TokenResponse
+        {
+            public string access_token { get; set; }
+            public string AccessToken => access_token;
+        }
+
+        public class GoogleUserInfo
+        {
+            public string email { get; set; }
+            public string name { get; set; }
+            public string picture { get; set; }
+            public string Email => email;
+            public string Name => name;
+            public string Picture => picture;
         }
 
         private string GenerateJwtToken(User user)
