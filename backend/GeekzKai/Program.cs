@@ -106,9 +106,11 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     {
         options.ClientId = builder.Configuration["Google:ClientId"] ?? Environment.GetEnvironmentVariable("Google__ClientId");
         options.ClientSecret = builder.Configuration["Google:ClientSecret"] ?? Environment.GetEnvironmentVariable("Google__ClientSecret");
+        options.CallbackPath = "/api/googleauth/callback";
         
         Console.WriteLine($"Google ClientId configured: {!string.IsNullOrEmpty(options.ClientId)}");
         Console.WriteLine($"Google ClientSecret configured: {!string.IsNullOrEmpty(options.ClientSecret)}");
+        Console.WriteLine($"Google CallbackPath: {options.CallbackPath}");
         
         if (string.IsNullOrEmpty(options.ClientId) || string.IsNullOrEmpty(options.ClientSecret))
         {

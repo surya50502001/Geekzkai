@@ -42,6 +42,8 @@ namespace geekzKai.Controllers
         {
             var redirectUrl = "https://geekzkai.onrender.com/api/googleauth/callback";
             Console.WriteLine($"Google OAuth redirect URL: {redirectUrl}");
+            Console.WriteLine($"Request Host: {Request.Host}");
+            Console.WriteLine($"Request Scheme: {Request.Scheme}");
             var properties = new AuthenticationProperties { RedirectUri = redirectUrl };
             return Challenge(properties, GoogleDefaults.AuthenticationScheme);
         }
