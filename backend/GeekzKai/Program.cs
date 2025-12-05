@@ -4,11 +4,20 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using DotNetEnv;
+using Microsoft.AspNetCore.HttpOverrides;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Load .env file
 Env.Load();
+
+// Configure forwarded headers for HTTPS behind proxy
+builder.Services.Configure<ForwardedHeadersOptions>(options =>
+{
+    options.ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto;
+    options.KnownNetworks.Clear();
+    options.KnownProxies.Clear();
+});
 
 // Controllers
 builder.Services.AddControllers()
@@ -134,6 +143,7 @@ app.UseSwaggerUI();
 
 
 // Middleware
+app.UseForwardedHeaders();
 
 app.UseRouting();
 
