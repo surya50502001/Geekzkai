@@ -5,7 +5,6 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using DotNetEnv;
 using Microsoft.AspNetCore.HttpOverrides;
-using SendGrid.Extensions.DependencyInjection;
 using geekzKai.Services;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -98,11 +97,7 @@ builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseNpgsql(dbConnection)
 );
 
-// SendGrid
-builder.Services.AddSendGrid(options =>
-{
-    options.ApiKey = builder.Configuration["SendGrid:ApiKey"] ?? Environment.GetEnvironmentVariable("SendGrid__ApiKey");
-});
+// Email Service
 builder.Services.AddScoped<EmailService>();
 
 // JWT & Google OAuth
