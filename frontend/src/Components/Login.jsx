@@ -31,47 +31,52 @@ function Login() {
     };
 
     return (
-        <div className="h-screen flex flex-col items-center justify-center p-4">
-            <div className="bg-white dark:bg-gray-900 p-8 rounded-xl shadow-lg w-full max-w-xs border border-gray-200 dark:border-gray-700 transition-colors">
-                <h2 className="text-3xl font-bold mb-6 text-center text-black dark:text-white">Login</h2>
+        <div className="min-h-screen flex items-center justify-center p-4" style={{backgroundColor: 'var(--bg-primary)'}}>
+            <div className="w-full max-w-sm">
+                <div className="text-center mb-8">
+                    <h1 className="text-2xl font-bold mb-2" style={{color: 'var(--text-primary)'}}>GeekzKai</h1>
+                    <p className="text-sm" style={{color: 'var(--text-secondary)'}}>Sign in to your account</p>
+                </div>
 
-                <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+                <form onSubmit={handleSubmit} className="space-y-4">
                     <input
                         type="email"
                         placeholder="Email"
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
-                        className="p-3 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg text-black dark:text-white focus:outline-none focus:ring-2 focus:ring-black dark:focus:ring-white"
+                        className="w-full p-3 rounded-lg border focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                        style={{backgroundColor: 'var(--bg-secondary)', borderColor: 'var(--border-color)', color: 'var(--text-primary)'}}
                         required
                     />
-
+                    
                     <input
                         type="password"
                         placeholder="Password"
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
-                        className="p-3 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg text-black dark:text-white focus:outline-none focus:ring-2 focus:ring-black dark:focus:ring-white"
+                        className="w-full p-3 rounded-lg border focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                        style={{backgroundColor: 'var(--bg-secondary)', borderColor: 'var(--border-color)', color: 'var(--text-primary)'}}
                         required
                     />
 
                     <button
                         type="submit"
                         disabled={loading}
-                        className="p-3 bg-black dark:bg-white text-white dark:text-black rounded-lg hover:bg-gray-800 dark:hover:bg-gray-200 transition-colors disabled:opacity-50"
+                        className="w-full p-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 transition-colors"
                     >
-                        {loading ? "Logging in..." : "Login"}
+                        {loading ? "Signing in..." : "Sign in"}
                     </button>
 
-                    <div className="flex items-center gap-4 my-4">
-                        <hr className="flex-1 border-gray-300 dark:border-gray-600" />
-                        <span className="text-gray-500 dark:text-gray-400 text-sm">OR</span>
-                        <hr className="flex-1 border-gray-300 dark:border-gray-600" />
+                    <div className="flex items-center my-4">
+                        <hr className="flex-1" style={{borderColor: 'var(--border-color)'}} />
+                        <span className="px-3 text-sm" style={{color: 'var(--text-secondary)'}}>or</span>
+                        <hr className="flex-1" style={{borderColor: 'var(--border-color)'}} />
                     </div>
 
                     <a
                         href="https://geekzkai.onrender.com/api/googleauth/signin"
-                        className="flex items-center justify-center gap-3 p-3 bg-white border border-gray-300 rounded-lg hover:shadow-md transition-all duration-200 transform hover:-translate-y-0.5"
-                        style={{color: '#1f2937'}}
+                        className="flex items-center justify-center gap-2 w-full p-3 border rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
+                        style={{borderColor: 'var(--border-color)', color: 'var(--text-primary)'}}
                     >
                         <svg className="w-5 h-5" viewBox="0 0 24 24">
                             <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
@@ -79,16 +84,16 @@ function Login() {
                             <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
                             <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
                         </svg>
-                        <span className="font-medium">Continue with Google</span>
+                        Continue with Google
                     </a>
-
-                    <p className="mt-6 text-center text-gray-600 dark:text-gray-400">
-                        New User?{" "}
-                        <Link to="/register" className="text-black dark:text-white hover:underline">
-                            Register here
-                        </Link>
-                    </p>
                 </form>
+                
+                <p className="mt-6 text-center text-sm" style={{color: 'var(--text-secondary)'}}>
+                    Don't have an account?{" "}
+                    <Link to="/register" className="text-blue-600 hover:underline">
+                        Sign up
+                    </Link>
+                </p>
             </div>
         </div>
     );

@@ -98,3 +98,20 @@ body {
     background: rgba(0, 0, 0, 0.3);
     border: 1px solid rgba(255, 255, 255, 0.1);
 }
+
+/* Mobile keyboard fix */
+@media (max-width: 768px) {
+    .bottom-nav-fixed {
+        position: fixed !important;
+        bottom: 0 !important;
+        z-index: 9999 !important;
+        transform: translateZ(0);
+    }
+    
+    /* Prevent viewport resize on keyboard open */
+    @supports (-webkit-touch-callout: none) {
+        .bottom-nav-fixed {
+            bottom: env(safe-area-inset-bottom, 0) !important;
+        }
+    }
+}

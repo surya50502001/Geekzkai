@@ -54,24 +54,7 @@ export default function TopNavbar() {
                             </button>
                         </div>
                     </div>
-                ) : (
-                    <div className="flex items-center gap-2">
-                        <Link 
-                            to="/login" 
-                            className="px-4 py-2 transition-colors"
-                            style={{color: 'var(--text-primary)'}}
-                        >
-                            Login
-                        </Link>
-                        <Link 
-                            to="/register" 
-                            className="px-4 py-2 rounded-lg transition-all duration-200 font-medium"
-                            style={{backgroundColor: 'var(--text-primary)', color: 'var(--bg-primary)'}}
-                        >
-                            Sign Up
-                        </Link>
-                    </div>
-                )}
+                ) : null}
 
                 <ThemeToggle />
             </div>

@@ -10,6 +10,7 @@ import { useAuth } from "./Context/AuthContext";
 import Settings from "./Pages/Settings";
 import Profile from "./Pages/Profile";
 import CreatePostPage from "./Pages/CreatePostPage";
+import Search from "./Pages/Search";
 import Sidebar from "./Components/Sidebar";
 import AuthCallback from "./Pages/AuthCallback";
 
@@ -33,14 +34,15 @@ function App() {
                 <div className="hidden md:block">
                     <Sidebar />
                 </div>
-                <main className="md:ml-[var(--sidebar-width,0px)] pb-20 md:pb-0">
+                <main className="md:ml-[var(--sidebar-width,0px)] pb-16 md:pb-0">
                     <Routes>
                         <Route path="/" element={<Home />} />
                         <Route path="/login" element={<Login />} />
                         <Route path="/register" element={<Register />} />
                         <Route path="/create" element={<PrivateRoute><CreatePostPage /></PrivateRoute>} />
                         <Route path="/profile" element={<PrivateRoute><Profile /></PrivateRoute>} />
-                        <Route path="/settings" element={<PrivateRoute><Settings /></PrivateRoute>} />
+                        <Route path="/settings" element={<Settings />} />
+                        <Route path="/search" element={<Search />} />
                         <Route path="/trending" element={<Trending /> } />
                         <Route path="/auth/callback" element={<AuthCallback />} />
                     </Routes>

@@ -39,19 +39,21 @@ function Register() {
     };
 
     return (
-        <div className="min-h-screen flex flex-col items-center justify-center p-4">
-            <div className="bg-white dark:bg-gray-900 p-8 rounded-xl shadow-lg w-full max-w-xs border border-gray-200 dark:border-gray-700 transition-colors">
-                <h2 className="text-3xl font-bold mb-6 text-center text-black dark:text-white">
-                    Register
-                </h2>
+        <div className="min-h-screen flex items-center justify-center p-4" style={{backgroundColor: 'var(--bg-primary)'}}>
+            <div className="w-full max-w-sm">
+                <div className="text-center mb-8">
+                    <h1 className="text-2xl font-bold mb-2" style={{color: 'var(--text-primary)'}}>GeekzKai</h1>
+                    <p className="text-sm" style={{color: 'var(--text-secondary)'}}>Create your account</p>
+                </div>
 
-                <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+                <form onSubmit={handleSubmit} className="space-y-4">
                     <input
                         type="text"
                         placeholder="Username"
                         value={username}
                         onChange={(e) => setUsername(e.target.value)}
-                        className="p-3 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg text-black dark:text-white focus:outline-none focus:ring-2 focus:ring-black dark:focus:ring-white"
+                        className="w-full p-3 rounded-lg border focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                        style={{backgroundColor: 'var(--bg-secondary)', borderColor: 'var(--border-color)', color: 'var(--text-primary)'}}
                         required
                     />
 
@@ -60,7 +62,8 @@ function Register() {
                         placeholder="Email"
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
-                        className="p-3 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg text-black dark:text-white focus:outline-none focus:ring-2 focus:ring-black dark:focus:ring-white"
+                        className="w-full p-3 rounded-lg border focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                        style={{backgroundColor: 'var(--bg-secondary)', borderColor: 'var(--border-color)', color: 'var(--text-primary)'}}
                         required
                     />
 
@@ -69,14 +72,13 @@ function Register() {
                         placeholder="Password"
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
-                        className="p-3 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg text-black dark:text-white focus:outline-none focus:ring-2 focus:ring-black dark:focus:ring-white"
+                        className="w-full p-3 rounded-lg border focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                        style={{backgroundColor: 'var(--bg-secondary)', borderColor: 'var(--border-color)', color: 'var(--text-primary)'}}
                         required
                     />
 
-                    {/* Youtuber Toggle */}
-                    <div className="flex items-center justify-between">
-                        <span className="text-black dark:text-white">Are you a YouTuber?</span>
-
+                    <div className="flex items-center justify-between p-3 rounded-lg border" style={{backgroundColor: 'var(--bg-secondary)', borderColor: 'var(--border-color)'}}>
+                        <span style={{color: 'var(--text-primary)'}}>Are you a YouTuber?</span>
                         <label className="relative inline-flex items-center cursor-pointer">
                             <input
                                 type="checkbox"
@@ -84,18 +86,18 @@ function Register() {
                                 onChange={() => setIsYoutuber(!isYoutuber)}
                                 className="sr-only peer"
                             />
-                            <div className="w-11 h-6 bg-gray-200 rounded-full peer peer-focus:ring-4 peer-focus:ring-black dark:peer-focus:ring-white peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:bg-gray-700 peer-checked:bg-black dark:peer-checked:bg-white"></div>
+                            <div className="w-11 h-6 bg-gray-200 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
                         </label>
                     </div>
 
-                    {/* Channel Link */}
                     {isYoutuber && (
                         <input
                             type="url"
                             placeholder="YouTube Channel Link"
                             value={link}
                             onChange={(e) => setLink(e.target.value)}
-                            className="p-3 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg text-black dark:text-white focus:outline-none focus:ring-2 focus:ring-black dark:focus:ring-white"
+                            className="w-full p-3 rounded-lg border focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                            style={{backgroundColor: 'var(--bg-secondary)', borderColor: 'var(--border-color)', color: 'var(--text-primary)'}}
                             required
                         />
                     )}
@@ -103,16 +105,16 @@ function Register() {
                     <button
                         type="submit"
                         disabled={loading}
-                        className="p-3 bg-black dark:bg-white text-white dark:text-black rounded-lg hover:bg-gray-800 dark:hover:bg-gray-200 transition-colors disabled:opacity-50"
+                        className="w-full p-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 transition-colors"
                     >
-                        {loading ? "Registering..." : "Register"}
+                        {loading ? "Creating account..." : "Create account"}
                     </button>
                 </form>
-
-                <p className="mt-6 text-center text-gray-600 dark:text-gray-400">
+                
+                <p className="mt-6 text-center text-sm" style={{color: 'var(--text-secondary)'}}>
                     Already have an account?{" "}
-                    <Link to="/login" className="text-black dark:text-white hover:underline">
-                        Login here
+                    <Link to="/login" className="text-blue-600 hover:underline">
+                        Sign in
                     </Link>
                 </p>
             </div>
