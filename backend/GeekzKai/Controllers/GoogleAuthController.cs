@@ -62,21 +62,24 @@ namespace geekzKai.Controllers
                 
                 if (string.IsNullOrEmpty(code))
                 {
-                    return Redirect($"https://geekzkai-1.onrender.com/auth/error?message={Uri.EscapeDataString("No authorization code received")}");
+                    var frontendUrl = _configuration["Frontend:BaseUrl"] ?? Environment.GetEnvironmentVariable("FRONTEND_BASE_URL") ?? "https://geekzkai-frontend.onrender.com";
+                    return Redirect($"{frontendUrl}/auth/error?message={Uri.EscapeDataString("No authorization code received")}");
                 }
 
                 // Exchange code for access token
                 var tokenResponse = await ExchangeCodeForToken(code);
                 if (tokenResponse == null)
                 {
-                    return Redirect($"https://geekzkai-1.onrender.com/auth/error?message={Uri.EscapeDataString("Failed to get access token")}");
+                    var frontendUrl = _configuration["Frontend:BaseUrl"] ?? Environment.GetEnvironmentVariable("FRONTEND_BASE_URL") ?? "https://geekzkai-frontend.onrender.com";
+                    return Redirect($"{frontendUrl}/auth/error?message={Uri.EscapeDataString("Failed to get access token")}");
                 }
 
                 // Get user info from Google
                 var userInfo = await GetGoogleUserInfo(tokenResponse.AccessToken);
                 if (userInfo == null)
                 {
-                    return Redirect($"https://geekzkai-1.onrender.com/auth/error?message={Uri.EscapeDataString("Failed to get user info")}");
+                    var frontendUrl = _configuration["Frontend:BaseUrl"] ?? Environment.GetEnvironmentVariable("FRONTEND_BASE_URL") ?? "https://geekzkai-frontend.onrender.com";
+                    return Redirect($"{frontendUrl}/auth/error?message={Uri.EscapeDataString("Failed to get user info")}");
                 }
 
                 Console.WriteLine($"Email: {userInfo.Email}, Name: {userInfo.Name}");
@@ -109,12 +112,14 @@ namespace geekzKai.Controllers
                 }
 
                 var token = GenerateJwtToken(user);
-                return Redirect($"https://geekzkai-1.onrender.com/auth/callback?token={token}");
+                var frontendUrl = _configuration["Frontend:BaseUrl"] ?? Environment.GetEnvironmentVariable("FRONTEND_BASE_URL") ?? "https://geekzkai-frontend.onrender.com";
+                return Redirect($"{frontendUrl}/auth/callback?token={token}");
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"Google OAuth callback error: {ex.Message}");
-                return Redirect($"https://geekzkai-1.onrender.com/auth/error?message={Uri.EscapeDataString(ex.Message)}");
+                var frontendUrl = _configuration["Frontend:BaseUrl"] ?? Environment.GetEnvironmentVariable("FRONTEND_BASE_URL") ?? "https://geekzkai-frontend.onrender.com";
+                return Redirect($"{frontendUrl}/auth/error?message={Uri.EscapeDataString(ex.Message)}");
             }
         }
 
