@@ -20,17 +20,7 @@ function AuthCallback() {
         if (token) {
             try {
                 localStorage.setItem('token', token);
-                // Decode token to get user info
-                const payload = JSON.parse(atob(token.split('.')[1]));
-                console.log('JWT Payload:', payload);
-                
-                const userData = {
-                    id: payload.nameid || payload['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier'],
-                    email: payload.email || payload['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress'],
-                    username: payload.unique_name || payload['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name']
-                };
-                
-                setUser(userData);
+                console.log('Token saved, redirecting to home');
                 navigate('/');
             } catch (error) {
                 console.error('Token processing error:', error);
