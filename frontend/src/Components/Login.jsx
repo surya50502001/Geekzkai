@@ -6,6 +6,7 @@ function Login() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [loading, setLoading] = useState(false);
+    const [error, setError] = useState("");
 
     const { login, user } = useAuth();
     const navigate = useNavigate();
@@ -13,6 +14,15 @@ function Login() {
     useEffect(() => {
         if (user) {
             navigate("/profile");
+        }
+        
+        // Check for OAuth errors in URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const oauthError = urlParams.get('error');
+        if (oauthError) {
+            setError(decodeURIComponent(oauthError));
+            // Clean up URL
+            window.history.replaceState({}, document.title, window.location.pathname);
         }
     }, [user, navigate]);
 
@@ -24,7 +34,7 @@ function Login() {
             await login(email, password);
         } catch (error) {
             console.error("Login failed:", error);
-            alert("Invalid email or password");
+            setError("Invalid email or password");
         } finally {
             setLoading(false);
         }
@@ -37,6 +47,12 @@ function Login() {
                     <h1 className="text-2xl font-bold mb-2" style={{color: 'var(--text-primary)'}}>GeekzKai</h1>
                     <p className="text-sm" style={{color: 'var(--text-secondary)'}}>Sign in to your account</p>
                 </div>
+
+                {error && (
+                    <div className="mb-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded">
+                        {error}
+                    </div>
+                )}
 
                 <form onSubmit={handleSubmit} className="space-y-4">
                     <input

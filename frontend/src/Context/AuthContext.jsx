@@ -12,6 +12,15 @@ export const AuthProvider = ({ children }) => {
     const [token, setToken] = useState(localStorage.getItem("token") || null);
     const [loading, setLoading] = useState(!!token);
 
+    // Update token state when user is set directly (for OAuth flows)
+    const setUserAndToken = (userData) => {
+        const currentToken = localStorage.getItem("token");
+        if (currentToken && currentToken !== token) {
+            setToken(currentToken);
+        }
+        setUser(userData);
+    };
+
     useEffect(() => {
         if (token) {
             setLoading(true);
@@ -89,7 +98,7 @@ export const AuthProvider = ({ children }) => {
     };
 
     return (
-        <AuthContext.Provider value={{ user, token, login, logout, register, loading }}>
+        <AuthContext.Provider value={{ user, token, login, logout, register, loading, setUser: setUserAndToken }}>
             {children}
         </AuthContext.Provider>
     );

@@ -109,7 +109,7 @@ namespace geekzKai.Controllers
                 }
 
                 var token = GenerateJwtToken(user);
-                return Redirect($"https://geekzkai-1.onrender.com/?token={token}");
+                return Redirect($"https://geekzkai-1.onrender.com/auth/callback?token={token}");
             }
             catch (Exception ex)
             {
