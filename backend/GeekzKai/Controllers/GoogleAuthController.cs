@@ -56,13 +56,14 @@ namespace geekzKai.Controllers
         [HttpGet("callback")]
         public async Task<IActionResult> Callback(string code, string state)
         {
+            var frontendUrl = _configuration["Frontend:BaseUrl"] ?? Environment.GetEnvironmentVariable("FRONTEND_BASE_URL") ?? "https://geekzkai-1.onrender.com";
+            
             try
             {
                 Console.WriteLine("Google OAuth callback started");
                 
                 if (string.IsNullOrEmpty(code))
                 {
-                    var frontendUrl = _configuration["Frontend:BaseUrl"] ?? Environment.GetEnvironmentVariable("FRONTEND_BASE_URL") ?? "https://geekzkai-frontend.onrender.com";
                     return Redirect($"{frontendUrl}/auth/error?message={Uri.EscapeDataString("No authorization code received")}");
                 }
 
@@ -70,7 +71,6 @@ namespace geekzKai.Controllers
                 var tokenResponse = await ExchangeCodeForToken(code);
                 if (tokenResponse == null)
                 {
-                    var frontendUrl = _configuration["Frontend:BaseUrl"] ?? Environment.GetEnvironmentVariable("FRONTEND_BASE_URL") ?? "https://geekzkai-frontend.onrender.com";
                     return Redirect($"{frontendUrl}/auth/error?message={Uri.EscapeDataString("Failed to get access token")}");
                 }
 
@@ -78,7 +78,6 @@ namespace geekzKai.Controllers
                 var userInfo = await GetGoogleUserInfo(tokenResponse.AccessToken);
                 if (userInfo == null)
                 {
-                    var frontendUrl = _configuration["Frontend:BaseUrl"] ?? Environment.GetEnvironmentVariable("FRONTEND_BASE_URL") ?? "https://geekzkai-frontend.onrender.com";
                     return Redirect($"{frontendUrl}/auth/error?message={Uri.EscapeDataString("Failed to get user info")}");
                 }
 
@@ -112,13 +111,11 @@ namespace geekzKai.Controllers
                 }
 
                 var token = GenerateJwtToken(user);
-                var frontendUrl = _configuration["Frontend:BaseUrl"] ?? Environment.GetEnvironmentVariable("FRONTEND_BASE_URL") ?? "https://geekzkai-frontend.onrender.com";
                 return Redirect($"{frontendUrl}/auth/callback?token={token}");
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"Google OAuth callback error: {ex.Message}");
-                var frontendUrl = _configuration["Frontend:BaseUrl"] ?? Environment.GetEnvironmentVariable("FRONTEND_BASE_URL") ?? "https://geekzkai-frontend.onrender.com";
                 return Redirect($"{frontendUrl}/auth/error?message={Uri.EscapeDataString(ex.Message)}");
             }
         }
