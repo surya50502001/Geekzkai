@@ -1,12 +1,10 @@
 import React, { useEffect, useState } from 'react';
+import API_BASE_URL from '../apiConfig';
 
 const Trending = () => {
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  
-  const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 
-    (window.location.hostname === 'localhost' ? 'http://localhost:5131/api' : 'https://geekzkai.onrender.com/api');
 
   useEffect(() => {
     const fetchPosts = async () => {

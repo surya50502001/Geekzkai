@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import { useAuth } from "../Context/AuthContext";
 import { Link, useNavigate } from "react-router-dom";
 import { Plus, TrendingUp, Users, MessageCircle, Star } from "lucide-react";
+import API_BASE_URL from "../apiConfig";
 
 function Home() {
     const { theme } = useTheme();
@@ -10,9 +11,6 @@ function Home() {
     const [posts, setPosts] = useState([]);
     const [loading, setLoading] = useState(true);
     const navigate = useNavigate();
-
-    const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 
-        (window.location.hostname === 'localhost' ? 'http://localhost:5131/api' : 'https://geekzkai.onrender.com/api');
 
     useEffect(() => {
         // Handle OAuth token from URL

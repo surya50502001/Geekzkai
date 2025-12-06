@@ -1,6 +1,7 @@
 import { X, PenTool, Send } from "lucide-react";
 import { useState } from "react";
 import { useAuth } from "../Context/AuthContext";
+import API_BASE_URL from "../apiConfig";
 
 export default function CreatePostModal({ isOpen, onClose }) {
     const { token, user } = useAuth();
@@ -8,8 +9,6 @@ export default function CreatePostModal({ isOpen, onClose }) {
     const [content, setContent] = useState("");
     const [loading, setLoading] = useState(false);
     const [success, setSuccess] = useState(false);
-
-    const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "https://geekzkai.onrender.com/api";
 
     if (!isOpen) return null;
 
