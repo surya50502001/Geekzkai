@@ -12,6 +12,9 @@ var builder = WebApplication.CreateBuilder(args);
 // Load .env file
 Env.Load();
 
+// Add environment variables to configuration
+builder.Configuration.AddEnvironmentVariables();
+
 // Configure forwarded headers for HTTPS behind proxy
 builder.Services.Configure<ForwardedHeadersOptions>(options =>
 {
@@ -94,7 +97,7 @@ if (builder.Environment.IsProduction())
 }
 // DB
 builder.Services.AddDbContext<AppDbContext>(options =>
-    options.UseNpgsql(dbConnection)
+    options.UseSqlite(dbConnection)
 );
 
 // Email Service
@@ -132,11 +135,14 @@ var app = builder.Build();
 
 // Manual OAuth implementation - no Google middleware
 // Auto-apply any pending EF migrations at startup
+// Temporarily disabled for testing
+/*
 using (var scope = app.Services.CreateScope())
 {
     var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
     db.Database.Migrate();
 }
+*/
 
 // ENABLE SWAGGER ALWAYS (for debugging)
 app.UseSwagger();
