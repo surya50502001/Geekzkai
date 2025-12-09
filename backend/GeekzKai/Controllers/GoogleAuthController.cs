@@ -39,7 +39,9 @@ namespace geekzKai.Controllers
         public IActionResult SignIn()
         {
             var clientId = _configuration["Google:ClientId"] ?? Environment.GetEnvironmentVariable("Google__ClientId");
-            var baseUrl = _configuration["BaseUrl"] ?? Environment.GetEnvironmentVariable("BASE_URL") ?? "http://localhost:5131";
+            var baseUrl = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") == "Development" 
+                ? "http://localhost:5131" 
+                : "https://geekzkai.onrender.com";
             var redirectUri = $"{baseUrl}/api/googleauth/callback";
             var scope = "openid email profile";
             var state = Guid.NewGuid().ToString();
@@ -125,7 +127,9 @@ namespace geekzKai.Controllers
         {
             var clientId = _configuration["Google:ClientId"] ?? Environment.GetEnvironmentVariable("Google__ClientId");
             var clientSecret = _configuration["Google:ClientSecret"] ?? Environment.GetEnvironmentVariable("Google__ClientSecret");
-            var baseUrl = _configuration["BaseUrl"] ?? Environment.GetEnvironmentVariable("BASE_URL") ?? "http://localhost:5131";
+            var baseUrl = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") == "Development" 
+                ? "http://localhost:5131" 
+                : "https://geekzkai.onrender.com";
             var redirectUri = $"{baseUrl}/api/googleauth/callback";
 
             var tokenRequest = new Dictionary<string, string>
