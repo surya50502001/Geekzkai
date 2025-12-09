@@ -56,7 +56,7 @@ namespace geekzKai.Controllers
         [HttpGet("callback")]
         public async Task<IActionResult> Callback(string code, string state)
         {
-            var frontendUrl = _configuration["Frontend:BaseUrl"] ?? Environment.GetEnvironmentVariable("FRONTEND_BASE_URL") ?? "https://geekzkai-1.onrender.com";
+            var frontendUrl = _configuration["Frontend:BaseUrl"] ?? Environment.GetEnvironmentVariable("FRONTEND_BASE_URL") ?? "https://geekzkai-frontend.onrender.com";
             
             try
             {

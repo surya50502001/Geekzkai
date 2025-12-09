@@ -6,7 +6,7 @@ services:
     staticPublishPath: ./dist
     routes:
       - type: rewrite
-        source: "/auth/callback"
+        source: "/auth/callback*"
         destination: /index.html
       - type: rewrite
         source: "/*"
