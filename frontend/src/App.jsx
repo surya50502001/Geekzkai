@@ -4,6 +4,7 @@ import Home from "./Pages/Home"
 import Login from "./Components/Login";
 import Register from "./Components/Register";
 import Trending from "./Pages/Trending";
+import CreatePost from "./Pages/CreatePost";
 
 import { Navigate } from "react-router-dom";
 import { useAuth } from "./Context/AuthContext";
@@ -71,6 +72,7 @@ function App() {
                         <Route path="/login" element={<Login />} />
                         <Route path="/register" element={<Register />} />
 
+                        <Route path="/create" element={<PrivateRoute><CreatePost /></PrivateRoute>} />
                         <Route path="/profile" element={<PrivateRoute><Profile /></PrivateRoute>} />
                         <Route path="/settings" element={<Settings />} />
                         <Route path="/search" element={<Search />} />

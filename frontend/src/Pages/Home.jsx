@@ -1,18 +1,16 @@
-
 import { useState, useEffect } from "react";
 import { useAuth } from "../Context/AuthContext";
 import { Link } from "react-router-dom";
 import { TrendingUp, Users, MessageCircle, Star } from "lucide-react";
 import API_BASE_URL from "../apiConfig";
-import CreatePostInline from "../Components/CreatePostInline";
+import FollowButton from "../Components/FollowButton";
+import ChatButton from "../Components/ChatButton";
 
 function Home() {
     const { user, setUser } = useAuth();
     const [posts, setPosts] = useState([]);
 
-
     useEffect(() => {
-        // Handle OAuth token from URL
         const urlParams = new URLSearchParams(window.location.search);
         const token = urlParams.get('token');
         
@@ -25,7 +23,6 @@ function Home() {
                 email: payload.email || payload['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress'],
                 username: payload.unique_name || payload['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name']
             });
-            // Clean URL
             window.history.replaceState({}, document.title, window.location.pathname);
         }
         
@@ -46,7 +43,6 @@ function Home() {
 
     return (
         <div className="min-h-screen">
-            {/* Hero Section */}
             <div className="relative overflow-hidden">
                 <div className="absolute inset-0 bg-gradient-to-br from-purple-600/20 via-blue-600/20 to-cyan-600/20 animate-pulse"></div>
                 <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(120,119,198,0.3),transparent_50%)] animate-pulse"></div>
@@ -61,7 +57,7 @@ function Home() {
                             GeekzKai 👾
                         </h1>
                         <p className="text-xl mb-8 max-w-2xl mx-auto leading-relaxed" style={{color: 'var(--text-primary)'}}>
-                            Your ultimate space to discuss anime theories, share "what if" ideas, and connect with fellow otaku from around the world!
+                            Your ultimate space to discuss anime theories, share ideas, and connect with fellow otaku from around the world!
                         </p>
                         
                         {user ? (
@@ -95,14 +91,6 @@ function Home() {
                 </div>
             </div>
 
-            {/* Create Post Section */}
-            {user && (
-                <div className="max-w-2xl mx-auto px-6 py-8">
-                    <CreatePostInline onPostCreated={fetchPosts} />
-                </div>
-            )}
-
-            {/* Stats Section */}
             <div className="max-w-7xl mx-auto px-6 py-16">
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                     <div className="text-center p-8 rounded-2xl shadow-lg border-2 border-purple-500/30 hover:border-purple-500 transition-all duration-300 hover:shadow-2xl transform hover:-translate-y-2" style={{backgroundColor: 'var(--bg-secondary)'}}>
@@ -129,7 +117,6 @@ function Home() {
                 </div>
             </div>
 
-            {/* Recent Posts Preview */}
             {posts.length > 0 && (
                 <div className="max-w-7xl mx-auto px-6 py-16">
                     <div className="text-center mb-12">
@@ -141,10 +128,21 @@ function Home() {
                             <div key={post.id} className="rounded-xl shadow-lg border p-6 hover:shadow-xl transition-all duration-200 transform hover:-translate-y-1" style={{backgroundColor: 'var(--bg-secondary)', borderColor: 'var(--border-color)'}}>
                                 <h3 className="font-semibold mb-2 line-clamp-2" style={{color: 'var(--text-primary)'}}>{post.question}</h3>
                                 <p className="text-sm mb-4 line-clamp-3" style={{color: 'var(--text-secondary)'}}>{post.description}</p>
-                                <div className="flex items-center justify-between text-xs" style={{color: 'var(--text-secondary)'}}>
-                                    <span>By {post.user?.username || 'Anonymous'}</span>
-                                    <span>{new Date(post.createdAt).toLocaleDateString()}</span>
+                                <div className="flex items-center justify-between mb-3">
+                                    <div className="flex items-center gap-2">
+                                        <div className="w-8 h-8 rounded-full bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center text-white text-sm font-semibold">
+                                            {post.user?.username?.[0]?.toUpperCase() || 'A'}
+                                        </div>
+                                        <span className="text-sm font-medium" style={{color: 'var(--text-primary)'}}>{post.user?.username || 'Anonymous'}</span>
+                                    </div>
+                                    <span className="text-xs" style={{color: 'var(--text-secondary)'}}>{new Date(post.createdAt).toLocaleDateString()}</span>
                                 </div>
+                                {post.user && (
+                                    <div className="flex gap-2">
+                                        <FollowButton userId={post.user.id} username={post.user.username} />
+                                        <ChatButton userId={post.user.id} username={post.user.username} onChatOpen={(user) => console.log('Open chat with:', user)} />
+                                    </div>
+                                )}
                             </div>
                         ))}
                     </div>
