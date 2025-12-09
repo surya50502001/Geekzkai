@@ -51,7 +51,8 @@ namespace geekzKai.Controllers
                 $"redirect_uri={Uri.EscapeDataString(redirectUri)}&" +
                 $"scope={Uri.EscapeDataString(scope)}&" +
                 $"response_type=code&" +
-                $"state={state}";
+                $"state={state}&" +
+                $"prompt=select_account";
             
             return Redirect(googleAuthUrl);
         }
