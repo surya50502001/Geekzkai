@@ -40,9 +40,9 @@ function AuthCallback() {
                 const decodedToken = jwtDecode(token);
                 if (decodedToken) {
                     const user = {
-                        id: decodedToken['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier'],
-                        email: decodedToken['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress'],
-                        username: decodedToken['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name'],
+                        id: decodedToken.id || decodedToken['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier'],
+                        email: decodedToken.email || decodedToken['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress'],
+                        username: decodedToken.username || decodedToken['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name'],
                     };
                     setUser(user);
                     console.log('Token saved and user set, redirecting to home');

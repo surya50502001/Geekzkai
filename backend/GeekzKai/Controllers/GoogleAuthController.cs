@@ -195,7 +195,10 @@ namespace geekzKai.Controllers
             {
                 new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
                 new Claim(ClaimTypes.Email, user.Email),
-                new Claim(ClaimTypes.Name, user.Username)
+                new Claim(ClaimTypes.Name, user.Username),
+                new Claim("id", user.Id.ToString()),
+                new Claim("email", user.Email),
+                new Claim("username", user.Username)
             };
 
             var token = new JwtSecurityToken(
