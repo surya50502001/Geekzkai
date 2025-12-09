@@ -1,16 +1,15 @@
-import { useTheme } from "../Context/ThemeContext";
+
 import { useState, useEffect } from "react";
 import { useAuth } from "../Context/AuthContext";
-import { Link, useNavigate } from "react-router-dom";
-import { Plus, TrendingUp, Users, MessageCircle, Star } from "lucide-react";
+import { Link } from "react-router-dom";
+import { TrendingUp, Users, MessageCircle, Star } from "lucide-react";
 import API_BASE_URL from "../apiConfig";
+import CreatePostInline from "../Components/CreatePostInline";
 
 function Home() {
-    const { theme } = useTheme();
     const { user, setUser } = useAuth();
     const [posts, setPosts] = useState([]);
-    const [loading, setLoading] = useState(true);
-    const navigate = useNavigate();
+
 
     useEffect(() => {
         // Handle OAuth token from URL
@@ -42,8 +41,6 @@ function Home() {
             }
         } catch (error) {
             console.error("Error fetching posts:", error);
-        } finally {
-            setLoading(false);
         }
     };
 
@@ -68,21 +65,13 @@ function Home() {
                         </p>
                         
                         {user ? (
-                            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                                <Link 
-                                    to="/create" 
-                                    className="inline-flex items-center gap-2 px-8 py-4 rounded-xl font-semibold transition-all duration-300 shadow-lg hover:shadow-2xl transform hover:-translate-y-2 bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white"
-                                >
-                                    <Plus size={20} />
-                                    Create Post
-                                </Link>
+                            <div className="flex justify-center">
                                 <Link 
                                     to="/trending" 
-                                    className="inline-flex items-center gap-2 px-8 py-4 rounded-xl font-semibold border-2 border-purple-500 transition-all duration-300 shadow-lg hover:shadow-2xl transform hover:-translate-y-2 hover:bg-purple-500 hover:text-white"
-                                    style={{backgroundColor: 'var(--bg-primary)', color: 'var(--text-primary)'}}
+                                    className="inline-flex items-center gap-2 px-8 py-4 rounded-xl font-semibold transition-all duration-300 shadow-lg hover:shadow-2xl transform hover:-translate-y-2 bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white"
                                 >
                                     <TrendingUp size={20} />
-                                    Trending
+                                    Explore Trending
                                 </Link>
                             </div>
                         ) : (
@@ -105,6 +94,13 @@ function Home() {
                     </div>
                 </div>
             </div>
+
+            {/* Create Post Section */}
+            {user && (
+                <div className="max-w-2xl mx-auto px-6 py-8">
+                    <CreatePostInline onPostCreated={fetchPosts} />
+                </div>
+            )}
 
             {/* Stats Section */}
             <div className="max-w-7xl mx-auto px-6 py-16">

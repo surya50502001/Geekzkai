@@ -10,7 +10,7 @@ import { useAuth } from "./Context/AuthContext";
 import { useEffect } from "react";
 import Settings from "./Pages/Settings";
 import Profile from "./Pages/Profile";
-import CreatePostPage from "./Pages/CreatePostPage";
+
 import Search from "./Pages/Search";
 import Sidebar from "./Components/Sidebar";
 import AuthCallback from "./Pages/AuthCallback";
@@ -70,7 +70,7 @@ function App() {
                         <Route path="/" element={<Home />} />
                         <Route path="/login" element={<Login />} />
                         <Route path="/register" element={<Register />} />
-                        <Route path="/create" element={<PrivateRoute><CreatePostPage /></PrivateRoute>} />
+
                         <Route path="/profile" element={<PrivateRoute><Profile /></PrivateRoute>} />
                         <Route path="/settings" element={<Settings />} />
                         <Route path="/search" element={<Search />} />
