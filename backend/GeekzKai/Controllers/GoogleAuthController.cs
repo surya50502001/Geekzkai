@@ -115,7 +115,7 @@ namespace geekzKai.Controllers
                 }
 
                 var token = GenerateJwtToken(user);
-                return Redirect($"{frontendUrl}/auth/callback?token={token}");
+                return Redirect($"{frontendUrl}/#token={token}");
             }
             catch (Exception ex)
             {

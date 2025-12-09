@@ -7,6 +7,7 @@ import Trending from "./Pages/Trending";
 
 import { Navigate } from "react-router-dom";
 import { useAuth } from "./Context/AuthContext";
+import { useEffect } from "react";
 import Settings from "./Pages/Settings";
 import Profile from "./Pages/Profile";
 import CreatePostPage from "./Pages/CreatePostPage";
@@ -27,6 +28,36 @@ function PrivateRoute({ children }) {
     return user ? children : <Navigate to="/login" />;
 }
 function App() {
+    const { setUser } = useAuth();
+
+    useEffect(() => {
+        const hash = window.location.hash;
+        if (hash.startsWith('#token=')) {
+            const token = hash.substring(7);
+            localStorage.setItem('token', token);
+            
+            try {
+                const base64Url = token.split('.')[1];
+                const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+                const jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
+                    return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+                }).join(''));
+                const decodedToken = JSON.parse(jsonPayload);
+                
+                const user = {
+                    id: decodedToken.id,
+                    email: decodedToken.email,
+                    username: decodedToken.username,
+                };
+                setUser(user);
+                window.location.hash = '';
+                window.history.replaceState(null, null, '/');
+            } catch (error) {
+                console.error('Token processing error:', error);
+            }
+        }
+    }, [setUser]);
+
     return (
         <div className="min-h-screen transition-colors duration-300" style={{backgroundColor: 'var(--bg-primary)', color: 'var(--text-primary)'}}>
             <Router>
