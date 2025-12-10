@@ -11,8 +11,8 @@ using geekzKai.Data;
 namespace GeekzKai.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20251210085713_FixIsYoutuberColumn")]
-    partial class FixIsYoutuberColumn
+    [Migration("20251210091111_AddMessagesTableOnly")]
+    partial class AddMessagesTableOnly
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
