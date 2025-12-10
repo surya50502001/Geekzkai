@@ -36,9 +36,12 @@ export default function Chat() {
             if (response.ok) {
                 const data = await response.json();
                 setConversations(data);
+            } else {
+                setConversations([]);
             }
         } catch (error) {
             console.error('Error fetching conversations:', error);
+            setConversations([]);
         } finally {
             setLoading(false);
         }
@@ -54,9 +57,12 @@ export default function Chat() {
             if (response.ok) {
                 const data = await response.json();
                 setMessages(data);
+            } else {
+                setMessages([]);
             }
         } catch (error) {
             console.error('Error fetching messages:', error);
+            setMessages([]);
         }
     };
 
@@ -102,7 +108,15 @@ export default function Chat() {
 
             if (response.ok) {
                 setNewMessage('');
-                fetchMessages(selectedChat.userId);
+                // Add the message to local state immediately for better UX
+                const newMsg = {
+                    id: Date.now(),
+                    senderId: user.id,
+                    receiverId: selectedChat.userId,
+                    content: newMessage,
+                    createdAt: new Date().toISOString()
+                };
+                setMessages(prev => [...prev, newMsg]);
                 fetchConversations();
             }
         } catch (error) {
@@ -184,6 +198,12 @@ export default function Chat() {
                             </div>
                             <p className="text-center" style={{color: 'var(--text-secondary)'}}>No conversations yet</p>
                             <p className="text-sm text-center mt-1" style={{color: 'var(--text-secondary)'}}>Start a new chat to begin messaging</p>
+                            <button
+                                onClick={() => setShowNewChat(true)}
+                                className="mt-4 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors"
+                            >
+                                Start New Chat
+                            </button>
                         </div>
                     ) : (
                         conversations.map((conversation) => (
