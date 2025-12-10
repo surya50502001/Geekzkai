@@ -27,7 +27,58 @@ namespace geekzKai.Controllers
             return await _context.Posts
                 .Include(p => p.User)
                 .Include(p => p.Comments)
+                .OrderByDescending(p => p.CreatedAt)
                 .ToListAsync();
+        }
+
+        // GET: api/posts/recommendations
+        [HttpGet("recommendations")]
+        [Microsoft.AspNetCore.Authorization.Authorize]
+        public async Task<ActionResult<IEnumerable<object>>> GetRecommendedUsers()
+        {
+            var currentUserId = int.Parse(User.FindFirst("id")?.Value ?? "0");
+            
+            var followingIds = await _context.Follows
+                .Where(f => f.FollowerId == currentUserId)
+                .Select(f => f.FollowingId)
+                .ToListAsync();
+
+            var recommendedUsers = await _context.Users
+                .Where(u => u.Id != currentUserId && !followingIds.Contains(u.Id))
+                .OrderByDescending(u => u.FollowersCount)
+                .Take(5)
+                .Select(u => new {
+                    u.Id,
+                    u.Username,
+                    u.ProfilePictureUrl,
+                    u.FollowersCount
+                })
+                .ToListAsync();
+
+            return Ok(recommendedUsers);
+        }
+
+        // GET: api/posts/feed
+        [HttpGet("feed")]
+        [Microsoft.AspNetCore.Authorization.Authorize]
+        public async Task<ActionResult<IEnumerable<Post>>> GetFeed()
+        {
+            var currentUserId = int.Parse(User.FindFirst("id")?.Value ?? "0");
+            
+            var followingIds = await _context.Follows
+                .Where(f => f.FollowerId == currentUserId)
+                .Select(f => f.FollowingId)
+                .ToListAsync();
+
+            var feedPosts = await _context.Posts
+                .Where(p => followingIds.Contains(p.UserId))
+                .Include(p => p.User)
+                .Include(p => p.Comments)
+                .OrderByDescending(p => p.CreatedAt)
+                .Take(20)
+                .ToListAsync();
+
+            return Ok(feedPosts);
         }
 
         // GET: api/posts/trending

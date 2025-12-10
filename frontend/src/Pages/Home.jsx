@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useAuth } from "../Context/AuthContext";
 import { Link } from "react-router-dom";
-import { TrendingUp, Users, MessageCircle, Star } from "lucide-react";
+import { TrendingUp, Users, MessageCircle, Star, UserPlus } from "lucide-react";
 import API_BASE_URL from "../apiConfig";
 import FollowButton from "../Components/FollowButton";
 import ChatButton from "../Components/ChatButton";
@@ -9,6 +9,8 @@ import ChatButton from "../Components/ChatButton";
 function Home() {
     const { user, setUser } = useAuth();
     const [posts, setPosts] = useState([]);
+    const [recommendedUsers, setRecommendedUsers] = useState([]);
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         const urlParams = new URLSearchParams(window.location.search);
@@ -26,7 +28,12 @@ function Home() {
             window.history.replaceState({}, document.title, window.location.pathname);
         }
         
-        fetchPosts();
+        if (user) {
+            fetchFeed();
+            fetchRecommendations();
+        } else {
+            fetchPosts();
+        }
     }, [setUser]);
 
     const fetchPosts = async () => {
@@ -38,6 +45,47 @@ function Home() {
             }
         } catch (error) {
             console.error("Error fetching posts:", error);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const fetchFeed = async () => {
+        try {
+            const response = await fetch(`${API_BASE_URL}/posts/feed`, {
+                headers: {
+                    'Authorization': `Bearer ${localStorage.getItem('token')}`
+                }
+            });
+            if (response.ok) {
+                const data = await response.json();
+                setPosts(data);
+            } else {
+                // Fallback to all posts if no following feed
+                fetchPosts();
+                return;
+            }
+        } catch (error) {
+            console.error("Error fetching feed:", error);
+            fetchPosts();
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const fetchRecommendations = async () => {
+        try {
+            const response = await fetch(`${API_BASE_URL}/posts/recommendations`, {
+                headers: {
+                    'Authorization': `Bearer ${localStorage.getItem('token')}`
+                }
+            });
+            if (response.ok) {
+                const data = await response.json();
+                setRecommendedUsers(data);
+            }
+        } catch (error) {
+            console.error("Error fetching recommendations:", error);
         }
     };
 
@@ -61,13 +109,21 @@ function Home() {
                         </p>
                         
                         {user ? (
-                            <div className="flex justify-center">
+                            <div className="flex justify-center gap-4">
                                 <Link 
-                                    to="/trending" 
+                                    to="/create" 
                                     className="inline-flex items-center gap-2 px-8 py-4 rounded-xl font-semibold transition-all duration-300 shadow-lg hover:shadow-2xl transform hover:-translate-y-2 bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white"
                                 >
+                                    <MessageCircle size={20} />
+                                    Create Post
+                                </Link>
+                                <Link 
+                                    to="/search" 
+                                    className="inline-flex items-center gap-2 px-8 py-4 rounded-xl font-semibold border-2 border-purple-500 transition-all duration-300 shadow-lg hover:shadow-2xl transform hover:-translate-y-2 hover:bg-purple-500 hover:text-white"
+                                    style={{backgroundColor: 'var(--bg-primary)', color: 'var(--text-primary)'}}
+                                >
                                     <TrendingUp size={20} />
-                                    Explore Trending
+                                    Explore
                                 </Link>
                             </div>
                         ) : (
@@ -117,7 +173,90 @@ function Home() {
                 </div>
             </div>
 
-            {posts.length > 0 && (
+            {user && (
+                <div className="max-w-7xl mx-auto px-6 py-16">
+                    <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
+                        {/* Main Feed */}
+                        <div className="lg:col-span-3">
+                            {loading ? (
+                                <div className="text-center py-8">
+                                    <div className="inline-block w-6 h-6 border-2 border-purple-600 border-t-transparent rounded-full animate-spin"></div>
+                                    <p className="mt-2" style={{color: 'var(--text-secondary)'}}>Loading your feed...</p>
+                                </div>
+                            ) : posts.length > 0 ? (
+                                <div>
+                                    <h2 className="text-2xl font-bold mb-6" style={{color: 'var(--text-primary)'}}>Your Feed</h2>
+                                    <div className="space-y-6">
+                                        {posts.map((post) => (
+                                            <div key={post.id} className="rounded-xl shadow-lg border p-6" style={{backgroundColor: 'var(--bg-secondary)', borderColor: 'var(--border-color)'}}>
+                                                <div className="flex items-center gap-3 mb-4">
+                                                    <div className="w-10 h-10 rounded-full bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center text-white font-semibold">
+                                                        {post.user?.username?.[0]?.toUpperCase() || 'A'}
+                                                    </div>
+                                                    <div>
+                                                        <h4 className="font-semibold" style={{color: 'var(--text-primary)'}}>{post.user?.username || 'Anonymous'}</h4>
+                                                        <p className="text-sm" style={{color: 'var(--text-secondary)'}}>{new Date(post.createdAt).toLocaleDateString()}</p>
+                                                    </div>
+                                                </div>
+                                                <h3 className="font-semibold mb-2" style={{color: 'var(--text-primary)'}}>{post.question}</h3>
+                                                <p className="mb-4" style={{color: 'var(--text-secondary)'}}>{post.description}</p>
+                                                {post.user && (
+                                                    <div className="flex gap-2">
+                                                        <ChatButton userId={post.user.id} username={post.user.username} onChatOpen={(user) => console.log('Open chat with:', user)} />
+                                                    </div>
+                                                )}
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
+                            ) : (
+                                <div className="text-center py-12">
+                                    <Users size={48} className="mx-auto mb-4" style={{color: 'var(--text-secondary)'}} />
+                                    <h3 className="text-xl font-semibold mb-2" style={{color: 'var(--text-primary)'}}>Your feed is empty</h3>
+                                    <p className="mb-6" style={{color: 'var(--text-secondary)'}}>Follow some users to see their posts here</p>
+                                    <Link 
+                                        to="/search" 
+                                        className="inline-flex items-center gap-2 px-6 py-3 bg-purple-500 text-white rounded-lg hover:bg-purple-600 transition-colors"
+                                    >
+                                        <Users size={20} />
+                                        Find People to Follow
+                                    </Link>
+                                </div>
+                            )}
+                        </div>
+
+                        {/* Sidebar */}
+                        <div className="lg:col-span-1">
+                            {recommendedUsers.length > 0 && (
+                                <div className="rounded-xl shadow-lg border p-6 mb-6" style={{backgroundColor: 'var(--bg-secondary)', borderColor: 'var(--border-color)'}}>
+                                    <h3 className="font-semibold mb-4 flex items-center gap-2" style={{color: 'var(--text-primary)'}}>
+                                        <UserPlus size={20} />
+                                        Suggested for you
+                                    </h3>
+                                    <div className="space-y-3">
+                                        {recommendedUsers.map((suggestedUser) => (
+                                            <div key={suggestedUser.id} className="flex items-center justify-between">
+                                                <div className="flex items-center gap-3">
+                                                    <div className="w-8 h-8 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white text-sm font-semibold">
+                                                        {suggestedUser.username[0].toUpperCase()}
+                                                    </div>
+                                                    <div>
+                                                        <p className="font-medium text-sm" style={{color: 'var(--text-primary)'}}>{suggestedUser.username}</p>
+                                                        <p className="text-xs" style={{color: 'var(--text-secondary)'}}>{suggestedUser.followersCount} followers</p>
+                                                    </div>
+                                                </div>
+                                                <FollowButton userId={suggestedUser.id} username={suggestedUser.username} size="sm" />
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
+                            )}
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {!user && posts.length > 0 && (
                 <div className="max-w-7xl mx-auto px-6 py-16">
                     <div className="text-center mb-12">
                         <h2 className="text-3xl font-bold mb-4" style={{color: 'var(--text-primary)'}}>Latest Discussions</h2>
@@ -148,7 +287,7 @@ function Home() {
                     </div>
                     <div className="text-center mt-8">
                         <Link 
-                            to="/trending" 
+                            to="/search" 
                             className="inline-flex items-center gap-2 text-black dark:text-white hover:text-black dark:hover:text-white font-medium"
                         >
                             View All Posts
