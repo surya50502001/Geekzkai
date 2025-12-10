@@ -7,7 +7,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace GeekzKai.Migrations
 {
     /// <inheritdoc />
-    public partial class today : Migration
+    public partial class InitialCreate : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -17,23 +17,83 @@ namespace GeekzKai.Migrations
                 columns: table => new
                 {
                     User_Id = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    Username = table.Column<string>(type: "text", nullable: false),
+                        .Annotation("Npgsql:ValueGenerationStrategy", Npgsql.EntityFrameworkCore.PostgreSQL.Metadata.NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Username = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
                     User_Email = table.Column<string>(type: "text", nullable: false),
-                    User_Password = table.Column<string>(type: "text", nullable: false),
+                    User_Password = table.Column<string>(type: "text", nullable: true),
                     User_CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    IsActive = table.Column<bool>(type: "boolean", nullable: false),
-                    IsYoutuber = table.Column<bool>(type: "boolean", nullable: false),
-                    IsAdmin = table.Column<bool>(type: "boolean", nullable: false),
-                    YouTubeChannelLink = table.Column<string>(type: "text", nullable: true),
-                    Bio = table.Column<string>(type: "text", nullable: true),
-                    ProfilePictureUrl = table.Column<string>(type: "text", nullable: true),
+                    User_Bio = table.Column<string>(type: "character varying(200)", maxLength: 200, nullable: true),
                     FollowersCount = table.Column<int>(type: "integer", nullable: false),
-                    FollowingCount = table.Column<int>(type: "integer", nullable: false)
+                    FollowingCount = table.Column<int>(type: "integer", nullable: false),
+                    IsActive = table.Column<bool>(type: "boolean", nullable: false),
+                    IsAdmin = table.Column<bool>(type: "boolean", nullable: false),
+                    IsYoutuber = table.Column<bool>(type: "boolean", nullable: false),
+                    ProfilePictureUrl = table.Column<string>(type: "text", nullable: true),
+                    YouTubeChannellink = table.Column<string>(type: "text", nullable: true),
+                    AuthProvider = table.Column<string>(type: "text", nullable: false),
+                    EmailVerified = table.Column<bool>(type: "boolean", nullable: false),
+                    EmailVerificationToken = table.Column<string>(type: "text", nullable: true),
+                    LastLoginAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Users", x => x.User_Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Follows",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    FollowerId = table.Column<int>(type: "integer", nullable: false),
+                    FollowingId = table.Column<int>(type: "integer", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Follows", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Follows_Users_FollowerId",
+                        column: x => x.FollowerId,
+                        principalTable: "Users",
+                        principalColumn: "User_Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Follows_Users_FollowingId",
+                        column: x => x.FollowingId,
+                        principalTable: "Users",
+                        principalColumn: "User_Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Messages",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    SenderId = table.Column<int>(type: "integer", nullable: false),
+                    ReceiverId = table.Column<int>(type: "integer", nullable: false),
+                    Content = table.Column<string>(type: "text", nullable: false),
+                    IsRead = table.Column<bool>(type: "boolean", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Messages", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Messages_Users_ReceiverId",
+                        column: x => x.ReceiverId,
+                        principalTable: "Users",
+                        principalColumn: "User_Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Messages_Users_SenderId",
+                        column: x => x.SenderId,
+                        principalTable: "Users",
+                        principalColumn: "User_Id",
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -44,7 +104,6 @@ namespace GeekzKai.Migrations
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     Post_Question = table.Column<string>(type: "text", nullable: false),
                     Post_Description = table.Column<string>(type: "text", nullable: true),
-                    Post_Upvotes = table.Column<int>(type: "integer", nullable: false),
                     Post_CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     Post_UserId = table.Column<int>(type: "integer", nullable: false)
                 },
@@ -94,7 +153,8 @@ namespace GeekzKai.Migrations
                     Upvote_Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     Upvote_UserId = table.Column<int>(type: "integer", nullable: false),
-                    Upvote_PostId = table.Column<int>(type: "integer", nullable: false)
+                    Upvote_PostId = table.Column<int>(type: "integer", nullable: false),
+                    VotedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -111,6 +171,7 @@ namespace GeekzKai.Migrations
                         principalTable: "Users",
                         principalColumn: "User_Id",
                         onDelete: ReferentialAction.Cascade);
+
                 });
 
             migrationBuilder.CreateIndex(
@@ -122,6 +183,27 @@ namespace GeekzKai.Migrations
                 name: "IX_Comments_Comment_UserId",
                 table: "Comments",
                 column: "Comment_UserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Follows_FollowerId_FollowingId",
+                table: "Follows",
+                columns: new[] { "FollowerId", "FollowingId" },
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Follows_FollowingId",
+                table: "Follows",
+                column: "FollowingId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Messages_ReceiverId",
+                table: "Messages",
+                column: "ReceiverId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Messages_SenderId",
+                table: "Messages",
+                column: "SenderId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Posts_Post_UserId",
@@ -138,6 +220,8 @@ namespace GeekzKai.Migrations
                 table: "Upvotes",
                 columns: new[] { "Upvote_UserId", "Upvote_PostId" },
                 unique: true);
+
+
         }
 
         /// <inheritdoc />
@@ -145,6 +229,12 @@ namespace GeekzKai.Migrations
         {
             migrationBuilder.DropTable(
                 name: "Comments");
+
+            migrationBuilder.DropTable(
+                name: "Follows");
+
+            migrationBuilder.DropTable(
+                name: "Messages");
 
             migrationBuilder.DropTable(
                 name: "Upvotes");
