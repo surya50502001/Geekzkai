@@ -39,47 +39,65 @@ namespace geekzKai.Controllers
         [HttpGet("conversations")]
         public async Task<IActionResult> GetConversations()
         {
-            var currentUserId = int.Parse(User.FindFirst("id")?.Value ?? "0");
+            try
+            {
+                var currentUserId = int.Parse(User.FindFirst("id")?.Value ?? "0");
 
-            var conversations = await _context.Messages
-                .Where(m => m.SenderId == currentUserId || m.ReceiverId == currentUserId)
-                .Include(m => m.Sender)
-                .Include(m => m.Receiver)
-                .GroupBy(m => m.SenderId == currentUserId ? m.ReceiverId : m.SenderId)
-                .Select(g => new
-                {
-                    UserId = g.Key,
-                    User = g.First().SenderId == currentUserId ? g.First().Receiver : g.First().Sender,
-                    LastMessage = g.OrderByDescending(m => m.CreatedAt).First(),
-                    UnreadCount = g.Count(m => m.ReceiverId == currentUserId && !m.IsRead)
-                })
-                .ToListAsync();
+                var messages = await _context.Messages
+                    .Where(m => m.SenderId == currentUserId || m.ReceiverId == currentUserId)
+                    .Include(m => m.Sender)
+                    .Include(m => m.Receiver)
+                    .OrderByDescending(m => m.CreatedAt)
+                    .ToListAsync();
 
-            return Ok(conversations);
+                var conversations = messages
+                    .GroupBy(m => m.SenderId == currentUserId ? m.ReceiverId : m.SenderId)
+                    .Select(g => new
+                    {
+                        UserId = g.Key,
+                        User = g.First().SenderId == currentUserId ? g.First().Receiver : g.First().Sender,
+                        LastMessage = g.First(),
+                        UnreadCount = g.Count(m => m.ReceiverId == currentUserId && !m.IsRead)
+                    })
+                    .ToList();
+
+                return Ok(conversations);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { error = ex.Message });
+            }
         }
 
         [HttpGet("{userId}")]
         public async Task<IActionResult> GetMessages(int userId)
         {
-            var currentUserId = int.Parse(User.FindFirst("id")?.Value ?? "0");
-
-            var messages = await _context.Messages
-                .Where(m => (m.SenderId == currentUserId && m.ReceiverId == userId) ||
-                           (m.SenderId == userId && m.ReceiverId == currentUserId))
-                .Include(m => m.Sender)
-                .Include(m => m.Receiver)
-                .OrderBy(m => m.CreatedAt)
-                .ToListAsync();
-
-            // Mark messages as read
-            var unreadMessages = messages.Where(m => m.ReceiverId == currentUserId && !m.IsRead);
-            foreach (var message in unreadMessages)
+            try
             {
-                message.IsRead = true;
-            }
-            await _context.SaveChangesAsync();
+                var currentUserId = int.Parse(User.FindFirst("id")?.Value ?? "0");
 
-            return Ok(messages);
+                var messages = await _context.Messages
+                    .Where(m => (m.SenderId == currentUserId && m.ReceiverId == userId) ||
+                               (m.SenderId == userId && m.ReceiverId == currentUserId))
+                    .Include(m => m.Sender)
+                    .Include(m => m.Receiver)
+                    .OrderBy(m => m.CreatedAt)
+                    .ToListAsync();
+
+                // Mark messages as read
+                var unreadMessages = messages.Where(m => m.ReceiverId == currentUserId && !m.IsRead);
+                foreach (var message in unreadMessages)
+                {
+                    message.IsRead = true;
+                }
+                await _context.SaveChangesAsync();
+
+                return Ok(messages);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { error = ex.Message });
+            }
         }
     }
 
