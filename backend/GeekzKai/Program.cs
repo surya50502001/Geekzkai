@@ -154,6 +154,8 @@ app.UseSwaggerUI();
 // Middleware
 app.UseForwardedHeaders();
 
+app.UseStaticFiles();
+
 app.UseRouting();
 
 app.UseCors(corsPolicy);
@@ -166,7 +168,8 @@ app.UseAuthorization();
 
 app.MapControllers();
 
-
+// SPA fallback routing - serve index.html for non-API routes
+app.MapFallbackToFile("index.html");
 
 app.Run();
 
