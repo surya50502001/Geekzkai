@@ -98,13 +98,13 @@ if (builder.Environment.IsProduction())
     if (string.IsNullOrEmpty(dbConnection)) throw new Exception("Database connection missing");
 }
 // DB
-builder.Services.AddDbContext<AppDbContext>(options =>
-{
-    if (builder.Environment.IsProduction())
-        options.UseNpgsql(dbConnection);
-    else
-        options.UseSqlite(dbConnection ?? "Data Source=geekzkai.db");
-});
+// builder.Services.AddDbContext<AppDbContext>(options =>
+// {
+//     if (builder.Environment.IsProduction())
+//         options.UseNpgsql(dbConnection);
+//     else
+//         options.UseSqlite(dbConnection ?? "Data Source=geekzkai.db");
+// });
 
 // Email Service
 builder.Services.AddScoped<EmailService>();
@@ -141,11 +141,11 @@ var app = builder.Build();
 
 // Manual OAuth implementation - no Google middleware
 // Auto-apply any pending EF migrations at startup
-using (var scope = app.Services.CreateScope())
-{
-    var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-    db.Database.Migrate();
-}
+// using (var scope = app.Services.CreateScope())
+// {
+//     var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+//     db.Database.Migrate();
+// }
 
 // ENABLE SWAGGER ALWAYS (for debugging)
 app.UseSwagger();
