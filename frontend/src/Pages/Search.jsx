@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
-import { Search as SearchIcon } from 'lucide-react'
+import { Search as SearchIcon, TrendingUp } from 'lucide-react'
+import { Link } from 'react-router-dom'
 
 function Search() {
   const [query, setQuery] = useState('')
@@ -54,9 +55,27 @@ function Search() {
       )}
 
       {!query && (
-        <div className="text-center py-8">
-          <SearchIcon size={48} className="mx-auto mb-4" style={{color: 'var(--text-secondary)'}} />
-          <p style={{color: 'var(--text-secondary)'}}>Start typing to search for discussions, users, and topics</p>
+        <div>
+          {/* Trending Section */}
+          <div className="mb-8">
+            <Link to="/trending" className="block p-4 rounded-lg border hover:bg-opacity-80 transition-colors" style={{backgroundColor: 'var(--bg-secondary)', borderColor: 'var(--border-color)'}}>
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <TrendingUp size={20} style={{color: 'var(--text-primary)'}} />
+                  <div>
+                    <h3 className="font-medium" style={{color: 'var(--text-primary)'}}>Trending</h3>
+                    <p className="text-sm" style={{color: 'var(--text-secondary)'}}>See what's popular right now</p>
+                  </div>
+                </div>
+                <span style={{color: 'var(--text-secondary)'}}>→</span>
+              </div>
+            </Link>
+          </div>
+          
+          <div className="text-center py-8">
+            <SearchIcon size={48} className="mx-auto mb-4" style={{color: 'var(--text-secondary)'}} />
+            <p style={{color: 'var(--text-secondary)'}}>Start typing to search for discussions, users, and topics</p>
+          </div>
         </div>
       )}
     </div>

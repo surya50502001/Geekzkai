@@ -1,4 +1,4 @@
-import { Home, User, Search, TrendingUp, Plus, MessageCircle } from "lucide-react";
+import { Home, Search, Plus, MessageCircle, Settings } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 import ThemeToggle from "./ThemeToggle";
 
@@ -10,8 +10,7 @@ export default function BottomNavbar() {
         { to: "/search", icon: Search, label: "Search" },
         { to: "/create", icon: Plus, label: "Create" },
         { to: "/chat", icon: MessageCircle, label: "Chat" },
-        { to: "/profile", icon: User, label: "Profile" },
-        { to: "/trending", icon: TrendingUp, label: "Trending" },
+        { to: "/settings", icon: Settings, label: "Settings" },
     ];
 
     return (

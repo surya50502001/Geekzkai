@@ -2,6 +2,8 @@ import React from 'react'
 import UpdateProfile from '../Components/UpdateProfile'
 import { useTheme } from '../Context/ThemeContext'
 import { useAuth } from '../Context/AuthContext'
+import { User } from 'lucide-react'
+import { Link } from 'react-router-dom'
 
 function Settings() {
   const { user } = useAuth()
@@ -31,10 +33,18 @@ function Settings() {
 
         {/* Profile - Only for logged in users */}
         {user && (
-          <div className="p-4 rounded-lg border" style={{backgroundColor: 'var(--bg-secondary)', borderColor: 'var(--border-color)'}}>
-            <h3 className="font-medium mb-4" style={{color: 'var(--text-primary)'}}>Profile</h3>
-            <UpdateProfile />
-          </div>
+          <Link to="/profile" className="block p-4 rounded-lg border hover:bg-opacity-80 transition-colors" style={{backgroundColor: 'var(--bg-secondary)', borderColor: 'var(--border-color)'}}>
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <User size={20} style={{color: 'var(--text-primary)'}} />
+                <div>
+                  <h3 className="font-medium" style={{color: 'var(--text-primary)'}}>Profile</h3>
+                  <p className="text-sm" style={{color: 'var(--text-secondary)'}}>View and edit your profile</p>
+                </div>
+              </div>
+              <span style={{color: 'var(--text-secondary)'}}>→</span>
+            </div>
+          </Link>
         )}
 
         {/* Sign in prompt */}

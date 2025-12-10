@@ -1,4 +1,4 @@
-import { Home, User, Settings, Plus, TrendingUp, MessageCircle } from "lucide-react";
+import { Home, Settings, Plus, MessageCircle, Search } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 import Resizable from "./Resizable";
 
@@ -9,9 +9,8 @@ export default function Sidebar() {
         { to: "/", icon: Home, label: "Home" },
         { to: "/create", icon: Plus, label: "Create" },
         { to: "/chat", icon: MessageCircle, label: "Chat" },
+        { to: "/search", icon: Search, label: "Search" },
         { to: "/settings", icon: Settings, label: "Settings" },
-        { to: "/profile", icon: User, label: "Profile" },
-        { to: "/trending", icon: TrendingUp, label: "Trending" },
     ];
 
 
