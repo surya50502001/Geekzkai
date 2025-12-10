@@ -11,8 +11,8 @@ using geekzKai.Data;
 namespace GeekzKai.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20251210091111_AddMessagesTableOnly")]
-    partial class AddMessagesTableOnly
+    [Migration("20251210104440_AddMessagesAndFollowsTablesOnly")]
+    partial class AddMessagesAndFollowsTablesOnly
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

@@ -47,7 +47,7 @@ namespace GeekzKai.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Comments", (string)null);
+                    b.ToTable("Comments");
                 });
 
             modelBuilder.Entity("geekzKai.Models.Follow", b =>
@@ -72,7 +72,7 @@ namespace GeekzKai.Migrations
                     b.HasIndex("FollowerId", "FollowingId")
                         .IsUnique();
 
-                    b.ToTable("Follows", (string)null);
+                    b.ToTable("Follows");
                 });
 
             modelBuilder.Entity("geekzKai.Models.Message", b =>
@@ -103,7 +103,7 @@ namespace GeekzKai.Migrations
 
                     b.HasIndex("SenderId");
 
-                    b.ToTable("Messages", (string)null);
+                    b.ToTable("Messages");
                 });
 
             modelBuilder.Entity("geekzKai.Models.Post", b =>
@@ -134,7 +134,7 @@ namespace GeekzKai.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Posts", (string)null);
+                    b.ToTable("Posts");
                 });
 
             modelBuilder.Entity("geekzKai.Models.Upvote", b =>
@@ -167,7 +167,7 @@ namespace GeekzKai.Migrations
                     b.HasIndex("UserId", "PostId")
                         .IsUnique();
 
-                    b.ToTable("Upvotes", (string)null);
+                    b.ToTable("Upvotes");
                 });
 
             modelBuilder.Entity("geekzKai.Models.User", b =>
@@ -246,7 +246,7 @@ namespace GeekzKai.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Users", (string)null);
+                    b.ToTable("Users");
                 });
 
             modelBuilder.Entity("geekzKai.Models.Comment", b =>
