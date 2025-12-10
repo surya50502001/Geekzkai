@@ -6,5 +6,13 @@ export default defineConfig({
   plugins: [react()],
   server: {
     host: '0.0.0.0', // This makes the server accessible externally
-  }
+  },
+  build: {
+    rollupOptions: {
+      output: {
+        manualChunks: undefined,
+      },
+    },
+    copyPublicDir: true,
+  },
 })
