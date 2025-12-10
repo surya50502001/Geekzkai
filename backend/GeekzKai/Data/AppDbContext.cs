@@ -108,14 +108,16 @@ namespace geekzKai.Data
             modelBuilder.Entity<Upvote>()
                 .HasOne(u => u.User)
                 .WithMany()
-                .HasForeignKey("Upvote_UserId")
+                .HasForeignKey(u => u.UserId)
+                .HasPrincipalKey(u => u.Id)
                 .OnDelete(DeleteBehavior.Cascade);
 
             // UPVOTE — POST
             modelBuilder.Entity<Upvote>()
                 .HasOne(u => u.Post)
                 .WithMany(p => p.Upvotes)
-                .HasForeignKey("Upvote_PostId")
+                .HasForeignKey(u => u.PostId)
+                .HasPrincipalKey(p => p.Id)
                 .OnDelete(DeleteBehavior.Cascade);
 
             // FOLLOW RELATIONSHIPS

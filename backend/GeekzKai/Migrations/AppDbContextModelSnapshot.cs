@@ -47,7 +47,7 @@ namespace GeekzKai.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Comments");
+                    b.ToTable("Comments", (string)null);
                 });
 
             modelBuilder.Entity("geekzKai.Models.Follow", b =>
@@ -72,7 +72,7 @@ namespace GeekzKai.Migrations
                     b.HasIndex("FollowerId", "FollowingId")
                         .IsUnique();
 
-                    b.ToTable("Follows");
+                    b.ToTable("Follows", (string)null);
                 });
 
             modelBuilder.Entity("geekzKai.Models.Message", b =>
@@ -103,7 +103,7 @@ namespace GeekzKai.Migrations
 
                     b.HasIndex("SenderId");
 
-                    b.ToTable("Messages");
+                    b.ToTable("Messages", (string)null);
                 });
 
             modelBuilder.Entity("geekzKai.Models.Post", b =>
@@ -134,7 +134,7 @@ namespace GeekzKai.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Posts");
+                    b.ToTable("Posts", (string)null);
                 });
 
             modelBuilder.Entity("geekzKai.Models.Upvote", b =>
@@ -148,36 +148,26 @@ namespace GeekzKai.Migrations
                         .HasColumnType("INTEGER")
                         .HasColumnName("Upvote_PostId");
 
-                    b.Property<int>("Upvote_PostId")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int>("Upvote_UserId")
-                        .HasColumnType("INTEGER");
-
                     b.Property<int>("UserId")
                         .HasColumnType("INTEGER")
                         .HasColumnName("Upvote_UserId");
+
+                    b.Property<int?>("UserId1")
+                        .HasColumnType("INTEGER");
 
                     b.Property<DateTime>("VotedAt")
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("Upvote_PostId");
+                    b.HasIndex("PostId");
 
-                    b.HasIndex("Upvote_UserId");
+                    b.HasIndex("UserId1");
 
                     b.HasIndex("UserId", "PostId")
                         .IsUnique();
 
-                    b.ToTable("Upvotes", t =>
-                        {
-                            t.Property("Upvote_PostId")
-                                .HasColumnName("Upvote_PostId1");
-
-                            t.Property("Upvote_UserId")
-                                .HasColumnName("Upvote_UserId1");
-                        });
+                    b.ToTable("Upvotes", (string)null);
                 });
 
             modelBuilder.Entity("geekzKai.Models.User", b =>
@@ -256,7 +246,7 @@ namespace GeekzKai.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Users");
+                    b.ToTable("Users", (string)null);
                 });
 
             modelBuilder.Entity("geekzKai.Models.Comment", b =>
@@ -331,21 +321,19 @@ namespace GeekzKai.Migrations
                 {
                     b.HasOne("geekzKai.Models.Post", "Post")
                         .WithMany("Upvotes")
-                        .HasForeignKey("Upvote_PostId")
+                        .HasForeignKey("PostId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("geekzKai.Models.User", "User")
                         .WithMany()
-                        .HasForeignKey("Upvote_UserId")
+                        .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("geekzKai.Models.User", null)
                         .WithMany("Upvotes")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("UserId1");
 
                     b.Navigation("Post");
 
