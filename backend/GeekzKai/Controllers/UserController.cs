@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
 using geekzKai.Data;
+using geekzKai.Models;
 
 namespace geekzKai.Controllers
 {
@@ -51,17 +52,74 @@ namespace geekzKai.Controllers
             }
 
             var users = await _context.Users
-                .Where(u => u.Username.Contains(query) || u.Email.Contains(query))
+                .Where(u => u.Username.Contains(query))
                 .Select(u => new {
                     u.Id,
                     u.Username,
-                    u.Email,
-                    u.ProfilePictureUrl
+                    u.ProfilePictureUrl,
+                    u.Bio
                 })
                 .Take(10)
                 .ToListAsync();
 
             return Ok(users);
+        }
+
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetUserById(int id)
+        {
+            var user = await _context.Users.FindAsync(id);
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(new {
+                user.Id,
+                user.Username,
+                user.Email,
+                user.Bio,
+                user.ProfilePictureUrl,
+                user.FollowersCount,
+                user.FollowingCount,
+                user.IsYoutuber,
+                user.IsAdmin,
+                user.CreatedAt
+            });
+        }
+
+        [HttpGet("{id}/followers")]
+        public async Task<IActionResult> GetFollowers(int id)
+        {
+            var followers = await _context.Follows
+                .Where(f => f.FollowingId == id)
+                .Include(f => f.Follower)
+                .Select(f => new {
+                    f.Follower.Id,
+                    f.Follower.Username,
+                    f.Follower.ProfilePictureUrl,
+                    f.Follower.Bio
+                })
+                .ToListAsync();
+
+            return Ok(followers);
+        }
+
+        [HttpGet("{id}/following")]
+        public async Task<IActionResult> GetFollowing(int id)
+        {
+            var following = await _context.Follows
+                .Where(f => f.FollowerId == id)
+                .Include(f => f.Following)
+                .Select(f => new {
+                    f.Following.Id,
+                    f.Following.Username,
+                    f.Following.ProfilePictureUrl,
+                    f.Following.Bio
+                })
+                .ToListAsync();
+
+            return Ok(following);
         }
     }
 }

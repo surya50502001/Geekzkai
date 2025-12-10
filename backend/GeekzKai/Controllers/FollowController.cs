@@ -40,6 +40,14 @@ namespace geekzKai.Controllers
             };
 
             _context.Follows.Add(follow);
+
+            // Update follower counts
+            var follower = await _context.Users.FindAsync(currentUserId);
+            var following = await _context.Users.FindAsync(userId);
+            
+            if (follower != null) follower.FollowingCount++;
+            if (following != null) following.FollowersCount++;
+
             await _context.SaveChangesAsync();
 
             return Ok(new { message = "User followed successfully" });
@@ -57,6 +65,14 @@ namespace geekzKai.Controllers
                 return BadRequest("Not following this user");
 
             _context.Follows.Remove(follow);
+
+            // Update follower counts
+            var follower = await _context.Users.FindAsync(currentUserId);
+            var following = await _context.Users.FindAsync(userId);
+            
+            if (follower != null && follower.FollowingCount > 0) follower.FollowingCount--;
+            if (following != null && following.FollowersCount > 0) following.FollowersCount--;
+
             await _context.SaveChangesAsync();
 
             return Ok(new { message = "User unfollowed successfully" });

@@ -1,11 +1,13 @@
 import { useState, useEffect } from "react";
 import { X, Search, User, Clock } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 export default function SearchModal({ isOpen, onClose }) {
     const [searchQuery, setSearchQuery] = useState("");
     const [searchResults, setSearchResults] = useState([]);
     const [recentSearches, setRecentSearches] = useState([]);
     const [loading, setLoading] = useState(false);
+    const navigate = useNavigate();
 
     const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "https://geekzkai.onrender.com/api";
 
@@ -27,7 +29,7 @@ export default function SearchModal({ isOpen, onClose }) {
     const searchUsers = async () => {
         setLoading(true);
         try {
-            const response = await fetch(`${API_BASE_URL}/user/search?q=${searchQuery}`);
+            const response = await fetch(`${API_BASE_URL}/user/search?query=${searchQuery}`);
             if (response.ok) {
                 const users = await response.json();
                 setSearchResults(users);
@@ -97,6 +99,7 @@ export default function SearchModal({ isOpen, onClose }) {
                                             key={user.id}
                                             onClick={() => {
                                                 addToRecentSearches(user);
+                                                navigate(`/user/${user.id}`);
                                                 onClose();
                                             }}
                                             className="w-full flex items-center gap-3 p-3 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors"
@@ -140,9 +143,13 @@ export default function SearchModal({ isOpen, onClose }) {
                             {recentSearches.length > 0 ? (
                                 <div className="space-y-2">
                                     {recentSearches.map((user) => (
-                                        <div
+                                        <button
                                             key={user.id}
-                                            className="flex items-center gap-3 p-3"
+                                            onClick={() => {
+                                                navigate(`/user/${user.id}`);
+                                                onClose();
+                                            }}
+                                            className="w-full flex items-center gap-3 p-3 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors"
                                         >
                                             <div className="w-12 h-12 rounded-full bg-gray-200 dark:bg-gray-700 flex items-center justify-center overflow-hidden">
                                                 {user.profilePictureUrl ? (
@@ -158,7 +165,7 @@ export default function SearchModal({ isOpen, onClose }) {
                                                 )}
                                             </div>
                                             <Clock size={16} className="text-gray-400" />
-                                        </div>
+                                        </button>
                                     ))}
                                 </div>
                             ) : (
