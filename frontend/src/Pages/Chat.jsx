@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useAuth } from '../Context/AuthContext';
-import { ArrowLeft, Send, X, MessageCircle, Search } from 'lucide-react';
+import { ArrowLeft, Send, MessageCircle, Search } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import API_BASE_URL from '../apiConfig';
 
@@ -10,9 +10,6 @@ export default function Chat() {
     const [messages, setMessages] = useState([]);
     const [newMessage, setNewMessage] = useState('');
     const [loading, setLoading] = useState(true);
-    const [showNewChat, setShowNewChat] = useState(false);
-    const [searchQuery, setSearchQuery] = useState('');
-    const [searchResults, setSearchResults] = useState([]);
     const [conversationSearchQuery, setConversationSearchQuery] = useState('');
     const { user } = useAuth();
     const navigate = useNavigate();
@@ -67,37 +64,13 @@ export default function Chat() {
         }
     };
 
-    useEffect(() => {
-        const searchUsers = async () => {
-            if (!searchQuery.trim()) {
-                setSearchResults([]);
-                return;
-            }
-            try {
-                const response = await fetch(`${API_BASE_URL}/user/search?query=${encodeURIComponent(searchQuery)}`);
-                if (response.ok) {
-                    const data = await response.json();
-                    setSearchResults(data);
-                }
-            } catch (error) {
-                console.error('Error searching users:', error);
-            }
-        };
 
-        const timeoutId = setTimeout(searchUsers, 300);
-        return () => clearTimeout(timeoutId);
-    }, [searchQuery]);
 
     const filteredConversations = conversations.filter(conversation =>
         conversation.user.email.toLowerCase().includes(conversationSearchQuery.toLowerCase())
     );
 
-    const startNewChat = (user) => {
-        setSelectedChat({ userId: user.id, user });
-        setShowNewChat(false);
-        setSearchQuery('');
-        setSearchResults([]);
-    };
+
 
     const handleSendMessage = async (e) => {
         e.preventDefault();
@@ -136,62 +109,13 @@ export default function Chat() {
 
     return (
         <div className="h-screen flex flex-col md:flex-row" style={{backgroundColor: 'var(--bg-primary)'}}>
-            {/* New Chat Modal */}
-            {showNewChat && (
-                <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-                    <div className="w-full max-w-md rounded-xl shadow-xl" style={{backgroundColor: 'var(--bg-primary)', border: '1px solid var(--border-color)'}}>
-                        <div className="flex items-center justify-between p-6 border-b" style={{borderColor: 'var(--border-color)'}}>
-                            <h3 className="text-lg font-semibold" style={{color: 'var(--text-primary)'}}>New Chat</h3>
-                            <button onClick={() => setShowNewChat(false)} className="p-1 rounded-full hover:bg-gray-100" style={{color: 'var(--text-secondary)'}}>
-                                <X size={20} />
-                            </button>
-                        </div>
-                        <div className="p-6">
-                            <input
-                                type="text"
-                                placeholder="Search by email..."
-                                value={searchQuery}
-                                onChange={(e) => setSearchQuery(e.target.value)}
-                                className="w-full p-3 rounded-xl border focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                style={{backgroundColor: 'var(--bg-secondary)', borderColor: 'var(--border-color)', color: 'var(--text-primary)'}}
-                            />
-                            <div className="mt-4 max-h-60 overflow-y-auto">
-                                {searchResults.map((user) => (
-                                    <div
-                                        key={user.id}
-                                        onClick={() => startNewChat(user)}
-                                        className="flex items-center gap-3 p-3 rounded-xl cursor-pointer transition-colors hover:bg-gray-50"
-                                        style={{'&:hover': {backgroundColor: 'var(--bg-secondary)'}}}
-                                    >
-                                        <div className="w-10 h-10 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white font-semibold text-sm">
-                                            {user.username[0].toUpperCase()}
-                                        </div>
-                                        <div>
-                                            <p className="font-medium" style={{color: 'var(--text-primary)'}}>{user.username}</p>
-                                            <p className="text-sm" style={{color: 'var(--text-secondary)'}}>{user.email}</p>
-                                        </div>
-                                    </div>
-                                ))}
-                                {searchQuery && searchResults.length === 0 && (
-                                    <p className="text-center py-8" style={{color: 'var(--text-secondary)'}}>No users found</p>
-                                )}
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            )}
+
 
             {/* Conversations List */}
             <div className={`${selectedChat ? 'hidden md:flex' : 'flex'} md:w-80 flex-col border-r`} style={{borderColor: 'var(--border-color)'}}>
                 <div className="p-4 border-b" style={{borderColor: 'var(--border-color)'}}>
-                    <div className="flex items-center justify-between mb-3">
+                    <div className="mb-3">
                         <h2 className="text-xl font-bold" style={{color: 'var(--text-primary)'}}>Messages</h2>
-                        <button
-                            onClick={() => setShowNewChat(true)}
-                            className="px-3 py-1 text-sm bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors"
-                        >
-                            New
-                        </button>
                     </div>
                     <div className="relative">
                         <Search size={16} className="absolute left-3 top-1/2 transform -translate-y-1/2" style={{color: 'var(--text-secondary)'}} />
@@ -217,12 +141,7 @@ export default function Chat() {
                             </div>
                             <p className="text-center" style={{color: 'var(--text-secondary)'}}>No conversations yet</p>
                             <p className="text-sm text-center mt-1" style={{color: 'var(--text-secondary)'}}>Start a new chat to begin messaging</p>
-                            <button
-                                onClick={() => setShowNewChat(true)}
-                                className="mt-4 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors"
-                            >
-                                New Chat
-                            </button>
+
                         </div>
                     ) : (
                         filteredConversations.map((conversation) => (
@@ -348,12 +267,7 @@ export default function Chat() {
                         </div>
                         <h3 className="text-xl font-semibold mb-2" style={{color: 'var(--text-primary)'}}>Your Messages</h3>
                         <p className="text-center mb-6" style={{color: 'var(--text-secondary)'}}>Send private messages to friends and connect with your community</p>
-                        <button
-                            onClick={() => setShowNewChat(true)}
-                            className="px-6 py-3 bg-blue-500 text-white rounded-full hover:bg-blue-600 transition-colors"
-                        >
-                            Start New Chat
-                        </button>
+
                     </div>
                 )}
             </div>
