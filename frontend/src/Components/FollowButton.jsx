@@ -3,7 +3,7 @@ import { UserPlus, UserMinus } from "lucide-react";
 import { useAuth } from "../Context/AuthContext";
 import API_BASE_URL from "../apiConfig";
 
-export default function FollowButton({ userId, username }) {
+export default function FollowButton({ userId, username, onFollowChange }) {
     const { token, user } = useAuth();
     const [isFollowing, setIsFollowing] = useState(false);
     const [loading, setLoading] = useState(false);
@@ -40,6 +40,9 @@ export default function FollowButton({ userId, username }) {
             
             if (response.ok) {
                 setIsFollowing(!isFollowing);
+                if (onFollowChange) {
+                    onFollowChange(!isFollowing);
+                }
             }
         } catch (error) {
             console.error("Error following/unfollowing user:", error);

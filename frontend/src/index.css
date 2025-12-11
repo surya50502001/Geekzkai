@@ -2,11 +2,19 @@
 
 :root {
     --sidebar-width: 300px;
-    --bg-primary: light-dark(white, black);
-    --text-primary: light-dark(black, white);
-    --bg-secondary: light-dark(#f9fafb, #1f2937);
-    --text-secondary: light-dark(#6b7280, #d1d5db);
-    --border-color: light-dark(black, white);
+    --bg-primary: white;
+    --text-primary: black;
+    --bg-secondary: #f9fafb;
+    --text-secondary: #6b7280;
+    --border-color: #e5e7eb;
+}
+
+.dark {
+    --bg-primary: #111827;
+    --text-primary: white;
+    --bg-secondary: #1f2937;
+    --text-secondary: #d1d5db;
+    --border-color: #374151;
 }
 
 @media (max-width: 768px) {
@@ -75,12 +83,20 @@ body {
 }
 
 ::-webkit-scrollbar-track {
-    background-color: light-dark(#f3f4f6, #1f2937);
+    background-color: #f3f4f6;
 }
 
 ::-webkit-scrollbar-thumb {
-    background-color: light-dark(#9ca3af, #4b5563);
+    background-color: #9ca3af;
     border-radius: 4px;
+}
+
+.dark ::-webkit-scrollbar-track {
+    background-color: #1f2937;
+}
+
+.dark ::-webkit-scrollbar-thumb {
+    background-color: #4b5563;
 }
 
 ::-webkit-scrollbar-thumb:hover {

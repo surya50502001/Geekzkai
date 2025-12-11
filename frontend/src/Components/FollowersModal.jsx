@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import API_BASE_URL from '../apiConfig';
 import FollowButton from './FollowButton';
 
-export default function FollowersModal({ isOpen, onClose, userId, type, username }) {
+export default function FollowersModal({ isOpen, onClose, userId, type, username, onFollowChange }) {
     const [users, setUsers] = useState([]);
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
@@ -98,7 +98,7 @@ export default function FollowersModal({ isOpen, onClose, userId, type, username
                                         </div>
                                     </div>
                                     <div className="ml-2">
-                                        <FollowButton userId={user.id} username={user.username} />
+                                        <FollowButton userId={user.id} username={user.username} onFollowChange={onFollowChange} />
                                     </div>
                                 </div>
                             ))}

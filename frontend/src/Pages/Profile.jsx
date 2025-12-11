@@ -17,6 +17,22 @@ export default function Profile() {
     const [followersModalOpen, setFollowersModalOpen] = useState(false);
     const [followingModalOpen, setFollowingModalOpen] = useState(false);
 
+    const refreshUserData = async () => {
+        if (token && user) {
+            try {
+                const response = await fetch(`${API_BASE_URL}/user/me`, {
+                    headers: { Authorization: `Bearer ${token}` },
+                });
+                if (response.ok) {
+                    const data = await response.json();
+                    setFullUser(data);
+                }
+            } catch (error) {
+                console.error('Error refreshing user data:', error);
+            }
+        }
+    };
+
     useEffect(() => {
         if (token && user) {
             fetch(`${API_BASE_URL}/user/me`, {
@@ -293,6 +309,7 @@ export default function Profile() {
                 userId={fullUser?.id}
                 type="followers"
                 username={fullUser?.username}
+                onFollowChange={refreshUserData}
             />
             
             <FollowersModal 
@@ -301,6 +318,7 @@ export default function Profile() {
                 userId={fullUser?.id}
                 type="following"
                 username={fullUser?.username}
+                onFollowChange={refreshUserData}
             />
         </div>
     );
