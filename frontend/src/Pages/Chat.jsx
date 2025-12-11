@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useAuth } from '../Context/AuthContext';
-import { ArrowLeft, Send, Plus, X, MessageCircle } from 'lucide-react';
+import { ArrowLeft, Send, X, MessageCircle, Search } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import API_BASE_URL from '../apiConfig';
 
@@ -13,6 +13,7 @@ export default function Chat() {
     const [showNewChat, setShowNewChat] = useState(false);
     const [searchQuery, setSearchQuery] = useState('');
     const [searchResults, setSearchResults] = useState([]);
+    const [conversationSearchQuery, setConversationSearchQuery] = useState('');
     const { user } = useAuth();
     const navigate = useNavigate();
 
@@ -82,6 +83,10 @@ export default function Chat() {
         }
     };
 
+    const filteredConversations = conversations.filter(conversation =>
+        conversation.user.email.toLowerCase().includes(conversationSearchQuery.toLowerCase())
+    );
+
     const startNewChat = (user) => {
         setSelectedChat({ userId: user.id, user });
         setShowNewChat(false);
@@ -139,7 +144,7 @@ export default function Chat() {
                         <div className="p-6">
                             <input
                                 type="text"
-                                placeholder="Search users..."
+                                placeholder="Search by email..."
                                 value={searchQuery}
                                 onChange={(e) => {
                                     setSearchQuery(e.target.value);
@@ -176,15 +181,27 @@ export default function Chat() {
 
             {/* Conversations List */}
             <div className={`${selectedChat ? 'hidden md:flex' : 'flex'} md:w-80 flex-col border-r`} style={{borderColor: 'var(--border-color)'}}>
-                <div className="p-4 border-b flex items-center justify-between" style={{borderColor: 'var(--border-color)'}}>
-                    <h2 className="text-xl font-bold" style={{color: 'var(--text-primary)'}}>Messages</h2>
-                    <button
-                        onClick={() => setShowNewChat(true)}
-                        className="p-2 rounded-full hover:bg-gray-100 transition-colors"
-                        style={{color: 'var(--text-primary)'}}
-                    >
-                        <Plus size={20} />
-                    </button>
+                <div className="p-4 border-b" style={{borderColor: 'var(--border-color)'}}>
+                    <div className="flex items-center justify-between mb-3">
+                        <h2 className="text-xl font-bold" style={{color: 'var(--text-primary)'}}>Messages</h2>
+                        <button
+                            onClick={() => setShowNewChat(true)}
+                            className="px-3 py-1 text-sm bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors"
+                        >
+                            New
+                        </button>
+                    </div>
+                    <div className="relative">
+                        <Search size={16} className="absolute left-3 top-1/2 transform -translate-y-1/2" style={{color: 'var(--text-secondary)'}} />
+                        <input
+                            type="text"
+                            placeholder="Search by email..."
+                            value={conversationSearchQuery}
+                            onChange={(e) => setConversationSearchQuery(e.target.value)}
+                            className="w-full pl-10 pr-3 py-2 rounded-lg border focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            style={{backgroundColor: 'var(--bg-secondary)', borderColor: 'var(--border-color)', color: 'var(--text-primary)'}}
+                        />
+                    </div>
                 </div>
                 <div className="flex-1 overflow-y-auto">
                     {loading ? (
@@ -202,11 +219,11 @@ export default function Chat() {
                                 onClick={() => setShowNewChat(true)}
                                 className="mt-4 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors"
                             >
-                                Start New Chat
+                                New Chat
                             </button>
                         </div>
                     ) : (
-                        conversations.map((conversation) => (
+                        filteredConversations.map((conversation) => (
                             <div
                                 key={conversation.userId}
                                 onClick={() => setSelectedChat(conversation)}

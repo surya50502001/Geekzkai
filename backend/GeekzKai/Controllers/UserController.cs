@@ -52,10 +52,11 @@ namespace geekzKai.Controllers
             }
 
             var users = await _context.Users
-                .Where(u => u.Username.Contains(query))
+                .Where(u => u.Email.Contains(query))
                 .Select(u => new {
                     u.Id,
                     u.Username,
+                    u.Email,
                     u.ProfilePictureUrl,
                     u.Bio
                 })
