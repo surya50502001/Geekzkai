@@ -52,7 +52,7 @@ namespace geekzKai.Controllers
             }
 
             var users = await _context.Users
-                .Where(u => u.Email.Contains(query))
+                .Where(u => u.Email.ToLower().Contains(query.ToLower()))
                 .Select(u => new {
                     u.Id,
                     u.Username,

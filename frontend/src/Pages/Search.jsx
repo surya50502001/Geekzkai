@@ -9,31 +9,36 @@ function Search() {
   const [loading, setLoading] = useState(false)
   const navigate = useNavigate()
 
-
-
-  const handleSearch = async (e) => {
-    e.preventDefault()
-    if (!query.trim()) return
-
-    setLoading(true)
-    try {
-      const response = await fetch(`${API_BASE_URL}/user/search?query=${query}`)
-      if (response.ok) {
-        const users = await response.json()
-        setResults(users)
+  useEffect(() => {
+    const searchUsers = async () => {
+      if (!query.trim()) {
+        setResults([])
+        return
       }
-    } catch (error) {
-      console.error('Search error:', error)
-    } finally {
-      setLoading(false)
+
+      setLoading(true)
+      try {
+        const response = await fetch(`${API_BASE_URL}/user/search?query=${encodeURIComponent(query)}`)
+        if (response.ok) {
+          const users = await response.json()
+          setResults(users)
+        }
+      } catch (error) {
+        console.error('Search error:', error)
+      } finally {
+        setLoading(false)
+      }
     }
-  }
+
+    const timeoutId = setTimeout(searchUsers, 300)
+    return () => clearTimeout(timeoutId)
+  }, [query])
 
   return (
     <div className="max-w-4xl mx-auto px-4 py-6 md:px-6 md:py-8">
       <h1 className="text-2xl font-bold mb-6" style={{color: 'var(--text-primary)'}}>Search</h1>
       
-      <form onSubmit={handleSearch} className="mb-8">
+      <div className="mb-8">
         <div className="relative">
           <SearchIcon 
             size={20} 
@@ -42,14 +47,14 @@ function Search() {
           />
           <input
             type="text"
-            placeholder="Search people..."
+            placeholder="Search by email..."
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             className="w-full pl-10 pr-4 py-3 rounded-lg border focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
             style={{backgroundColor: 'var(--bg-secondary)', borderColor: 'var(--border-color)', color: 'var(--text-primary)'}}
           />
         </div>
-      </form>
+      </div>
 
       {loading && (
         <div className="text-center py-8">
@@ -100,7 +105,7 @@ function Search() {
         <div className="text-center py-12">
           <SearchIcon size={48} className="mx-auto mb-4" style={{color: 'var(--text-secondary)'}} />
           <h2 className="text-xl font-semibold mb-2" style={{color: 'var(--text-primary)'}}>Find People</h2>
-          <p style={{color: 'var(--text-secondary)'}}>Search for people by their username</p>
+          <p style={{color: 'var(--text-secondary)'}}>Search for people by their email</p>
         </div>
       )}
     </div>

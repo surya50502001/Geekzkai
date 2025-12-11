@@ -67,21 +67,26 @@ export default function Chat() {
         }
     };
 
-    const searchUsers = async (query) => {
-        if (!query.trim()) {
-            setSearchResults([]);
-            return;
-        }
-        try {
-            const response = await fetch(`${API_BASE_URL}/user/search?query=${encodeURIComponent(query)}`);
-            if (response.ok) {
-                const data = await response.json();
-                setSearchResults(data);
+    useEffect(() => {
+        const searchUsers = async () => {
+            if (!searchQuery.trim()) {
+                setSearchResults([]);
+                return;
             }
-        } catch (error) {
-            console.error('Error searching users:', error);
-        }
-    };
+            try {
+                const response = await fetch(`${API_BASE_URL}/user/search?query=${encodeURIComponent(searchQuery)}`);
+                if (response.ok) {
+                    const data = await response.json();
+                    setSearchResults(data);
+                }
+            } catch (error) {
+                console.error('Error searching users:', error);
+            }
+        };
+
+        const timeoutId = setTimeout(searchUsers, 300);
+        return () => clearTimeout(timeoutId);
+    }, [searchQuery]);
 
     const filteredConversations = conversations.filter(conversation =>
         conversation.user.email.toLowerCase().includes(conversationSearchQuery.toLowerCase())
@@ -146,10 +151,7 @@ export default function Chat() {
                                 type="text"
                                 placeholder="Search by email..."
                                 value={searchQuery}
-                                onChange={(e) => {
-                                    setSearchQuery(e.target.value);
-                                    searchUsers(e.target.value);
-                                }}
+                                onChange={(e) => setSearchQuery(e.target.value)}
                                 className="w-full p-3 rounded-xl border focus:outline-none focus:ring-2 focus:ring-blue-500"
                                 style={{backgroundColor: 'var(--bg-secondary)', borderColor: 'var(--border-color)', color: 'var(--text-primary)'}}
                             />
