@@ -25,5 +25,8 @@
 
 		<!-- BCrypt -->
 		<PackageReference Include="BCrypt.Net-Next" Version="4.0.3" />
+		
+		<!-- SignalR -->
+		<PackageReference Include="Microsoft.AspNetCore.SignalR" Version="1.1.0" />
 	</ItemGroup>
 </Project>

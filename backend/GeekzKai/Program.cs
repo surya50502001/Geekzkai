@@ -31,6 +31,9 @@ builder.Services.AddControllers()
             System.Text.Json.Serialization.ReferenceHandler.IgnoreCycles;
     });
 
+// SignalR
+builder.Services.AddSignalR();
+
 // CORS
 var corsPolicy = "AllowFrontend";
 
@@ -169,6 +172,9 @@ app.UseAuthorization();
 
 
 app.MapControllers();
+
+// SignalR Hub
+app.MapHub<geekzKai.Hubs.ChatHub>("/chathub");
 
 // SPA fallback routing - serve index.html for non-API routes
 app.MapFallbackToFile("index.html");

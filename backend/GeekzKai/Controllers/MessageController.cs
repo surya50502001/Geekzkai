@@ -3,6 +3,8 @@ using Microsoft.EntityFrameworkCore;
 using geekzKai.Data;
 using geekzKai.Models;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.SignalR;
+using geekzKai.Hubs;
 
 namespace geekzKai.Controllers
 {
@@ -12,10 +14,12 @@ namespace geekzKai.Controllers
     public class MessageController : ControllerBase
     {
         private readonly AppDbContext _context;
+        private readonly IHubContext<ChatHub> _hubContext;
 
-        public MessageController(AppDbContext context)
+        public MessageController(AppDbContext context, IHubContext<ChatHub> hubContext)
         {
             _context = context;
+            _hubContext = hubContext;
         }
 
         [HttpPost]
@@ -33,7 +37,26 @@ namespace geekzKai.Controllers
             _context.Messages.Add(message);
             await _context.SaveChangesAsync();
 
-            return Ok(new { message = "Message sent successfully" });
+            // Load sender info for real-time notification
+            var messageWithSender = await _context.Messages
+                .Include(m => m.Sender)
+                .FirstAsync(m => m.Id == message.Id);
+
+            // Send real-time notification to receiver
+            await _hubContext.Clients.Group($"user_{request.ReceiverId}")
+                .SendAsync("ReceiveMessage", new {
+                    messageWithSender.Id,
+                    messageWithSender.SenderId,
+                    messageWithSender.Content,
+                    messageWithSender.CreatedAt,
+                    Sender = new {
+                        messageWithSender.Sender.Id,
+                        messageWithSender.Sender.Username,
+                        messageWithSender.Sender.ProfilePictureUrl
+                    }
+                });
+
+            return Ok(messageWithSender);
         }
 
         [HttpGet("conversations")]
