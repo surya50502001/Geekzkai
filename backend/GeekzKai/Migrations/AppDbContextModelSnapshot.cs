@@ -75,6 +75,101 @@ namespace GeekzKai.Migrations
                     b.ToTable("Follows");
                 });
 
+            modelBuilder.Entity("geekzKai.Models.LiveMessage", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("LiveStreamId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Message")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("SentAt")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("LiveStreamId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("LiveMessages");
+                });
+
+            modelBuilder.Entity("geekzKai.Models.LiveStream", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Description")
+                        .HasMaxLength(500)
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime?>("EndedAt")
+                        .HasColumnType("TEXT");
+
+                    b.Property<bool>("IsLive")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTime>("StartedAt")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("StreamKey")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("StreamerId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("ViewerCount")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("StreamerId");
+
+                    b.ToTable("LiveStreams");
+                });
+
+            modelBuilder.Entity("geekzKai.Models.LiveViewer", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTime>("JoinedAt")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("LiveStreamId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("LiveStreamId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("LiveViewers");
+                });
+
             modelBuilder.Entity("geekzKai.Models.Message", b =>
                 {
                     b.Property<int>("Id")
@@ -135,6 +230,98 @@ namespace GeekzKai.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("Posts");
+                });
+
+            modelBuilder.Entity("geekzKai.Models.Room", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("CreatorId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("CurrentParticipants")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Description")
+                        .HasMaxLength(500)
+                        .HasColumnType("TEXT");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("MaxParticipants")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CreatorId");
+
+                    b.ToTable("Rooms");
+                });
+
+            modelBuilder.Entity("geekzKai.Models.RoomMessage", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Message")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("RoomId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTime>("SentAt")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("RoomId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("RoomMessages");
+                });
+
+            modelBuilder.Entity("geekzKai.Models.RoomParticipant", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTime>("JoinedAt")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("RoomId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("RoomId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("RoomParticipants");
                 });
 
             modelBuilder.Entity("geekzKai.Models.Upvote", b =>
@@ -287,6 +474,55 @@ namespace GeekzKai.Migrations
                     b.Navigation("Following");
                 });
 
+            modelBuilder.Entity("geekzKai.Models.LiveMessage", b =>
+                {
+                    b.HasOne("geekzKai.Models.LiveStream", "LiveStream")
+                        .WithMany("Messages")
+                        .HasForeignKey("LiveStreamId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("geekzKai.Models.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("LiveStream");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("geekzKai.Models.LiveStream", b =>
+                {
+                    b.HasOne("geekzKai.Models.User", "Streamer")
+                        .WithMany()
+                        .HasForeignKey("StreamerId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Streamer");
+                });
+
+            modelBuilder.Entity("geekzKai.Models.LiveViewer", b =>
+                {
+                    b.HasOne("geekzKai.Models.LiveStream", "LiveStream")
+                        .WithMany("Viewers")
+                        .HasForeignKey("LiveStreamId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("geekzKai.Models.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("LiveStream");
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("geekzKai.Models.Message", b =>
                 {
                     b.HasOne("geekzKai.Models.User", "Receiver")
@@ -317,6 +553,55 @@ namespace GeekzKai.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("geekzKai.Models.Room", b =>
+                {
+                    b.HasOne("geekzKai.Models.User", "Creator")
+                        .WithMany()
+                        .HasForeignKey("CreatorId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Creator");
+                });
+
+            modelBuilder.Entity("geekzKai.Models.RoomMessage", b =>
+                {
+                    b.HasOne("geekzKai.Models.Room", "Room")
+                        .WithMany("Messages")
+                        .HasForeignKey("RoomId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("geekzKai.Models.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Room");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("geekzKai.Models.RoomParticipant", b =>
+                {
+                    b.HasOne("geekzKai.Models.Room", "Room")
+                        .WithMany("Participants")
+                        .HasForeignKey("RoomId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("geekzKai.Models.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Room");
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("geekzKai.Models.Upvote", b =>
                 {
                     b.HasOne("geekzKai.Models.Post", "Post")
@@ -340,11 +625,25 @@ namespace GeekzKai.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("geekzKai.Models.LiveStream", b =>
+                {
+                    b.Navigation("Messages");
+
+                    b.Navigation("Viewers");
+                });
+
             modelBuilder.Entity("geekzKai.Models.Post", b =>
                 {
                     b.Navigation("Comments");
 
                     b.Navigation("Upvotes");
+                });
+
+            modelBuilder.Entity("geekzKai.Models.Room", b =>
+                {
+                    b.Navigation("Messages");
+
+                    b.Navigation("Participants");
                 });
 
             modelBuilder.Entity("geekzKai.Models.User", b =>

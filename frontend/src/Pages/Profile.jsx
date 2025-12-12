@@ -33,6 +33,11 @@ export default function Profile() {
         }
     };
 
+    // Refresh user data when component mounts or user changes
+    useEffect(() => {
+        refreshUserData();
+    }, [user?.id]);
+
     useEffect(() => {
         if (token && user) {
             fetch(`${API_BASE_URL}/user/me`, {

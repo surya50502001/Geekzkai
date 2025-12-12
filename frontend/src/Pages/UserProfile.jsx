@@ -40,7 +40,7 @@ export default function UserProfile() {
         return (
             <div className="min-h-screen flex items-center justify-center" style={{backgroundColor: 'var(--bg-primary)'}}>
                 <div className="text-center">
-                    <div className="w-8 h-8 border-2 border-blue-500 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+                    <div className="w-8 h-8 border-2 border-t-transparent rounded-full animate-spin mx-auto mb-4" style={{borderColor: 'var(--text-primary)', borderTopColor: 'transparent'}}></div>
                     <p style={{color: 'var(--text-secondary)'}}>Loading profile...</p>
                 </div>
             </div>
@@ -147,7 +147,7 @@ export default function UserProfile() {
                 {/* Action Buttons */}
                 <div className="flex gap-3">
                     <div className="flex-1">
-                        <FollowButton userId={user.id} username={user.username} />
+                        <FollowButton userId={user.id} username={user.username} onFollowChange={fetchUser} />
                     </div>
                     <div className="flex-1">
                         <ChatButton 

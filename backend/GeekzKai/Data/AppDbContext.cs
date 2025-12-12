@@ -13,6 +13,12 @@ namespace geekzKai.Data
         public DbSet<Upvote> Upvotes { get; set; }
         public DbSet<Follow> Follows { get; set; }
         public DbSet<Message> Messages { get; set; }
+        public DbSet<Room> Rooms { get; set; }
+        public DbSet<RoomParticipant> RoomParticipants { get; set; }
+        public DbSet<RoomMessage> RoomMessages { get; set; }
+        public DbSet<LiveStream> LiveStreams { get; set; }
+        public DbSet<LiveViewer> LiveViewers { get; set; }
+        public DbSet<LiveMessage> LiveMessages { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -148,6 +154,68 @@ namespace geekzKai.Data
                 .HasOne(m => m.Receiver)
                 .WithMany()
                 .HasForeignKey(m => m.ReceiverId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            // ROOM RELATIONSHIPS
+            modelBuilder.Entity<Room>()
+                .HasOne(r => r.Creator)
+                .WithMany()
+                .HasForeignKey(r => r.CreatorId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<RoomParticipant>()
+                .HasOne(rp => rp.Room)
+                .WithMany(r => r.Participants)
+                .HasForeignKey(rp => rp.RoomId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<RoomParticipant>()
+                .HasOne(rp => rp.User)
+                .WithMany()
+                .HasForeignKey(rp => rp.UserId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<RoomMessage>()
+                .HasOne(rm => rm.Room)
+                .WithMany(r => r.Messages)
+                .HasForeignKey(rm => rm.RoomId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<RoomMessage>()
+                .HasOne(rm => rm.User)
+                .WithMany()
+                .HasForeignKey(rm => rm.UserId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            // LIVE STREAM RELATIONSHIPS
+            modelBuilder.Entity<LiveStream>()
+                .HasOne(ls => ls.Streamer)
+                .WithMany()
+                .HasForeignKey(ls => ls.StreamerId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<LiveViewer>()
+                .HasOne(lv => lv.LiveStream)
+                .WithMany(ls => ls.Viewers)
+                .HasForeignKey(lv => lv.LiveStreamId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<LiveViewer>()
+                .HasOne(lv => lv.User)
+                .WithMany()
+                .HasForeignKey(lv => lv.UserId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<LiveMessage>()
+                .HasOne(lm => lm.LiveStream)
+                .WithMany(ls => ls.Messages)
+                .HasForeignKey(lm => lm.LiveStreamId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<LiveMessage>()
+                .HasOne(lm => lm.User)
+                .WithMany()
+                .HasForeignKey(lm => lm.UserId)
                 .OnDelete(DeleteBehavior.Restrict);
         }
     }

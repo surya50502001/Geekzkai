@@ -1,19 +1,20 @@
-import { Home, Search, Plus, MessageCircle, User, X, Settings, LogOut } from "lucide-react";
+import { Home, Search, Plus, MessageCircle, User, X, Settings, LogOut, Bell } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 import { useState } from "react";
 import { useAuth } from "../Context/AuthContext";
 import { useTheme } from "../Context/ThemeContext";
+import CreateModal from "./CreateModal";
 
 export default function BottomNavbar() {
     const location = useLocation();
     const { user, logout } = useAuth();
     const { isDark, toggleTheme } = useTheme();
     const [showProfileMenu, setShowProfileMenu] = useState(false);
+    const [showCreateModal, setShowCreateModal] = useState(false);
 
     const navItems = [
         { to: "/", icon: Home, label: "Home" },
         { to: "/search", icon: Search, label: "Search" },
-        { to: "/create", icon: Plus, label: "Create" },
         { to: "/chat", icon: MessageCircle, label: "Chat" },
     ];
 
@@ -36,6 +37,23 @@ export default function BottomNavbar() {
                         </Link>
                     );
                 })}
+                
+                {/* Create Button */}
+                <button
+                    onClick={() => setShowCreateModal(true)}
+                    className="flex flex-col items-center p-2 transition-colors"
+                    style={{color: 'var(--text-secondary)'}}
+                >
+                    <Plus size={24} />
+                    <span className="text-xs mt-1">Create</span>
+                </button>
+                
+                {/* Notifications Button */}
+                <button className="flex flex-col items-center p-2 transition-colors relative" style={{color: 'var(--text-secondary)'}}>
+                    <Bell size={24} />
+                    <span className="text-xs mt-1">Notifications</span>
+                    <span className="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full"></span>
+                </button>
                 
                 {/* Profile Button */}
                 <button
@@ -141,7 +159,12 @@ export default function BottomNavbar() {
                     </div>
                 </div>
             )}
-
+            
+            {/* Create Modal */}
+            <CreateModal 
+                isOpen={showCreateModal} 
+                onClose={() => setShowCreateModal(false)} 
+            />
         </>
     );
 }
