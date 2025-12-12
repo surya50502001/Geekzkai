@@ -11,8 +11,8 @@ using geekzKai.Data;
 namespace GeekzKai.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20251212103113_InitialCreateWithRoomAndLive")]
-    partial class InitialCreateWithRoomAndLive
+    [Migration("20251212114501_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
