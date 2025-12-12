@@ -1,16 +1,17 @@
-import { Home, Search, Plus, MessageCircle, Settings } from "lucide-react";
+import { Home, Search, Plus, MessageCircle, User } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
-import ThemeToggle from "./ThemeToggle";
+import { useAuth } from "../Context/AuthContext";
 
 export default function BottomNavbar() {
     const location = useLocation();
+    const { user } = useAuth();
 
     const navItems = [
         { to: "/", icon: Home, label: "Home" },
         { to: "/search", icon: Search, label: "Search" },
         { to: "/create", icon: Plus, label: "Create" },
         { to: "/chat", icon: MessageCircle, label: "Chat" },
-        { to: "/settings", icon: Settings, label: "Settings" },
+        { to: "/profile", icon: User, label: "Profile" },
     ];
 
     return (
@@ -32,7 +33,6 @@ export default function BottomNavbar() {
                         </Link>
                     );
                 })}
-                <ThemeToggle />
             </nav>
 
         </>
