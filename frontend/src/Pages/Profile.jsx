@@ -72,10 +72,10 @@ export default function Profile() {
 
     if (loading) {
         return (
-            <div className="flex justify-center items-center h-screen bg-gray-50 dark:bg-gray-900">
+            <div className="flex justify-center items-center h-screen" style={{backgroundColor: 'var(--bg-primary)'}}>
                 <div className="text-center">
-                    <div className="w-8 h-8 border-2 border-blue-500 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-                    <p className="text-gray-600 dark:text-gray-400">Loading profile...</p>
+                    <div className="w-8 h-8 border-2 border-t-transparent rounded-full animate-spin mx-auto mb-4" style={{borderColor: 'var(--text-primary)', borderTopColor: 'transparent'}}></div>
+                    <p style={{color: 'var(--text-secondary)'}}>Loading profile...</p>
                 </div>
             </div>
         );
@@ -83,12 +83,13 @@ export default function Profile() {
     
     if (!fullUser) {
         return (
-            <div className="flex justify-center items-center h-screen bg-gray-50 dark:bg-gray-900">
+            <div className="flex justify-center items-center h-screen" style={{backgroundColor: 'var(--bg-primary)'}}>
                 <div className="text-center">
-                    <p className="text-gray-600 dark:text-gray-400 mb-4">Unable to load profile</p>
+                    <p className="mb-4" style={{color: 'var(--text-secondary)'}}>Unable to load profile</p>
                     <button 
                         onClick={() => navigate('/')}
-                        className="px-4 py-2 bg-black dark:bg-white text-white dark:text-black rounded-lg hover:bg-gray-800 dark:hover:bg-gray-200 transition-colors"
+                        className="px-4 py-2 rounded-lg transition-colors hover:opacity-80"
+                        style={{backgroundColor: 'var(--text-primary)', color: 'var(--bg-primary)'}}
                     >
                         Go Home
                     </button>
@@ -98,14 +99,15 @@ export default function Profile() {
     }
 
     return (
-        <div className="min-h-screen bg-slate-50 dark:bg-slate-900">
+        <div className="min-h-screen" style={{backgroundColor: 'var(--bg-primary)'}}>
             {/* Header */}
-            <div className="bg-white dark:bg-slate-800 border-b border-slate-200 dark:border-slate-700 sticky top-0 z-20">
+            <div className="border-b sticky top-0 z-20" style={{backgroundColor: 'var(--bg-primary)', borderColor: 'var(--border-color)'}}>
                 <div className="px-4 py-3 flex justify-between items-center">
-                    <h1 className="text-xl font-semibold text-gray-900 dark:text-white">{fullUser.username}</h1>
+                    <h1 className="text-xl font-semibold" style={{color: 'var(--text-primary)'}}>{fullUser.username}</h1>
                     <button
                         onClick={() => setIsMenuOpen(true)}
-                        className="p-2 text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-900 rounded-lg transition-colors"
+                        className="p-2 rounded-lg transition-colors hover:opacity-80"
+                        style={{color: 'var(--text-primary)'}}
                     >
                         <Menu size={24} />
                     </button>
@@ -114,64 +116,71 @@ export default function Profile() {
 
             {/* Hamburger Menu Overlay */}
             {isMenuOpen && (
-                <div className="fixed inset-0 bg-black bg-opacity-50 z-50" onClick={() => setIsMenuOpen(false)}>
-                    <div className="fixed right-0 top-0 h-full w-80 bg-white dark:bg-gray-900 shadow-xl" onClick={(e) => e.stopPropagation()}>
-                        <div className="p-4 border-b border-gray-200 dark:border-gray-700 flex justify-between items-center">
-                            <h2 className="text-lg font-semibold text-gray-900 dark:text-white">Account</h2>
+                <div className="fixed inset-0 z-50" style={{backgroundColor: 'var(--bg-primary)'}}>
+                    <div className="flex flex-col h-full">
+                        {/* Header */}
+                        <div className="flex items-center justify-between p-4 border-b" style={{borderColor: 'var(--border-color)'}}>
+                            <h2 className="text-xl font-bold" style={{color: 'var(--text-primary)'}}>Account</h2>
                             <button
                                 onClick={() => setIsMenuOpen(false)}
-                                className="p-2 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
+                                className="p-2 rounded-lg transition-colors"
+                                style={{color: 'var(--text-primary)'}}
                             >
-                                <X size={20} />
+                                <X size={24} />
                             </button>
                         </div>
-                        <div className="p-4 space-y-6">
-                            {/* Account Details */}
-                            <div>
-                                <h3 className="text-sm font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-3">Account Details</h3>
-                                <div className="space-y-3">
-                                    <div className="flex items-center gap-3">
-                                        <Mail size={16} className="text-gray-400" />
-                                        <div>
-                                            <p className="text-xs text-gray-500 dark:text-gray-400">Email</p>
-                                            <p className="text-sm text-gray-900 dark:text-white">{fullUser.email}</p>
-                                        </div>
+                        
+                        {/* Content */}
+                        <div className="flex-1 p-4 space-y-6">
+                            {/* User Info */}
+                            <div className="p-6 border-b" style={{borderColor: 'var(--border-color)'}}>
+                                <div className="flex items-center gap-4">
+                                    <div className="w-16 h-16 rounded-full flex items-center justify-center overflow-hidden" style={{backgroundColor: 'var(--bg-secondary)'}}>
+                                        {fullUser.profilePictureUrl ? (
+                                            <img src={fullUser.profilePictureUrl} className="w-full h-full object-cover" alt="Profile" />
+                                        ) : (
+                                            <User size={32} style={{color: 'var(--text-secondary)'}} />
+                                        )}
                                     </div>
-                                    <div className="flex items-center gap-3">
-                                        <Calendar size={16} className="text-gray-400" />
-                                        <div>
-                                            <p className="text-xs text-gray-500 dark:text-gray-400">Member Since</p>
-                                            <p className="text-sm text-gray-900 dark:text-white">{new Date(fullUser.createdAt).toLocaleDateString()}</p>
-                                        </div>
+                                    <div>
+                                        <h3 className="text-lg font-semibold" style={{color: 'var(--text-primary)'}}>{fullUser.username}</h3>
+                                        <p className="text-sm" style={{color: 'var(--text-secondary)'}}>{fullUser.email}</p>
+                                        <p className="text-xs" style={{color: 'var(--text-secondary)'}}>Member since {new Date(fullUser.createdAt).toLocaleDateString()}</p>
                                     </div>
                                 </div>
                             </div>
                             
-                            {/* Actions */}
+                            {/* Menu Items */}
                             <div className="space-y-2">
                                 <button
                                     onClick={() => {
                                         setIsUpdateModalOpen(true);
                                         setIsMenuOpen(false);
                                     }}
-                                    className="w-full flex items-center gap-3 px-3 py-2 text-left text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors"
+                                    className="w-full flex items-center gap-4 p-4 rounded-lg transition-colors hover:opacity-80"
+                                    style={{color: 'var(--text-primary)'}}
                                 >
-                                    <Edit size={16} />
-                                    Edit Profile
+                                    <Edit size={20} />
+                                    <span>Edit Profile</span>
                                 </button>
                                 <button
-                                    onClick={() => navigate('/settings')}
-                                    className="w-full flex items-center gap-3 px-3 py-2 text-left text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors"
+                                    onClick={() => {
+                                        navigate('/settings');
+                                        setIsMenuOpen(false);
+                                    }}
+                                    className="w-full flex items-center gap-4 p-4 rounded-lg transition-colors hover:opacity-80"
+                                    style={{color: 'var(--text-primary)'}}
                                 >
-                                    <Settings size={16} />
-                                    Settings
+                                    <Settings size={20} />
+                                    <span>Settings</span>
                                 </button>
                                 <button
                                     onClick={handleLogout}
-                                    className="w-full flex items-center gap-3 px-3 py-2 text-left text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors"
+                                    className="w-full flex items-center gap-4 p-4 rounded-lg transition-colors hover:opacity-80"
+                                    style={{color: 'var(--text-primary)'}}
                                 >
-                                    <LogOut size={16} />
-                                    Logout
+                                    <LogOut size={20} />
+                                    <span>Logout</span>
                                 </button>
                             </div>
                         </div>
@@ -183,11 +192,11 @@ export default function Profile() {
                 {/* Profile Header */}
                 <div className="flex items-center gap-6 mb-8">
                     {/* Avatar */}
-                    <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-full bg-gray-200 dark:bg-gray-700 flex items-center justify-center overflow-hidden">
+                    <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-full flex items-center justify-center overflow-hidden" style={{backgroundColor: 'var(--bg-secondary)'}}>
                         {fullUser.profilePictureUrl ? (
                             <img src={fullUser.profilePictureUrl} className="w-full h-full object-cover" alt="Profile" />
                         ) : (
-                            <User size={32} className="text-gray-400" />
+                            <User size={32} style={{color: 'var(--text-secondary)'}} />
                         )}
                     </div>
 
@@ -195,22 +204,24 @@ export default function Profile() {
                     <div className="flex-1">
                         <div className="flex justify-around text-center">
                             <div>
-                                <p className="text-lg font-semibold text-gray-900 dark:text-white">{posts.length}</p>
-                                <p className="text-sm text-gray-600 dark:text-gray-400">Posts</p>
+                                <p className="text-lg font-semibold" style={{color: 'var(--text-primary)'}}>{posts.length}</p>
+                                <p className="text-sm" style={{color: 'var(--text-secondary)'}}>Posts</p>
                             </div>
                             <button 
                                 onClick={() => setFollowersModalOpen(true)}
-                                className="hover:bg-gray-100 dark:hover:bg-gray-800 p-2 rounded-lg transition-colors"
+                                className="p-2 rounded-lg transition-colors hover:opacity-80"
+                                style={{'&:hover': {backgroundColor: 'var(--bg-secondary)'}}}
                             >
-                                <p className="text-lg font-semibold text-gray-900 dark:text-white">{fullUser.followersCount || 0}</p>
-                                <p className="text-sm text-gray-600 dark:text-gray-400">Followers</p>
+                                <p className="text-lg font-semibold" style={{color: 'var(--text-primary)'}}>{fullUser.followersCount || 0}</p>
+                                <p className="text-sm" style={{color: 'var(--text-secondary)'}}>Followers</p>
                             </button>
                             <button 
                                 onClick={() => setFollowingModalOpen(true)}
-                                className="hover:bg-gray-100 dark:hover:bg-gray-800 p-2 rounded-lg transition-colors"
+                                className="p-2 rounded-lg transition-colors hover:opacity-80"
+                                style={{'&:hover': {backgroundColor: 'var(--bg-secondary)'}}}
                             >
-                                <p className="text-lg font-semibold text-gray-900 dark:text-white">{fullUser.followingCount || 0}</p>
-                                <p className="text-sm text-gray-600 dark:text-gray-400">Following</p>
+                                <p className="text-lg font-semibold" style={{color: 'var(--text-primary)'}}>{fullUser.followingCount || 0}</p>
+                                <p className="text-sm" style={{color: 'var(--text-secondary)'}}>Following</p>
                             </button>
                         </div>
                     </div>
@@ -218,9 +229,9 @@ export default function Profile() {
 
                 {/* Bio */}
                 <div className="mb-6">
-                    <h2 className="font-semibold text-gray-900 dark:text-white mb-1">{fullUser.username}</h2>
+                    <h2 className="font-semibold mb-1" style={{color: 'var(--text-primary)'}}>{fullUser.username}</h2>
                     {fullUser.bio && (
-                        <p className="text-gray-700 dark:text-gray-300 text-sm">{fullUser.bio}</p>
+                        <p className="text-sm" style={{color: 'var(--text-secondary)'}}>{fullUser.bio}</p>
                     )}
                     
                     {/* Badges */}
@@ -242,42 +253,45 @@ export default function Profile() {
                 <div className="flex gap-2 mb-8">
                     <button
                         onClick={() => setIsUpdateModalOpen(true)}
-                        className="flex-1 py-2 px-4 bg-gray-200 dark:bg-gray-800 text-gray-900 dark:text-white text-sm font-medium rounded-lg hover:bg-gray-300 dark:hover:bg-gray-700 transition-colors"
+                        className="flex-1 py-2 px-4 text-sm font-medium rounded-lg transition-colors hover:opacity-80"
+                        style={{backgroundColor: 'var(--bg-secondary)', color: 'var(--text-primary)'}}
                     >
                         Edit Profile
                     </button>
                     <button
                         onClick={() => navigator.clipboard.writeText(window.location.href)}
-                        className="flex-1 py-2 px-4 bg-gray-200 dark:bg-gray-800 text-gray-900 dark:text-white text-sm font-medium rounded-lg hover:bg-gray-300 dark:hover:bg-gray-700 transition-colors"
+                        className="flex-1 py-2 px-4 text-sm font-medium rounded-lg transition-colors hover:opacity-80"
+                        style={{backgroundColor: 'var(--bg-secondary)', color: 'var(--text-primary)'}}
                     >
                         Share Profile
                     </button>
                 </div>
 
                 {/* Posts Grid */}
-                <div className="border-t border-gray-200 dark:border-gray-800 pt-4">
+                <div className="border-t pt-4" style={{borderColor: 'var(--border-color)'}}>
                     <div className="flex justify-center mb-4">
-                        <div className="w-6 h-6 border-2 border-gray-900 dark:border-white grid grid-cols-3 gap-0.5">
-                            <div className="bg-gray-900 dark:bg-white"></div>
-                            <div className="bg-gray-900 dark:bg-white"></div>
-                            <div className="bg-gray-900 dark:bg-white"></div>
-                            <div className="bg-gray-900 dark:bg-white"></div>
-                            <div className="bg-gray-900 dark:bg-white"></div>
-                            <div className="bg-gray-900 dark:bg-white"></div>
-                            <div className="bg-gray-900 dark:bg-white"></div>
-                            <div className="bg-gray-900 dark:bg-white"></div>
-                            <div className="bg-gray-900 dark:bg-white"></div>
+                        <div className="w-6 h-6 border-2 grid grid-cols-3 gap-0.5" style={{borderColor: 'var(--text-primary)'}}>
+                            <div style={{backgroundColor: 'var(--text-primary)'}}></div>
+                            <div style={{backgroundColor: 'var(--text-primary)'}}></div>
+                            <div style={{backgroundColor: 'var(--text-primary)'}}></div>
+                            <div style={{backgroundColor: 'var(--text-primary)'}}></div>
+                            <div style={{backgroundColor: 'var(--text-primary)'}}></div>
+                            <div style={{backgroundColor: 'var(--text-primary)'}}></div>
+                            <div style={{backgroundColor: 'var(--text-primary)'}}></div>
+                            <div style={{backgroundColor: 'var(--text-primary)'}}></div>
+                            <div style={{backgroundColor: 'var(--text-primary)'}}></div>
                         </div>
                     </div>
                     {posts.length === 0 ? (
                         <div className="text-center py-12">
-                            <div className="w-16 h-16 mx-auto mb-4 border-2 border-gray-300 dark:border-gray-600 rounded-full flex items-center justify-center">
-                                <User size={24} className="text-gray-400" />
+                            <div className="w-16 h-16 mx-auto mb-4 border-2 rounded-full flex items-center justify-center" style={{borderColor: 'var(--border-color)'}}>
+                                <User size={24} style={{color: 'var(--text-secondary)'}} />
                             </div>
-                            <p className="text-gray-500 dark:text-gray-400 mb-4">No posts yet</p>
+                            <p className="mb-4" style={{color: 'var(--text-secondary)'}}>No posts yet</p>
                             <button
                                 onClick={() => navigate('/create')}
-                                className="px-6 py-2 bg-black dark:bg-white text-white dark:text-black rounded-lg hover:bg-gray-800 dark:hover:bg-gray-200 transition-colors"
+                                className="px-6 py-2 rounded-lg transition-colors hover:opacity-80"
+                                style={{backgroundColor: 'var(--text-primary)', color: 'var(--bg-primary)'}}
                             >
                                 Share your first post
                             </button>
@@ -285,9 +299,9 @@ export default function Profile() {
                     ) : (
                         <div className="grid grid-cols-3 gap-1">
                             {posts.map((post) => (
-                                <div key={post.id} className="aspect-square bg-gray-100 dark:bg-gray-800 flex items-center justify-center relative group cursor-pointer">
+                                <div key={post.id} className="aspect-square flex items-center justify-center relative group cursor-pointer" style={{backgroundColor: 'var(--bg-secondary)'}}>
                                     <div className="text-center p-2">
-                                        <p className="text-xs font-medium text-gray-700 dark:text-gray-300 line-clamp-2">{post.question}</p>
+                                        <p className="text-xs font-medium line-clamp-2" style={{color: 'var(--text-primary)'}}>{post.question}</p>
                                     </div>
                                     <div className="absolute inset-0 bg-black bg-opacity-50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                                         <div className="text-white text-xs text-center">
