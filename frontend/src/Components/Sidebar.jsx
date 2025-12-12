@@ -24,7 +24,8 @@ export default function Sidebar() {
                         width: "100%",
                         opacity: width < 80 ? 1 : 1,
                         backgroundColor: 'var(--bg-primary)',
-                        borderColor: 'var(--border-color)'
+                        borderColor: 'var(--border-color)',
+                        color: 'var(--text-primary)'
                     }}
                 >
                     <nav className="flex-1">
