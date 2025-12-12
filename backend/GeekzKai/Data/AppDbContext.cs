@@ -19,6 +19,7 @@ namespace geekzKai.Data
         public DbSet<LiveStream> LiveStreams { get; set; }
         public DbSet<LiveViewer> LiveViewers { get; set; }
         public DbSet<LiveMessage> LiveMessages { get; set; }
+        public DbSet<Notification> Notifications { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -216,6 +217,19 @@ namespace geekzKai.Data
                 .HasOne(lm => lm.User)
                 .WithMany()
                 .HasForeignKey(lm => lm.UserId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            // NOTIFICATION RELATIONSHIPS
+            modelBuilder.Entity<Notification>()
+                .HasOne(n => n.User)
+                .WithMany()
+                .HasForeignKey(n => n.UserId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<Notification>()
+                .HasOne(n => n.FromUser)
+                .WithMany()
+                .HasForeignKey(n => n.FromUserId)
                 .OnDelete(DeleteBehavior.Restrict);
         }
     }

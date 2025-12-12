@@ -48,6 +48,19 @@ namespace geekzKai.Controllers
             if (follower != null) follower.FollowingCount++;
             if (following != null) following.FollowersCount++;
 
+            // Create notification
+            if (follower != null)
+            {
+                var notification = new Notification
+                {
+                    UserId = userId,
+                    FromUserId = currentUserId,
+                    Type = "follow",
+                    Message = $"{follower.Username} started following you"
+                };
+                _context.Notifications.Add(notification);
+            }
+
             await _context.SaveChangesAsync();
 
             return Ok(new { message = "User followed successfully" });

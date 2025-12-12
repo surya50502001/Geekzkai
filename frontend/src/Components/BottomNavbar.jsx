@@ -1,9 +1,10 @@
 import { Home, Search, Plus, MessageCircle, User, X, Settings, LogOut, Bell } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useAuth } from "../Context/AuthContext";
 import { useTheme } from "../Context/ThemeContext";
 import CreateModal from "./CreateModal";
+import { useNotifications } from "../hooks/useNotifications";
 
 export default function BottomNavbar() {
     const location = useLocation();
@@ -11,6 +12,15 @@ export default function BottomNavbar() {
     const { isDark, toggleTheme } = useTheme();
     const [showProfileMenu, setShowProfileMenu] = useState(false);
     const [showCreateModal, setShowCreateModal] = useState(false);
+    const [showNotifications, setShowNotifications] = useState(false);
+    const { notifications, unreadCount, fetchNotifications, markAsRead } = useNotifications();
+
+    // Close all modals when location changes
+    useEffect(() => {
+        setShowProfileMenu(false);
+        setShowCreateModal(false);
+        setShowNotifications(false);
+    }, [location.pathname]);
 
     const navItems = [
         { to: "/", icon: Home, label: "Home" },
@@ -49,10 +59,19 @@ export default function BottomNavbar() {
                 </button>
                 
                 {/* Notifications Button */}
-                <button className="flex flex-col items-center p-2 transition-colors relative" style={{color: 'var(--text-secondary)'}}>
+                <button 
+                    onClick={() => {
+                        setShowNotifications(true);
+                        fetchNotifications();
+                    }}
+                    className="flex flex-col items-center p-2 transition-colors relative" 
+                    style={{color: 'var(--text-secondary)'}}
+                >
                     <Bell size={24} />
                     <span className="text-xs mt-1">Notifications</span>
-                    <span className="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full"></span>
+                    {unreadCount > 0 && (
+                        <span className="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full"></span>
+                    )}
                 </button>
                 
                 {/* Profile Button */}
@@ -155,6 +174,70 @@ export default function BottomNavbar() {
                                 <LogOut size={20} />
                                 <span>Logout</span>
                             </button>
+                        </div>
+                    </div>
+                </div>
+            )}
+            
+            {/* Notifications Modal */}
+            {showNotifications && (
+                <div className="fixed inset-0 z-50 md:hidden" style={{backgroundColor: 'var(--bg-primary)'}}>
+                    <div className="flex flex-col h-full">
+                        <div className="flex items-center justify-between p-4 border-b" style={{borderColor: 'var(--border-color)'}}>
+                            <h2 className="text-xl font-bold" style={{color: 'var(--text-primary)'}}>Notifications</h2>
+                            <button
+                                onClick={() => setShowNotifications(false)}
+                                className="p-2 rounded-lg transition-colors"
+                                style={{color: 'var(--text-primary)'}}
+                            >
+                                <X size={24} />
+                            </button>
+                        </div>
+                        <div className="flex-1 p-4">
+                            {notifications.length === 0 ? (
+                                <div className="flex items-center justify-center h-full">
+                                    <p style={{color: 'var(--text-secondary)'}}>No notifications yet</p>
+                                </div>
+                            ) : (
+                                <div className="space-y-2">
+                                    {notifications.map((notification) => (
+                                        <div
+                                            key={notification.id}
+                                            onClick={() => !notification.isRead && markAsRead(notification.id)}
+                                            className="p-3 rounded-lg border cursor-pointer"
+                                            style={{
+                                                backgroundColor: notification.isRead ? 'transparent' : 'var(--bg-secondary)',
+                                                borderColor: 'var(--border-color)'
+                                            }}
+                                        >
+                                            <div className="flex items-center gap-3">
+                                                {notification.fromUser.profilePictureUrl ? (
+                                                    <img 
+                                                        src={notification.fromUser.profilePictureUrl} 
+                                                        alt={notification.fromUser.username}
+                                                        className="w-8 h-8 rounded-full"
+                                                    />
+                                                ) : (
+                                                    <div className="w-8 h-8 rounded-full bg-gray-300 flex items-center justify-center">
+                                                        <User size={16} />
+                                                    </div>
+                                                )}
+                                                <div className="flex-1">
+                                                    <p className="text-sm" style={{color: 'var(--text-primary)'}}>
+                                                        {notification.message}
+                                                    </p>
+                                                    <p className="text-xs" style={{color: 'var(--text-secondary)'}}>
+                                                        {new Date(notification.createdAt).toLocaleDateString()}
+                                                    </p>
+                                                </div>
+                                                {!notification.isRead && (
+                                                    <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
+                                                )}
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+                            )}
                         </div>
                     </div>
                 </div>
