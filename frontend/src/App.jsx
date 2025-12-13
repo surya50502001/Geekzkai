@@ -15,6 +15,7 @@ import Profile from "./Pages/Profile";
 
 import Search from "./Pages/Search";
 import UserProfile from "./Pages/UserProfile";
+import Create from "./Pages/Create";
 import Sidebar from "./Components/Sidebar";
 import AuthCallback from "./Pages/AuthCallback";
 
@@ -74,6 +75,7 @@ function App() {
                         <Route path="/login" element={<Login />} />
                         <Route path="/register" element={<Register />} />
 
+                        <Route path="/create" element={<PrivateRoute><Create /></PrivateRoute>} />
                         <Route path="/create/post" element={<PrivateRoute><CreatePost /></PrivateRoute>} />
                         <Route path="/create/room" element={<PrivateRoute><div className="p-8 text-center" style={{backgroundColor: 'var(--bg-primary)', color: 'var(--text-primary)'}}>Create Room - Coming Soon</div></PrivateRoute>} />
                         <Route path="/create/live" element={<PrivateRoute><div className="p-8 text-center" style={{backgroundColor: 'var(--bg-primary)', color: 'var(--text-primary)'}}>Go Live - Coming Soon</div></PrivateRoute>} />

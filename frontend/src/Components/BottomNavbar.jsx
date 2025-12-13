@@ -3,7 +3,7 @@ import { Link, useLocation } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { useAuth } from "../Context/AuthContext";
 import { useTheme } from "../Context/ThemeContext";
-import CreateModal from "./CreateModal";
+
 import { useNotifications } from "../hooks/useNotifications";
 
 export default function BottomNavbar() {
@@ -11,14 +11,12 @@ export default function BottomNavbar() {
     const { user, logout } = useAuth();
     const { isDark, toggleTheme } = useTheme();
     const [showProfileMenu, setShowProfileMenu] = useState(false);
-    const [showCreateModal, setShowCreateModal] = useState(false);
     const [showNotifications, setShowNotifications] = useState(false);
     const { notifications, unreadCount, fetchNotifications, markAsRead } = useNotifications();
 
     // Close all modals when location changes
     useEffect(() => {
         setShowProfileMenu(false);
-        setShowCreateModal(false);
         setShowNotifications(false);
     }, [location.pathname]);
 
@@ -49,14 +47,14 @@ export default function BottomNavbar() {
                 })}
                 
                 {/* Create Button */}
-                <button
-                    onClick={() => setShowCreateModal(true)}
+                <Link
+                    to="/create"
                     className="flex flex-col items-center p-2 transition-colors"
                     style={{color: 'var(--text-secondary)'}}
                 >
                     <Plus size={24} />
                     <span className="text-xs mt-1">Create</span>
-                </button>
+                </Link>
                 
                 {/* Notifications Button */}
                 <button 
@@ -242,12 +240,6 @@ export default function BottomNavbar() {
                     </div>
                 </div>
             )}
-            
-            {/* Create Modal */}
-            <CreateModal 
-                isOpen={showCreateModal} 
-                onClose={() => setShowCreateModal(false)} 
-            />
         </>
     );
 }
