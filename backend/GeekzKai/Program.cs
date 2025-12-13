@@ -43,6 +43,7 @@ builder.Services.AddCors(options =>
     {
         policy.WithOrigins(
             "https://geekzkai-1.onrender.com",
+            "https://geekzkai.onrender.com",
             "http://localhost:3000",
             "https://localhost:3000",
             "http://localhost:5173",
