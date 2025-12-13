@@ -139,10 +139,14 @@ namespace geekzKai.Controllers
             if (user == null)
                 return NotFound();
 
-            user.Username = request.Username;
-            user.Email = request.Email;
-            user.Bio = request.Bio;
-            user.ProfilePictureUrl = request.ProfilePictureUrl;
+            if (!string.IsNullOrEmpty(request.Username))
+                user.Username = request.Username;
+            if (!string.IsNullOrEmpty(request.Email))
+                user.Email = request.Email;
+            if (request.Bio != null)
+                user.Bio = request.Bio;
+            if (!string.IsNullOrEmpty(request.ProfilePictureUrl))
+                user.ProfilePictureUrl = request.ProfilePictureUrl;
 
             await _context.SaveChangesAsync();
 
