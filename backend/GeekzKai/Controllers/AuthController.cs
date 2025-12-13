@@ -28,7 +28,7 @@ namespace geekzKai.Controllers
         {
             var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == request.Email);
             
-            if (user == null || !BCrypt.Verify(request.Password, user.Password))
+            if (user == null || !BCrypt.Net.BCrypt.Verify(request.Password, user.Password))
             {
                 return Unauthorized(new { message = "Invalid credentials" });
             }
@@ -49,7 +49,7 @@ namespace geekzKai.Controllers
             {
                 Email = request.Email,
                 Username = request.Username,
-                Password = BCrypt.HashPassword(request.Password),
+                Password = BCrypt.Net.BCrypt.HashPassword(request.Password),
                 EmailVerified = false
             };
 
