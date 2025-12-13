@@ -102,12 +102,106 @@ namespace geekzKai.Controllers
             var post = await _context.Posts
                 .Include(p => p.User)
                 .Include(p => p.Comments)
+                    .ThenInclude(c => c.User)
+                .Include(p => p.Upvotes)
                 .FirstOrDefaultAsync(p => p.Id == id);
 
             if (post == null)
                 return NotFound(new { message = "Post not found" });
 
             return Ok(post);
+        }
+
+        // GET: api/posts/{id}/upvote-status
+        [HttpGet("{id}/upvote-status")]
+        [Microsoft.AspNetCore.Authorization.Authorize]
+        public async Task<IActionResult> GetUpvoteStatus(int id)
+        {
+            var userId = int.Parse(User.FindFirst("id")?.Value ?? "0");
+            
+            var isUpvoted = await _context.Upvotes
+                .AnyAsync(u => u.PostId == id && u.UserId == userId);
+
+            return Ok(new { isUpvoted });
+        }
+
+        // POST: api/posts/{id}/upvote
+        [HttpPost("{id}/upvote")]
+        [Microsoft.AspNetCore.Authorization.Authorize]
+        public async Task<IActionResult> UpvotePost(int id)
+        {
+            var userId = int.Parse(User.FindFirst("id")?.Value ?? "0");
+            
+            var existingUpvote = await _context.Upvotes
+                .FirstOrDefaultAsync(u => u.PostId == id && u.UserId == userId);
+
+            if (existingUpvote != null)
+                return BadRequest("Already upvoted");
+
+            var upvote = new Upvote
+            {
+                PostId = id,
+                UserId = userId,
+                VotedAt = DateTime.UtcNow
+            };
+
+            _context.Upvotes.Add(upvote);
+            await _context.SaveChangesAsync();
+
+            return Ok();
+        }
+
+        // DELETE: api/posts/{id}/upvote
+        [HttpDelete("{id}/upvote")]
+        [Microsoft.AspNetCore.Authorization.Authorize]
+        public async Task<IActionResult> RemoveUpvote(int id)
+        {
+            var userId = int.Parse(User.FindFirst("id")?.Value ?? "0");
+            
+            var upvote = await _context.Upvotes
+                .FirstOrDefaultAsync(u => u.PostId == id && u.UserId == userId);
+
+            if (upvote == null)
+                return BadRequest("Not upvoted");
+
+            _context.Upvotes.Remove(upvote);
+            await _context.SaveChangesAsync();
+
+            return Ok();
+        }
+
+        // GET: api/posts/{id}/comments
+        [HttpGet("{id}/comments")]
+        public async Task<IActionResult> GetComments(int id)
+        {
+            var comments = await _context.Comments
+                .Where(c => c.PostId == id)
+                .Include(c => c.User)
+                .OrderBy(c => c.CreatedAt)
+                .ToListAsync();
+
+            return Ok(comments);
+        }
+
+        // POST: api/posts/{id}/comments
+        [HttpPost("{id}/comments")]
+        [Microsoft.AspNetCore.Authorization.Authorize]
+        public async Task<IActionResult> AddComment(int id, [FromBody] CommentRequest request)
+        {
+            var userId = int.Parse(User.FindFirst("id")?.Value ?? "0");
+            
+            var comment = new Comment
+            {
+                PostId = id,
+                UserId = userId,
+                Text = request.Text,
+                CreatedAt = DateTime.UtcNow
+            };
+
+            _context.Comments.Add(comment);
+            await _context.SaveChangesAsync();
+
+            return Ok();
         }
 
         // POST: api/posts
@@ -226,5 +320,10 @@ namespace geekzKai.Controllers
                 }
             });
         }
+    }
+
+    public class CommentRequest
+    {
+        public string Text { get; set; } = string.Empty;
     }
 }

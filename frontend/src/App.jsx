@@ -16,6 +16,7 @@ import Profile from "./Pages/Profile";
 import Search from "./Pages/Search";
 import UserProfile from "./Pages/UserProfile";
 import Create from "./Pages/Create";
+import PostDetail from "./Pages/PostDetail";
 import Sidebar from "./Components/Sidebar";
 import AuthCallback from "./Pages/AuthCallback";
 
@@ -84,6 +85,7 @@ function App() {
                         <Route path="/settings" element={<Settings />} />
                         <Route path="/search" element={<Search />} />
                         <Route path="/user/:id" element={<UserProfile />} />
+                        <Route path="/post/:id" element={<PostDetail />} />
                         <Route path="/trending" element={<Trending /> } />
                         <Route path="/auth/callback" element={<AuthCallback />} />
                     </Routes>

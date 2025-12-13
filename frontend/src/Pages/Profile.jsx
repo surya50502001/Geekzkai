@@ -304,7 +304,12 @@ export default function Profile() {
                     ) : (
                         <div className="grid grid-cols-3 gap-1">
                             {posts.map((post) => (
-                                <div key={post.id} className="aspect-square flex items-center justify-center relative group cursor-pointer" style={{backgroundColor: 'var(--bg-secondary)'}}>
+                                <div 
+                                    key={post.id} 
+                                    onClick={() => navigate(`/post/${post.id}`)}
+                                    className="aspect-square flex items-center justify-center relative group cursor-pointer" 
+                                    style={{backgroundColor: 'var(--bg-secondary)'}}
+                                >
                                     <div className="text-center p-2">
                                         <p className="text-xs font-medium line-clamp-2" style={{color: 'var(--text-primary)'}}>{post.question}</p>
                                     </div>
