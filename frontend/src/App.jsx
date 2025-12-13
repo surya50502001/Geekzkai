@@ -41,27 +41,35 @@ function App() {
     useEffect(() => {
         const hash = window.location.hash;
         if (hash.startsWith('#token=')) {
-            const token = hash.substring(7);
-            localStorage.setItem('token', token);
+            const hashParams = new URLSearchParams(hash.substring(1));
+            const token = hashParams.get('token');
+            const tour = hashParams.get('tour');
             
-            try {
-                const base64Url = token.split('.')[1];
-                const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
-                const jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
-                    return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
-                }).join(''));
-                const decodedToken = JSON.parse(jsonPayload);
+            if (token) {
+                localStorage.setItem('token', token);
                 
-                const user = {
-                    id: decodedToken.id,
-                    email: decodedToken.email,
-                    username: decodedToken.username,
-                };
-                setUser(user);
-                window.location.hash = '';
-                window.history.replaceState(null, null, '/');
-            } catch (error) {
-                console.error('Token processing error:', error);
+                try {
+                    const base64Url = token.split('.')[1];
+                    const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+                    const jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
+                        return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+                    }).join(''));
+                    const decodedToken = JSON.parse(jsonPayload);
+                    
+                    const user = {
+                        id: decodedToken.id,
+                        email: decodedToken.email,
+                        username: decodedToken.username,
+                    };
+                    setUser(user);
+                    
+                    // Redirect to profile with tour parameter if needed
+                    const redirectUrl = tour === 'true' ? '/profile?tour=true' : '/profile';
+                    window.location.hash = '';
+                    window.history.replaceState(null, null, redirectUrl);
+                } catch (error) {
+                    console.error('Token processing error:', error);
+                }
             }
         }
     }, [setUser]);

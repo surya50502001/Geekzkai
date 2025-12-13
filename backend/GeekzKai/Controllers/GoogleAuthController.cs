@@ -89,6 +89,7 @@ namespace geekzKai.Controllers
 
                 // Find or create user
                 var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == userInfo.Email);
+                bool isNewUser = false;
                 
                 if (user == null)
                 {
@@ -106,6 +107,7 @@ namespace geekzKai.Controllers
                     _context.Users.Add(user);
                     await _context.SaveChangesAsync();
                     Console.WriteLine($"New user created with ID: {user.Id}");
+                    isNewUser = true;
                 }
                 else
                 {
@@ -115,7 +117,8 @@ namespace geekzKai.Controllers
                 }
 
                 var token = GenerateJwtToken(user);
-                return Redirect($"{frontendUrl}/#token={token}");
+                var redirectUrl = isNewUser ? $"{frontendUrl}/#token={token}&tour=true" : $"{frontendUrl}/#token={token}";
+                return Redirect(redirectUrl);
             }
             catch (Exception ex)
             {

@@ -19,6 +19,8 @@ export default function Profile() {
     const [editData, setEditData] = useState({});
     const [saving, setSaving] = useState(false);
     const [saveMessage, setSaveMessage] = useState('');
+    const [showTour, setShowTour] = useState(false);
+    const [tourData, setTourData] = useState({ isYoutuber: false, youtubeChannel: '' });
 
 
     const refreshUserData = async () => {
@@ -36,6 +38,17 @@ export default function Profile() {
             }
         }
     };
+
+    // Check for tour parameter
+    useEffect(() => {
+        const urlParams = new URLSearchParams(window.location.search);
+        const tourParam = urlParams.get('tour');
+        if (tourParam === 'true') {
+            setShowTour(true);
+            // Clean URL
+            window.history.replaceState({}, document.title, window.location.pathname);
+        }
+    }, []);
 
     // Refresh user data when component mounts or user changes
     useEffect(() => {
@@ -476,6 +489,88 @@ export default function Profile() {
             </div>
 
 
+            {/* Tour Modal */}
+            {showTour && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center p-4" style={{backgroundColor: 'rgba(0,0,0,0.5)'}}>
+                    <div className="w-full max-w-md rounded-lg p-6" style={{backgroundColor: 'var(--bg-primary)'}}>
+                        <h2 className="text-xl font-bold mb-4" style={{color: 'var(--text-primary)'}}>Welcome to GeekzKai!</h2>
+                        <p className="mb-4" style={{color: 'var(--text-secondary)'}}>Are you a YouTuber?</p>
+                        
+                        <div className="space-y-3 mb-4">
+                            <label className="flex items-center gap-3 cursor-pointer">
+                                <input
+                                    type="radio"
+                                    name="youtuber"
+                                    checked={!tourData.isYoutuber}
+                                    onChange={() => setTourData({...tourData, isYoutuber: false})}
+                                    className="w-4 h-4"
+                                />
+                                <span style={{color: 'var(--text-primary)'}}>No, I'm just here to explore</span>
+                            </label>
+                            <label className="flex items-center gap-3 cursor-pointer">
+                                <input
+                                    type="radio"
+                                    name="youtuber"
+                                    checked={tourData.isYoutuber}
+                                    onChange={() => setTourData({...tourData, isYoutuber: true})}
+                                    className="w-4 h-4"
+                                />
+                                <span style={{color: 'var(--text-primary)'}}>Yes, I'm a YouTuber</span>
+                            </label>
+                        </div>
+                        
+                        {tourData.isYoutuber && (
+                            <input
+                                type="url"
+                                placeholder="YouTube Channel URL (optional)"
+                                value={tourData.youtubeChannel}
+                                onChange={(e) => setTourData({...tourData, youtubeChannel: e.target.value})}
+                                className="w-full p-2 mb-4 border rounded-lg"
+                                style={{
+                                    backgroundColor: 'var(--bg-secondary)',
+                                    borderColor: 'var(--border-color)',
+                                    color: 'var(--text-primary)'
+                                }}
+                            />
+                        )}
+                        
+                        <div className="flex gap-2">
+                            <button
+                                onClick={() => setShowTour(false)}
+                                className="flex-1 py-2 px-4 rounded-lg"
+                                style={{backgroundColor: 'var(--bg-secondary)', color: 'var(--text-primary)'}}
+                            >
+                                Skip
+                            </button>
+                            <button
+                                onClick={async () => {
+                                    try {
+                                        await fetch(`${API_BASE_URL}/user/me`, {
+                                            method: 'PUT',
+                                            headers: {
+                                                'Content-Type': 'application/json',
+                                                Authorization: `Bearer ${token}`
+                                            },
+                                            body: JSON.stringify({
+                                                isYoutuber: tourData.isYoutuber,
+                                                youtubeChannelLink: tourData.youtubeChannel
+                                            })
+                                        });
+                                        setShowTour(false);
+                                        refreshUserData();
+                                    } catch (error) {
+                                        console.error('Failed to update:', error);
+                                    }
+                                }}
+                                className="flex-1 py-2 px-4 rounded-lg"
+                                style={{backgroundColor: '#3b82f6', color: 'white'}}
+                            >
+                                Continue
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     );
 }
