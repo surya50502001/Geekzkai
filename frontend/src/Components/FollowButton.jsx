@@ -41,7 +41,7 @@ export default function FollowButton({ userId, username, onFollowChange }) {
             if (response.ok) {
                 setIsFollowing(!isFollowing);
                 if (onFollowChange) {
-                    onFollowChange(!isFollowing);
+                    onFollowChange();
                 }
             }
         } catch (error) {
