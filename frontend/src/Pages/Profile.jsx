@@ -232,11 +232,33 @@ export default function Profile() {
                 {/* Profile Header */}
                 <div className="flex items-center gap-6 mb-8">
                     {/* Avatar */}
-                    <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-full flex items-center justify-center overflow-hidden" style={{backgroundColor: 'var(--bg-secondary)'}}>
-                        {fullUser.profilePictureUrl ? (
-                            <img src={fullUser.profilePictureUrl} className="w-full h-full object-cover" alt="Profile" />
-                        ) : (
-                            <User size={32} style={{color: 'var(--text-secondary)'}} />
+                    <div className="relative">
+                        <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-full flex items-center justify-center overflow-hidden" style={{backgroundColor: 'var(--bg-secondary)'}}>
+                            {fullUser.profilePictureUrl ? (
+                                <img src={fullUser.profilePictureUrl} className="w-full h-full object-cover" alt="Profile" />
+                            ) : (
+                                <User size={32} style={{color: 'var(--text-secondary)'}} />
+                            )}
+                        </div>
+                        {isEditing && (
+                            <label className="absolute bottom-0 right-0 p-2 rounded-full cursor-pointer" style={{backgroundColor: '#3b82f6'}}>
+                                <Camera size={16} color="white" />
+                                <input
+                                    type="file"
+                                    accept="image/*"
+                                    onChange={(e) => {
+                                        const file = e.target.files[0];
+                                        if (file) {
+                                            const reader = new FileReader();
+                                            reader.onload = (e) => {
+                                                setEditData({...editData, profilePictureUrl: e.target.result});
+                                            };
+                                            reader.readAsDataURL(file);
+                                        }
+                                    }}
+                                    className="hidden"
+                                />
+                            </label>
                         )}
                     </div>
 
