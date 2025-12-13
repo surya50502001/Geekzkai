@@ -1,4 +1,4 @@
-namespace GeekzKai.Models
+namespace geekzKai.Models
 {
     public class UpdateProfileRequest
     {
