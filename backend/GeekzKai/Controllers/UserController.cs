@@ -58,7 +58,7 @@ namespace geekzKai.Controllers
             }
 
             var users = await _context.Users
-                .Where(u => u.Email.ToLower().Contains(query.ToLower()))
+                .Where(u => u.Username.ToLower().Contains(query.ToLower()))
                 .Select(u => new {
                     u.Id,
                     u.Username,
@@ -127,6 +127,38 @@ namespace geekzKai.Controllers
                 .ToListAsync();
 
             return Ok(following);
+        }
+
+        [HttpPut("me")]
+        [Authorize]
+        public async Task<IActionResult> UpdateProfile([FromBody] UpdateProfileRequest request)
+        {
+            var userId = int.Parse(User.FindFirst("id")?.Value ?? "0");
+            
+            var user = await _context.Users.FindAsync(userId);
+            if (user == null)
+                return NotFound();
+
+            user.Username = request.Username;
+            user.Email = request.Email;
+            user.Bio = request.Bio;
+            user.ProfilePictureUrl = request.ProfilePictureUrl;
+
+            await _context.SaveChangesAsync();
+
+            return Ok(new {
+                user.Id,
+                user.Username,
+                user.Email,
+                user.ProfilePictureUrl,
+                user.EmailVerified,
+                user.Bio,
+                user.FollowersCount,
+                user.FollowingCount,
+                user.IsYoutuber,
+                user.IsAdmin,
+                user.CreatedAt
+            });
         }
     }
 }

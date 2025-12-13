@@ -45,40 +45,61 @@ function UpdateProfile({ isOpen, onClose }) {
     return (
         <div
             onClick={handleOverlayClick}
-            className="fixed top-0 left-0 right-0 bottom-0 bg-white bg-opacity-60 backdrop-blur-sm flex items-center justify-center z-50"
+            className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4"
         >
-            <div className="bg-background-secondary w-80 rounded-xl shadow-xl p-6 relative animate-fadeIn border border-border-primary">
+            <div className="w-full max-w-md rounded-lg shadow-xl p-6 relative" style={{backgroundColor: 'var(--bg-secondary)'}}>
                 <button
                     onClick={onClose}
-                    className="absolute right-3 top-3 text-text-secondary hover:text-text-primary"
+                    className="absolute right-3 top-3 p-2 rounded-lg transition-colors"
+                    style={{color: 'var(--text-primary)'}}
                 >
-                    <X size={22} />
+                    <X size={20} />
                 </button>
 
-                <h2 className="text-2xl font-bold mb-4 text-text-primary">Update Profile</h2>
-                <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+                <h2 className="text-xl font-bold mb-6" style={{color: 'var(--text-primary)'}}>Update Profile</h2>
+                <form onSubmit={handleSubmit} className="space-y-4">
                     <input
                         type="text"
                         placeholder="Username"
                         value={username}
                         onChange={(e) => setUsername(e.target.value)}
-                        className="p-3 bg-background-primary border border-border-primary rounded-lg text-text-primary focus:outline-none focus:ring-2 focus:ring-primary"
+                        className="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        style={{
+                            backgroundColor: 'var(--bg-primary)',
+                            borderColor: 'var(--border-color)',
+                            color: 'var(--text-primary)'
+                        }}
                     />
                     <input
                         type="email"
                         placeholder="Email"
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
-                        className="p-3 bg-background-primary border border-border-primary rounded-lg text-text-primary focus:outline-none focus:ring-2 focus:ring-primary"
+                        className="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        style={{
+                            backgroundColor: 'var(--bg-primary)',
+                            borderColor: 'var(--border-color)',
+                            color: 'var(--text-primary)'
+                        }}
                     />
                     <input
                         type="password"
                         placeholder="New Password (optional)"
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
-                        className="p-3 bg-background-primary border border-border-primary rounded-lg text-text-primary focus:outline-none focus:ring-2 focus:ring-primary"
+                        className="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        style={{
+                            backgroundColor: 'var(--bg-primary)',
+                            borderColor: 'var(--border-color)',
+                            color: 'var(--text-primary)'
+                        }}
                     />
-                    <button type="submit" disabled={loading} className="p-3 rounded-lg bg-primary text-white hover:bg-primary-dark transition-colors disabled:bg-gray-400">
+                    <button 
+                        type="submit" 
+                        disabled={loading} 
+                        className="w-full p-3 rounded-lg transition-colors disabled:opacity-50"
+                        style={{backgroundColor: '#3b82f6', color: 'white'}}
+                    >
                         {loading ? "Updating..." : "Update"}
                     </button>
                 </form>

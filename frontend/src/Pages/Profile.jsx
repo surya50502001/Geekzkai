@@ -1,19 +1,23 @@
 import { useAuth } from "../Context/AuthContext";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { LogOut, Edit, Share2, User, Calendar, Mail, Menu, X, Settings } from "lucide-react";
-import UpdateProfile from "../Components/UpdateProfile";
+import { LogOut, Edit, Share2, User, Calendar, Mail, Menu, X, Settings, Check, Camera } from "lucide-react";
+import { useTheme } from "../Context/ThemeContext";
 
 import API_BASE_URL from "../apiConfig";
 
 export default function Profile() {
     const { user, logout, token } = useAuth();
+    const { isDark, toggleTheme } = useTheme();
     const navigate = useNavigate();
     const [fullUser, setFullUser] = useState(null);
-    const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false);
+
     const [loading, setLoading] = useState(true);
     const [posts, setPosts] = useState([]);
     const [isMenuOpen, setIsMenuOpen] = useState(false);
+    const [isEditing, setIsEditing] = useState(false);
+    const [editData, setEditData] = useState({});
+    const [saving, setSaving] = useState(false);
 
 
     const refreshUserData = async () => {
@@ -36,6 +40,16 @@ export default function Profile() {
     useEffect(() => {
         refreshUserData();
     }, [user?.id]);
+
+    useEffect(() => {
+        if (fullUser && !isEditing) {
+            setEditData({
+                username: fullUser.username || '',
+                bio: fullUser.bio || '',
+                profilePictureUrl: fullUser.profilePictureUrl || ''
+            });
+        }
+    }, [fullUser, isEditing]);
 
     useEffect(() => {
         if (token && user) {
@@ -158,7 +172,7 @@ export default function Profile() {
                             <div className="space-y-2">
                                 <button
                                     onClick={() => {
-                                        setIsUpdateModalOpen(true);
+                                        setIsEditing(true);
                                         setIsMenuOpen(false);
                                     }}
                                     className="w-full flex items-center gap-4 p-4 rounded-lg transition-colors hover:opacity-80"
@@ -166,6 +180,17 @@ export default function Profile() {
                                 >
                                     <Edit size={20} />
                                     <span>Edit Profile</span>
+                                </button>
+                                <button
+                                    onClick={() => {
+                                        toggleTheme();
+                                        setIsMenuOpen(false);
+                                    }}
+                                    className="w-full flex items-center gap-4 p-4 rounded-lg transition-colors hover:opacity-80"
+                                    style={{color: 'var(--text-primary)'}}
+                                >
+                                    <span className="text-xl">{isDark ? '☀️' : '🌙'}</span>
+                                    <span>Theme: {isDark ? 'Dark' : 'Light'}</span>
                                 </button>
                                 <button
                                     onClick={() => {
@@ -231,9 +256,41 @@ export default function Profile() {
 
                 {/* Bio */}
                 <div className="mb-6">
-                    <h2 className="font-semibold mb-1" style={{color: 'var(--text-primary)'}}>{fullUser.username}</h2>
-                    {fullUser.bio && (
-                        <p className="text-sm" style={{color: 'var(--text-secondary)'}}>{fullUser.bio}</p>
+                    {isEditing ? (
+                        <div className="space-y-3">
+                            <input
+                                type="text"
+                                value={editData.username}
+                                onChange={(e) => setEditData({...editData, username: e.target.value})}
+                                className="w-full p-2 border rounded-lg font-semibold"
+                                style={{
+                                    backgroundColor: 'var(--bg-secondary)',
+                                    borderColor: 'var(--border-color)',
+                                    color: 'var(--text-primary)'
+                                }}
+                            />
+                            <textarea
+                                value={editData.bio}
+                                onChange={(e) => setEditData({...editData, bio: e.target.value})}
+                                placeholder="Tell us about yourself..."
+                                rows={3}
+                                maxLength={200}
+                                className="w-full p-2 border rounded-lg text-sm resize-none"
+                                style={{
+                                    backgroundColor: 'var(--bg-secondary)',
+                                    borderColor: 'var(--border-color)',
+                                    color: 'var(--text-primary)'
+                                }}
+                            />
+                            <p className="text-xs" style={{color: 'var(--text-secondary)'}}>{editData.bio.length}/200</p>
+                        </div>
+                    ) : (
+                        <>
+                            <h2 className="font-semibold mb-1" style={{color: 'var(--text-primary)'}}>{fullUser.username}</h2>
+                            {fullUser.bio && (
+                                <p className="text-sm" style={{color: 'var(--text-secondary)'}}>{fullUser.bio}</p>
+                            )}
+                        </>
                     )}
                     
                     {/* Badges */}
@@ -253,20 +310,63 @@ export default function Profile() {
 
                 {/* Action Buttons */}
                 <div className="flex gap-2 mb-8">
-                    <button
-                        onClick={() => setIsUpdateModalOpen(true)}
-                        className="flex-1 py-2 px-4 text-sm font-medium rounded-lg transition-colors hover:opacity-80"
-                        style={{backgroundColor: 'var(--bg-secondary)', color: 'var(--text-primary)'}}
-                    >
-                        Edit Profile
-                    </button>
-                    <button
-                        onClick={() => navigator.clipboard.writeText(window.location.href)}
-                        className="flex-1 py-2 px-4 text-sm font-medium rounded-lg transition-colors hover:opacity-80"
-                        style={{backgroundColor: 'var(--bg-secondary)', color: 'var(--text-primary)'}}
-                    >
-                        Share Profile
-                    </button>
+                    {isEditing ? (
+                        <>
+                            <button
+                                onClick={async () => {
+                                    setSaving(true);
+                                    try {
+                                        const response = await fetch(`${API_BASE_URL}/user/me`, {
+                                            method: 'PUT',
+                                            headers: {
+                                                'Content-Type': 'application/json',
+                                                Authorization: `Bearer ${token}`
+                                            },
+                                            body: JSON.stringify(editData)
+                                        });
+                                        if (response.ok) {
+                                            const updatedUser = await response.json();
+                                            setFullUser(updatedUser);
+                                            setIsEditing(false);
+                                        }
+                                    } catch (error) {
+                                        console.error('Update failed:', error);
+                                    } finally {
+                                        setSaving(false);
+                                    }
+                                }}
+                                disabled={saving}
+                                className="flex-1 py-2 px-4 text-sm font-medium rounded-lg transition-colors hover:opacity-80 disabled:opacity-50"
+                                style={{backgroundColor: '#3b82f6', color: 'white'}}
+                            >
+                                {saving ? 'Saving...' : 'Save'}
+                            </button>
+                            <button
+                                onClick={() => setIsEditing(false)}
+                                className="flex-1 py-2 px-4 text-sm font-medium rounded-lg transition-colors hover:opacity-80"
+                                style={{backgroundColor: 'var(--bg-secondary)', color: 'var(--text-primary)'}}
+                            >
+                                Cancel
+                            </button>
+                        </>
+                    ) : (
+                        <>
+                            <button
+                                onClick={() => setIsEditing(true)}
+                                className="flex-1 py-2 px-4 text-sm font-medium rounded-lg transition-colors hover:opacity-80"
+                                style={{backgroundColor: 'var(--bg-secondary)', color: 'var(--text-primary)'}}
+                            >
+                                Edit Profile
+                            </button>
+                            <button
+                                onClick={() => navigator.clipboard.writeText(window.location.href)}
+                                className="flex-1 py-2 px-4 text-sm font-medium rounded-lg transition-colors hover:opacity-80"
+                                style={{backgroundColor: 'var(--bg-secondary)', color: 'var(--text-primary)'}}
+                            >
+                                Share Profile
+                            </button>
+                        </>
+                    )}
                 </div>
 
                 {/* Posts Grid */}
@@ -322,7 +422,7 @@ export default function Profile() {
                 </div>
             </div>
 
-            <UpdateProfile isOpen={isUpdateModalOpen} onClose={() => setIsUpdateModalOpen(false)} />
+
         </div>
     );
 }
