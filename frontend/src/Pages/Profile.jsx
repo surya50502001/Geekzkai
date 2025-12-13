@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { LogOut, Edit, Share2, User, Calendar, Mail, Menu, X, Settings } from "lucide-react";
 import UpdateProfile from "../Components/UpdateProfile";
-import FollowersModal from "../Components/FollowersModal";
+
 import API_BASE_URL from "../apiConfig";
 
 export default function Profile() {
@@ -14,8 +14,7 @@ export default function Profile() {
     const [loading, setLoading] = useState(true);
     const [posts, setPosts] = useState([]);
     const [isMenuOpen, setIsMenuOpen] = useState(false);
-    const [followersModalOpen, setFollowersModalOpen] = useState(false);
-    const [followingModalOpen, setFollowingModalOpen] = useState(false);
+
 
     const refreshUserData = async () => {
         if (token && user) {
@@ -213,17 +212,15 @@ export default function Profile() {
                                 <p className="text-sm" style={{color: 'var(--text-secondary)'}}>Posts</p>
                             </div>
                             <button 
-                                onClick={() => setFollowersModalOpen(true)}
+                                onClick={() => navigate(`/user/${fullUser.id}/followers`)}
                                 className="p-2 rounded-lg transition-colors hover:opacity-80"
-                                style={{'&:hover': {backgroundColor: 'var(--bg-secondary)'}}}
                             >
                                 <p className="text-lg font-semibold" style={{color: 'var(--text-primary)'}}>{fullUser.followersCount || 0}</p>
                                 <p className="text-sm" style={{color: 'var(--text-secondary)'}}>Followers</p>
                             </button>
                             <button 
-                                onClick={() => setFollowingModalOpen(true)}
+                                onClick={() => navigate(`/user/${fullUser.id}/following`)}
                                 className="p-2 rounded-lg transition-colors hover:opacity-80"
-                                style={{'&:hover': {backgroundColor: 'var(--bg-secondary)'}}}
                             >
                                 <p className="text-lg font-semibold" style={{color: 'var(--text-primary)'}}>{fullUser.followingCount || 0}</p>
                                 <p className="text-sm" style={{color: 'var(--text-secondary)'}}>Following</p>
@@ -326,24 +323,6 @@ export default function Profile() {
             </div>
 
             <UpdateProfile isOpen={isUpdateModalOpen} onClose={() => setIsUpdateModalOpen(false)} />
-            
-            <FollowersModal 
-                isOpen={followersModalOpen}
-                onClose={() => setFollowersModalOpen(false)}
-                userId={fullUser?.id}
-                type="followers"
-                username={fullUser?.username}
-                onFollowChange={refreshUserData}
-            />
-            
-            <FollowersModal 
-                isOpen={followingModalOpen}
-                onClose={() => setFollowingModalOpen(false)}
-                userId={fullUser?.id}
-                type="following"
-                username={fullUser?.username}
-                onFollowChange={refreshUserData}
-            />
         </div>
     );
 }
