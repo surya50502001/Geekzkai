@@ -19,6 +19,7 @@ import Create from "./Pages/Create";
 import PostDetail from "./Pages/PostDetail";
 import FollowersPage from "./Pages/FollowersPage";
 import EditProfile from "./Pages/EditProfile";
+import FollowRequests from "./Pages/FollowRequests";
 import Sidebar from "./Components/Sidebar";
 import AuthCallback from "./Pages/AuthCallback";
 
@@ -85,6 +86,7 @@ function App() {
                         <Route path="/chat" element={<PrivateRoute><Chat /></PrivateRoute>} />
                         <Route path="/profile" element={<PrivateRoute><Profile /></PrivateRoute>} />
                         <Route path="/profile/edit" element={<PrivateRoute><EditProfile /></PrivateRoute>} />
+                        <Route path="/follow-requests" element={<PrivateRoute><FollowRequests /></PrivateRoute>} />
                         <Route path="/settings" element={<Settings />} />
                         <Route path="/search" element={<Search />} />
                         <Route path="/user/:id" element={<UserProfile />} />

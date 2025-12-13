@@ -1,7 +1,7 @@
 import { useAuth } from "../Context/AuthContext";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { LogOut, Edit, Share2, User, Calendar, Mail, Menu, X, Settings, Check, Camera } from "lucide-react";
+import { LogOut, Edit, Share2, User, Calendar, Mail, Menu, X, Settings, Check, Camera, UserCheck } from "lucide-react";
 import { useTheme } from "../Context/ThemeContext";
 
 import API_BASE_URL from "../apiConfig";
@@ -180,6 +180,17 @@ export default function Profile() {
                                 >
                                     <Edit size={20} />
                                     <span>Edit Profile</span>
+                                </button>
+                                <button
+                                    onClick={() => {
+                                        navigate('/follow-requests');
+                                        setIsMenuOpen(false);
+                                    }}
+                                    className="w-full flex items-center gap-4 p-4 rounded-lg transition-colors hover:opacity-80"
+                                    style={{color: 'var(--text-primary)'}}
+                                >
+                                    <UserCheck size={20} />
+                                    <span>Follow Requests</span>
                                 </button>
                                 <button
                                     onClick={() => {
