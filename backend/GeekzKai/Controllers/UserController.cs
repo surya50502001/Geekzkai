@@ -39,7 +39,13 @@ namespace geekzKai.Controllers
                 user.Username,
                 user.Email,
                 user.ProfilePictureUrl,
-                user.EmailVerified
+                user.EmailVerified,
+                user.Bio,
+                user.FollowersCount,
+                user.FollowingCount,
+                user.IsYoutuber,
+                user.IsAdmin,
+                user.CreatedAt
             });
         }
 
