@@ -47,7 +47,7 @@ namespace GeekzKai.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Comments");
+                    b.ToTable("Comments", (string)null);
                 });
 
             modelBuilder.Entity("geekzKai.Models.Follow", b =>
@@ -72,7 +72,7 @@ namespace GeekzKai.Migrations
                     b.HasIndex("FollowerId", "FollowingId")
                         .IsUnique();
 
-                    b.ToTable("Follows");
+                    b.ToTable("Follows", (string)null);
                 });
 
             modelBuilder.Entity("geekzKai.Models.LiveMessage", b =>
@@ -100,7 +100,7 @@ namespace GeekzKai.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("LiveMessages");
+                    b.ToTable("LiveMessages", (string)null);
                 });
 
             modelBuilder.Entity("geekzKai.Models.LiveStream", b =>
@@ -140,7 +140,7 @@ namespace GeekzKai.Migrations
 
                     b.HasIndex("StreamerId");
 
-                    b.ToTable("LiveStreams");
+                    b.ToTable("LiveStreams", (string)null);
                 });
 
             modelBuilder.Entity("geekzKai.Models.LiveViewer", b =>
@@ -167,7 +167,7 @@ namespace GeekzKai.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("LiveViewers");
+                    b.ToTable("LiveViewers", (string)null);
                 });
 
             modelBuilder.Entity("geekzKai.Models.Message", b =>
@@ -198,7 +198,7 @@ namespace GeekzKai.Migrations
 
                     b.HasIndex("SenderId");
 
-                    b.ToTable("Messages");
+                    b.ToTable("Messages", (string)null);
                 });
 
             modelBuilder.Entity("geekzKai.Models.Post", b =>
@@ -229,7 +229,7 @@ namespace GeekzKai.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Posts");
+                    b.ToTable("Posts", (string)null);
                 });
 
             modelBuilder.Entity("geekzKai.Models.Room", b =>
@@ -266,7 +266,7 @@ namespace GeekzKai.Migrations
 
                     b.HasIndex("CreatorId");
 
-                    b.ToTable("Rooms");
+                    b.ToTable("Rooms", (string)null);
                 });
 
             modelBuilder.Entity("geekzKai.Models.RoomMessage", b =>
@@ -294,7 +294,7 @@ namespace GeekzKai.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("RoomMessages");
+                    b.ToTable("RoomMessages", (string)null);
                 });
 
             modelBuilder.Entity("geekzKai.Models.RoomParticipant", b =>
@@ -321,7 +321,7 @@ namespace GeekzKai.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("RoomParticipants");
+                    b.ToTable("RoomParticipants", (string)null);
                 });
 
             modelBuilder.Entity("geekzKai.Models.Upvote", b =>
@@ -354,7 +354,7 @@ namespace GeekzKai.Migrations
                     b.HasIndex("UserId", "PostId")
                         .IsUnique();
 
-                    b.ToTable("Upvotes");
+                    b.ToTable("Upvotes", (string)null);
                 });
 
             modelBuilder.Entity("geekzKai.Models.User", b =>
@@ -433,7 +433,7 @@ namespace GeekzKai.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Users");
+                    b.ToTable("Users", (string)null);
                 });
 
             modelBuilder.Entity("geekzKai.Models.Comment", b =>

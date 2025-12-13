@@ -18,6 +18,7 @@ export default function Profile() {
     const [isEditing, setIsEditing] = useState(false);
     const [editData, setEditData] = useState({});
     const [saving, setSaving] = useState(false);
+    const [saveMessage, setSaveMessage] = useState('');
 
 
     const refreshUserData = async () => {
@@ -348,7 +349,10 @@ export default function Profile() {
                             <button
                                 onClick={async () => {
                                     setSaving(true);
+                                    setSaveMessage('');
                                     try {
+                                        console.log('Saving to:', `${API_BASE_URL}/user/me`);
+                                        console.log('Data:', editData);
                                         const response = await fetch(`${API_BASE_URL}/user/me`, {
                                             method: 'PUT',
                                             headers: {
@@ -357,13 +361,22 @@ export default function Profile() {
                                             },
                                             body: JSON.stringify(editData)
                                         });
+                                        
+                                        console.log('Response status:', response.status);
+                                        
                                         if (response.ok) {
                                             const updatedUser = await response.json();
                                             setFullUser(updatedUser);
                                             setIsEditing(false);
+                                            setSaveMessage('Profile updated successfully!');
+                                        } else {
+                                            const errorText = await response.text();
+                                            console.error('Server error:', errorText);
+                                            setSaveMessage(`Failed to save: ${response.status} ${response.statusText}`);
                                         }
                                     } catch (error) {
                                         console.error('Update failed:', error);
+                                        setSaveMessage(`Network error: ${error.message}`);
                                     } finally {
                                         setSaving(false);
                                     }
@@ -399,6 +412,13 @@ export default function Profile() {
                                 Share Profile
                             </button>
                         </>
+                    )}
+                    
+                    {/* Save Message */}
+                    {saveMessage && (
+                        <div className={`mt-3 p-2 rounded text-sm text-center ${saveMessage.includes('success') ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}`}>
+                            {saveMessage}
+                        </div>
                     )}
                 </div>
 
