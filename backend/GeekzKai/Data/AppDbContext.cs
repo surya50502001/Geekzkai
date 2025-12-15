@@ -222,6 +222,7 @@ namespace geekzKai.Data
             // NOTIFICATION TABLE MAPPING
             modelBuilder.Entity<Notification>(entity =>
             {
+                entity.Property(n => n.Id).ValueGeneratedOnAdd();
                 entity.Property(n => n.IsRead)
                     .HasConversion<int>();
             });
