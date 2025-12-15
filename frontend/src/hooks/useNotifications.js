@@ -59,7 +59,12 @@ export const useNotifications = () => {
     };
 
     useEffect(() => {
-        fetchUnreadCount();
+        if (token) {
+            fetchUnreadCount();
+            // Poll every 10 seconds for new notifications
+            const interval = setInterval(fetchUnreadCount, 10000);
+            return () => clearInterval(interval);
+        }
     }, [token]);
 
     return {
