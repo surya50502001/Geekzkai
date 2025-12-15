@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useAuth } from '../Context/AuthContext';
+import API_BASE_URL from '../apiConfig';
 
 export const useNotifications = () => {
     const [notifications, setNotifications] = useState([]);
@@ -10,7 +11,7 @@ export const useNotifications = () => {
         if (!token) return;
         
         try {
-            const response = await fetch('/api/notification', {
+            const response = await fetch(`${API_BASE_URL}/Notification`, {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
             if (response.ok) {
@@ -26,7 +27,7 @@ export const useNotifications = () => {
         if (!token) return;
         
         try {
-            const response = await fetch('/api/notification/unread-count', {
+            const response = await fetch(`${API_BASE_URL}/Notification/unread-count`, {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
             if (response.ok) {
@@ -42,7 +43,7 @@ export const useNotifications = () => {
         if (!token) return;
         
         try {
-            const response = await fetch(`/api/notification/${id}/read`, {
+            const response = await fetch(`${API_BASE_URL}/Notification/${id}/read`, {
                 method: 'POST',
                 headers: { 'Authorization': `Bearer ${token}` }
             });
