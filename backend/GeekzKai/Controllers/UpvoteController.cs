@@ -22,7 +22,7 @@ namespace geekzKai.Controllers
         public async Task<IActionResult> ToggleUpvote([FromBody] Upvote upvote)
         {
             // find the post
-            var post = await _context.Posts.Include(p => p.Upvotes).FirstOrDefaultAsync(p => p.Id == upvote.PostId);
+            var post = await _context.Posts.Include(p => p.Upvotes).Include(p => p.User).FirstOrDefaultAsync(p => p.Id == upvote.PostId);
 
             if (post == null)
                 return NotFound(new { message = "Post not found" });
@@ -41,6 +41,24 @@ namespace geekzKai.Controllers
 
             // if not, add new upvote
             _context.Upvotes.Add(upvote);
+
+            // Create notification for post owner (don't notify yourself)
+            if (post.UserId != upvote.UserId)
+            {
+                var upvoter = await _context.Users.FindAsync(upvote.UserId);
+                if (upvoter != null)
+                {
+                    var notification = new Notification
+                    {
+                        UserId = post.UserId,
+                        FromUserId = upvote.UserId,
+                        Type = "upvote",
+                        Message = $"{upvoter.Username} upvoted your post"
+                    };
+                    _context.Notifications.Add(notification);
+                }
+            }
+
             await _context.SaveChangesAsync();
 
             return Ok(new { message = "Upvoted successfully!" });

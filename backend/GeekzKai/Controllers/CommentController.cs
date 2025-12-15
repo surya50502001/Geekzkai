@@ -54,14 +54,33 @@ namespace geekzKai.Controllers
                 return BadRequest(new { message = "Comments text cannot be empty" });
             }
 
-            var post = await _context.Posts.FindAsync(comment.PostId);
+            var post = await _context.Posts.Include(p => p.User).FirstOrDefaultAsync(p => p.Id == comment.PostId);
 
             if (post == null)
             {
                 return BadRequest(new { message = "Invalid Post ID" });
             }
+            
             comment.CreatedAt = DateTime.UtcNow;
             _context.Comments.Add(comment);
+
+            // Create notification for post owner (don't notify yourself)
+            if (post.UserId != comment.UserId)
+            {
+                var commenter = await _context.Users.FindAsync(comment.UserId);
+                if (commenter != null)
+                {
+                    var notification = new Notification
+                    {
+                        UserId = post.UserId,
+                        FromUserId = comment.UserId,
+                        Type = "comment",
+                        Message = $"{commenter.Username} commented on your post"
+                    };
+                    _context.Notifications.Add(notification);
+                }
+            }
+
             await _context.SaveChangesAsync();
 
             return CreatedAtAction(nameof(GetComment), new { id = comment.Id }, comment);

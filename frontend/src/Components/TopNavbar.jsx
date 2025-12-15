@@ -1,13 +1,16 @@
-import { Search, Bell, User, Settings, ChevronDown } from "lucide-react";
+import { Search, Bell, User, Settings, ChevronDown, Menu, X } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useState, useEffect, useRef } from "react";
 import { useAuth } from "../Context/AuthContext";
 import { useTheme } from "../Context/ThemeContext";
+import { useNotifications } from "../hooks/useNotifications";
 
 export default function TopNavbar() {
     const { user, logout } = useAuth();
     const { isDark, toggleTheme } = useTheme();
     const [showSettings, setShowSettings] = useState(false);
+    const [showNotifications, setShowNotifications] = useState(false);
+    const { notifications, unreadCount, fetchNotifications, markAsRead } = useNotifications();
     const settingsRef = useRef(null);
 
     useEffect(() => {
@@ -22,7 +25,9 @@ export default function TopNavbar() {
     }, []);
 
     return (
-        <nav className="hidden md:flex border-b backdrop-blur-md p-4 items-center sticky top-0 z-40" style={{ marginLeft: 'var(--sidebar-width, 0px)', backgroundColor: 'var(--bg-primary)', borderColor: 'var(--border-color)' }}>
+        <>
+            {/* Desktop Navbar */}
+            <nav className="hidden md:flex border-b backdrop-blur-md p-4 items-center sticky top-0 z-40" style={{ marginLeft: 'var(--sidebar-width, 0px)', backgroundColor: 'var(--bg-primary)', borderColor: 'var(--border-color)' }}>
             <div className="flex-1">
                 <Link to="/" className="text-2xl font-bold" style={{color: 'var(--text-primary)'}}>
                     GeekzKai
@@ -120,5 +125,99 @@ export default function TopNavbar() {
                 ) : null}
             </div>
         </nav>
+
+        {/* Mobile Navbar */}
+        <nav className="flex md:hidden justify-between items-center border-b p-4 sticky top-0 z-40" style={{backgroundColor: 'var(--bg-primary)', borderColor: 'var(--border-color)'}}>
+            <Link to="/" className="text-2xl font-bold" style={{color: 'var(--text-primary)'}}>
+                GeekzKai
+            </Link>
+            <div className="flex items-center gap-4">
+                {user && (
+                    <button 
+                        onClick={() => {
+                            setShowNotifications(true);
+                            fetchNotifications();
+                        }}
+                        className="p-2 rounded-full transition-colors relative" 
+                        style={{color: 'var(--text-primary)'}}
+                    >
+                        <Bell size={20} />
+                        {unreadCount > 0 && (
+                            <span className="absolute -top-1 -right-1 w-4 h-4 bg-red-500 text-white text-xs rounded-full flex items-center justify-center">
+                                {unreadCount > 9 ? '9+' : unreadCount}
+                            </span>
+                        )}
+                    </button>
+                )}
+                <button style={{color: 'var(--text-primary)'}}>
+                    <Menu size={24} />
+                </button>
+            </div>
+        </nav>
+
+        {/* Mobile Notifications Modal */}
+        {showNotifications && (
+            <div className="fixed inset-0 z-50 md:hidden" style={{backgroundColor: 'var(--bg-primary)'}}>
+                <div className="flex flex-col h-full">
+                    <div className="flex items-center justify-between p-4 border-b" style={{borderColor: 'var(--border-color)'}}>
+                        <h2 className="text-xl font-bold" style={{color: 'var(--text-primary)'}}>Notifications</h2>
+                        <button
+                            onClick={() => setShowNotifications(false)}
+                            className="p-2 rounded-lg transition-colors"
+                            style={{color: 'var(--text-primary)'}}
+                        >
+                            <X size={24} />
+                        </button>
+                    </div>
+                    <div className="flex-1 p-4">
+                        {notifications.length === 0 ? (
+                            <div className="flex items-center justify-center h-full">
+                                <p style={{color: 'var(--text-secondary)'}}>No notifications yet</p>
+                            </div>
+                        ) : (
+                            <div className="space-y-2">
+                                {notifications.map((notification) => (
+                                    <div
+                                        key={notification.id}
+                                        onClick={() => !notification.isRead && markAsRead(notification.id)}
+                                        className="p-3 rounded-lg border cursor-pointer"
+                                        style={{
+                                            backgroundColor: notification.isRead ? 'transparent' : 'var(--bg-secondary)',
+                                            borderColor: 'var(--border-color)'
+                                        }}
+                                    >
+                                        <div className="flex items-center gap-3">
+                                            {notification.fromUser?.profilePictureUrl ? (
+                                                <img 
+                                                    src={notification.fromUser.profilePictureUrl} 
+                                                    alt={notification.fromUser.username}
+                                                    className="w-8 h-8 rounded-full"
+                                                />
+                                            ) : (
+                                                <div className="w-8 h-8 rounded-full bg-gray-300 flex items-center justify-center">
+                                                    <User size={16} />
+                                                </div>
+                                            )}
+                                            <div className="flex-1">
+                                                <p className="text-sm" style={{color: 'var(--text-primary)'}}>
+                                                    {notification.fromUser?.username} {notification.message}
+                                                </p>
+                                                <p className="text-xs" style={{color: 'var(--text-secondary)'}}>
+                                                    {new Date(notification.createdAt).toLocaleDateString()}
+                                                </p>
+                                            </div>
+                                            {!notification.isRead && (
+                                                <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
+                                            )}
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        )}
+                    </div>
+                </div>
+            </div>
+        )}
+        </>
     );
 }
