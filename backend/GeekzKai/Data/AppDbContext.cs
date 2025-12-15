@@ -219,6 +219,13 @@ namespace geekzKai.Data
                 .HasForeignKey(lm => lm.UserId)
                 .OnDelete(DeleteBehavior.Restrict);
 
+            // NOTIFICATION TABLE MAPPING
+            modelBuilder.Entity<Notification>(entity =>
+            {
+                entity.Property(n => n.IsRead)
+                    .HasConversion<int>();
+            });
+
             // NOTIFICATION RELATIONSHIPS
             modelBuilder.Entity<Notification>()
                 .HasOne(n => n.User)
