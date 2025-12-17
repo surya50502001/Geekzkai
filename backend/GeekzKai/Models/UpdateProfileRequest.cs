@@ -6,5 +6,7 @@ namespace geekzKai.Models
         public string? Email { get; set; }
         public string? Bio { get; set; }
         public string? ProfilePictureUrl { get; set; }
+        public bool IsYoutuber { get; set; }
+        public string? YoutubeChannelLink { get; set; }
     }
 }

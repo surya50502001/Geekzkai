@@ -44,6 +44,7 @@ namespace geekzKai.Controllers
                 user.FollowersCount,
                 user.FollowingCount,
                 user.IsYoutuber,
+                user.YouTubeChannelLink,
                 user.IsAdmin,
                 user.CreatedAt
             });
@@ -147,6 +148,9 @@ namespace geekzKai.Controllers
                 user.Bio = request.Bio;
             if (!string.IsNullOrEmpty(request.ProfilePictureUrl))
                 user.ProfilePictureUrl = request.ProfilePictureUrl;
+            
+            user.IsYoutuber = request.IsYoutuber;
+            user.YouTubeChannelLink = request.YoutubeChannelLink;
 
             await _context.SaveChangesAsync();
 
@@ -160,6 +164,7 @@ namespace geekzKai.Controllers
                 user.FollowersCount,
                 user.FollowingCount,
                 user.IsYoutuber,
+                user.YouTubeChannelLink,
                 user.IsAdmin,
                 user.CreatedAt
             });
