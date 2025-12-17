@@ -1,5 +1,5 @@
 import { Search, Bell, User, Settings, ChevronDown, Menu, ArrowLeft } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { useState, useEffect, useRef } from "react";
 import { useAuth } from "../Context/AuthContext";
 import { useTheme } from "../Context/ThemeContext";
@@ -12,6 +12,7 @@ export default function TopNavbar() {
     const [showNotifications, setShowNotifications] = useState(false);
     const { notifications, unreadCount, fetchNotifications, markAsRead } = useNotifications();
     const settingsRef = useRef(null);
+    const location = useLocation();
 
     useEffect(() => {
         const handleClickOutside = (event) => {
@@ -23,6 +24,10 @@ export default function TopNavbar() {
         document.addEventListener('mousedown', handleClickOutside);
         return () => document.removeEventListener('mousedown', handleClickOutside);
     }, []);
+
+    useEffect(() => {
+        setShowNotifications(false);
+    }, [location.pathname]);
 
     return (
         <>
