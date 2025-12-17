@@ -27,14 +27,16 @@ function Home() {
             });
             window.history.replaceState({}, document.title, window.location.pathname);
         }
-        
+    }, [setUser]);
+
+    useEffect(() => {
         if (user) {
             fetchFeed();
             fetchRecommendations();
         } else {
             fetchPosts();
         }
-    }, [setUser]);
+    }, [user]);
 
     const fetchPosts = async () => {
         try {

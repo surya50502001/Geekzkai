@@ -9,12 +9,13 @@ export default function FollowButton({ userId, username, onFollowChange }) {
     const [loading, setLoading] = useState(false);
 
     useEffect(() => {
-        if (user && userId !== user.id) {
+        if (user && userId !== user.id && token) {
             checkFollowStatus();
         }
-    }, [userId, user]);
+    }, [userId, user, token]);
 
     const checkFollowStatus = async () => {
+        if (!token) return;
         try {
             const response = await fetch(`${API_BASE_URL}/follow/status/${userId}`, {
                 headers: { Authorization: `Bearer ${token}` }
