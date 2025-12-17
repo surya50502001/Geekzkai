@@ -150,7 +150,7 @@ namespace geekzKai.Controllers
                 user.ProfilePictureUrl = request.ProfilePictureUrl;
             
             user.IsYoutuber = request.IsYoutuber;
-            user.YouTubeChannelLink = request.YoutubeChannelLink;
+            user.YouTubeChannelLink = request.YouTubeChannelLink;
 
             await _context.SaveChangesAsync();
 

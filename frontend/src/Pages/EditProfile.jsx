@@ -13,7 +13,7 @@ export default function EditProfile() {
         bio: '',
         profilePictureUrl: '',
         isYoutuber: false,
-        youtubeChannelLink: ''
+        YouTubeChannelLink: ''
     });
     const [loading, setLoading] = useState(false);
     const [message, setMessage] = useState('');
@@ -26,7 +26,7 @@ export default function EditProfile() {
                 bio: user.bio || '',
                 profilePictureUrl: user.profilePictureUrl || '',
                 isYoutuber: user.isYoutuber || false,
-                youtubeChannelLink: user.youtubeChannelLink || ''
+                YouTubeChannelLink: user.YouTubeChannelLink || ''
             });
         }
     }, [user]);
@@ -119,7 +119,7 @@ export default function EditProfile() {
                     </div>
 
                     {/* Form Fields */}
-                    <div className="space-y-4">
+                    <div className="space-y-4 max-h-96 overflow-y-auto">
                         <div>
                             <label className="block text-sm font-medium mb-2" style={{color: 'var(--text-primary)'}}>Username</label>
                             <input
@@ -191,8 +191,8 @@ export default function EditProfile() {
                                 <label className="block text-sm font-medium mb-2" style={{color: 'var(--text-primary)'}}>YouTube Channel Link</label>
                                 <input
                                     type="url"
-                                    name="youtubeChannelLink"
-                                    value={formData.youtubeChannelLink}
+                                    name="YouTubeChannelLink"
+                                    value={formData.YouTubeChannelLink}
                                     onChange={handleInputChange}
                                     placeholder="https://youtube.com/@yourchannel"
                                     className="w-full p-3 border rounded-lg"
