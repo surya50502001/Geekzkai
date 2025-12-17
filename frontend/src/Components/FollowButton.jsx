@@ -6,7 +6,6 @@ import API_BASE_URL from "../apiConfig";
 export default function FollowButton({ userId, username, onFollowChange }) {
     const { token, user } = useAuth();
     const [isFollowing, setIsFollowing] = useState(false);
-    const [requestPending, setRequestPending] = useState(false);
     const [loading, setLoading] = useState(false);
 
     useEffect(() => {
@@ -26,22 +25,14 @@ export default function FollowButton({ userId, username, onFollowChange }) {
                 setIsFollowing(data.isFollowing);
             }
             
-            // Check for pending friend request
-            const requestResponse = await fetch(`${API_BASE_URL}/notification/friend-requests`, {
-                headers: { Authorization: `Bearer ${token}` }
-            });
-            if (requestResponse.ok) {
-                const requests = await requestResponse.json();
-                const hasPendingRequest = requests.some(req => req.fromUserId === parseInt(localStorage.getItem('currentUserId')) && req.userId === userId);
-                setRequestPending(hasPendingRequest);
-            }
+
         } catch (error) {
             console.error("Error checking follow status:", error);
         }
     };
 
     const handleFollow = async () => {
-        if (!user || userId === user.id || requestPending) return;
+        if (!user || userId === user.id) return;
         
         setLoading(true);
         try {
@@ -51,11 +42,7 @@ export default function FollowButton({ userId, username, onFollowChange }) {
             });
             
             if (response.ok) {
-                if (isFollowing) {
-                    setIsFollowing(false);
-                } else {
-                    setRequestPending(true);
-                }
+                setIsFollowing(!isFollowing);
                 if (onFollowChange) {
                     onFollowChange();
                 }
@@ -83,12 +70,10 @@ export default function FollowButton({ userId, username, onFollowChange }) {
                 <div className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin" />
             ) : isFollowing ? (
                 <UserMinus size={16} />
-            ) : requestPending ? (
-                <span>⏳</span>
             ) : (
                 <UserPlus size={16} />
             )}
-            {isFollowing ? "Unfollow" : requestPending ? "Request Sent" : "Follow"}
+            {isFollowing ? "Unfollow" : "Follow"}
         </button>
     );
 }
