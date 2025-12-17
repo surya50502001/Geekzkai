@@ -149,9 +149,7 @@ export default function TopNavbar() {
                         )}
                     </button>
                 )}
-                <button style={{color: 'var(--text-primary)'}}>
-                    <Menu size={24} />
-                </button>
+
             </div>
         </nav>
 
