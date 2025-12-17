@@ -11,7 +11,9 @@ export default function EditProfile() {
         username: '',
         email: '',
         bio: '',
-        profilePictureUrl: ''
+        profilePictureUrl: '',
+        isYoutuber: false,
+        youtubeChannelLink: ''
     });
     const [loading, setLoading] = useState(false);
     const [message, setMessage] = useState('');
@@ -22,7 +24,9 @@ export default function EditProfile() {
                 username: user.username || '',
                 email: user.email || '',
                 bio: user.bio || '',
-                profilePictureUrl: user.profilePictureUrl || ''
+                profilePictureUrl: user.profilePictureUrl || '',
+                isYoutuber: user.isYoutuber || false,
+                youtubeChannelLink: user.youtubeChannelLink || ''
             });
         }
     }, [user]);
@@ -168,6 +172,38 @@ export default function EditProfile() {
                             />
                             <p className="text-xs mt-1" style={{color: 'var(--text-secondary)'}}>{formData.bio.length}/200</p>
                         </div>
+
+                        <div className="flex items-center justify-between p-3 rounded-lg border" style={{backgroundColor: 'var(--bg-secondary)', borderColor: 'var(--border-color)'}}>
+                            <span style={{color: 'var(--text-primary)'}}>Are you a YouTuber?</span>
+                            <label className="relative inline-flex items-center cursor-pointer">
+                                <input
+                                    type="checkbox"
+                                    checked={formData.isYoutuber}
+                                    onChange={(e) => setFormData({...formData, isYoutuber: e.target.checked})}
+                                    className="sr-only peer"
+                                />
+                                <div className="w-11 h-6 bg-gray-200 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
+                            </label>
+                        </div>
+
+                        {formData.isYoutuber && (
+                            <div>
+                                <label className="block text-sm font-medium mb-2" style={{color: 'var(--text-primary)'}}>YouTube Channel Link</label>
+                                <input
+                                    type="url"
+                                    name="youtubeChannelLink"
+                                    value={formData.youtubeChannelLink}
+                                    onChange={handleInputChange}
+                                    placeholder="https://youtube.com/@yourchannel"
+                                    className="w-full p-3 border rounded-lg"
+                                    style={{
+                                        backgroundColor: 'var(--bg-secondary)',
+                                        borderColor: 'var(--border-color)',
+                                        color: 'var(--text-primary)'
+                                    }}
+                                />
+                            </div>
+                        )}
                     </div>
 
                     {/* Submit Button */}
