@@ -62,5 +62,20 @@ namespace geekzKai.Controllers
 
             return Ok();
         }
+
+        [HttpGet("friend-requests")]
+        [Authorize]
+        public async Task<IActionResult> GetFriendRequests()
+        {
+            var userId = int.Parse(User.FindFirst("id")?.Value ?? "0");
+            
+            var friendRequests = await _context.Notifications
+                .Where(n => n.UserId == userId && n.Type == "friend_request")
+                .Include(n => n.FromUser)
+                .OrderByDescending(n => n.CreatedAt)
+                .ToListAsync();
+
+            return Ok(friendRequests);
+        }
     }
 }
