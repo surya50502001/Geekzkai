@@ -1,4 +1,4 @@
-import { Search, Bell, User, Settings, ChevronDown, Menu, X } from "lucide-react";
+import { Search, Bell, User, Settings, ChevronDown, Menu, ArrowLeft } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useState, useEffect, useRef } from "react";
 import { useAuth } from "../Context/AuthContext";
@@ -157,15 +157,15 @@ export default function TopNavbar() {
         {showNotifications && (
             <div className="fixed inset-0 z-50 md:hidden" style={{backgroundColor: 'var(--bg-primary)'}}>
                 <div className="flex flex-col h-full">
-                    <div className="flex items-center justify-between p-4 border-b" style={{borderColor: 'var(--border-color)'}}>
-                        <h2 className="text-xl font-bold" style={{color: 'var(--text-primary)'}}>Notifications</h2>
+                    <div className="flex items-center gap-4 p-4 border-b" style={{borderColor: 'var(--border-color)'}}>
                         <button
                             onClick={() => setShowNotifications(false)}
                             className="p-2 rounded-lg transition-colors"
                             style={{color: 'var(--text-primary)'}}
                         >
-                            <X size={24} />
+                            <ArrowLeft size={24} />
                         </button>
+                        <h2 className="text-xl font-bold" style={{color: 'var(--text-primary)'}}>Notifications</h2>
                     </div>
                     <div className="flex-1 p-4">
                         {notifications.length === 0 ? (
