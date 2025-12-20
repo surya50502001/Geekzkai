@@ -14,6 +14,9 @@ export default function Profile() {
 
     const [loading, setLoading] = useState(true);
     const [posts, setPosts] = useState([]);
+    const [youtubeVideos, setYoutubeVideos] = useState([]);
+    const [loadingVideos, setLoadingVideos] = useState(false);
+    const [activeTab, setActiveTab] = useState('all'); // 'all', 'posts', 'videos'
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const [isEditing, setIsEditing] = useState(false);
     const [editData, setEditData] = useState({});
@@ -39,6 +42,52 @@ export default function Profile() {
         }
     };
 
+    // Function to fetch YouTube videos (mock implementation)
+    const fetchYouTubeVideos = async (channelUrl) => {
+        if (!channelUrl) return;
+        setLoadingVideos(true);
+        try {
+            // Mock YouTube videos with dates
+            const mockVideos = [
+                {
+                    id: '1',
+                    title: 'Latest Video from Channel',
+                    thumbnail: 'https://img.youtube.com/vi/dQw4w9WgXcQ/maxresdefault.jpg',
+                    url: channelUrl,
+                    type: 'video',
+                    createdAt: new Date(Date.now() - 86400000).toISOString() // 1 day ago
+                },
+                {
+                    id: '2', 
+                    title: 'Another Great Video',
+                    thumbnail: 'https://img.youtube.com/vi/dQw4w9WgXcQ/maxresdefault.jpg',
+                    url: channelUrl,
+                    type: 'video',
+                    createdAt: new Date(Date.now() - 172800000).toISOString() // 2 days ago
+                }
+            ];
+            setYoutubeVideos(mockVideos);
+        } catch (error) {
+            console.error('Error fetching YouTube videos:', error);
+        } finally {
+            setLoadingVideos(false);
+        }
+    };
+
+    // Combine and sort posts and videos
+    const getCombinedContent = () => {
+        const postsWithType = posts.map(post => ({...post, type: 'post'}));
+        const combined = [...postsWithType, ...youtubeVideos];
+        return combined.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+    };
+
+    const getFilteredContent = () => {
+        const combined = getCombinedContent();
+        if (activeTab === 'posts') return combined.filter(item => item.type === 'post');
+        if (activeTab === 'videos') return combined.filter(item => item.type === 'video');
+        return combined;
+    };
+
     // Check for tour parameter
     useEffect(() => {
         const urlParams = new URLSearchParams(window.location.search);
@@ -54,6 +103,13 @@ export default function Profile() {
     useEffect(() => {
         refreshUserData();
     }, [user?.id]);
+
+    // Fetch YouTube videos when user has channel link
+    useEffect(() => {
+        if (fullUser?.isYoutuber && fullUser?.YouTubeChannelLink) {
+            fetchYouTubeVideos(fullUser.YouTubeChannelLink);
+        }
+    }, [fullUser?.YouTubeChannelLink, fullUser?.isYoutuber]);
 
     useEffect(() => {
         if (fullUser && !isEditing) {
@@ -467,48 +523,96 @@ export default function Profile() {
 
                 {/* Posts Grid */}
                 <div className="border-t pt-4" style={{borderColor: 'var(--border-color)'}}>
-                    <div className="flex justify-center mb-4">
-                        <div className="w-6 h-6 border-2 grid grid-cols-3 gap-0.5" style={{borderColor: 'var(--text-primary)'}}>
-                            <div style={{backgroundColor: 'var(--text-primary)'}}></div>
-                            <div style={{backgroundColor: 'var(--text-primary)'}}></div>
-                            <div style={{backgroundColor: 'var(--text-primary)'}}></div>
-                            <div style={{backgroundColor: 'var(--text-primary)'}}></div>
-                            <div style={{backgroundColor: 'var(--text-primary)'}}></div>
-                            <div style={{backgroundColor: 'var(--text-primary)'}}></div>
-                            <div style={{backgroundColor: 'var(--text-primary)'}}></div>
-                            <div style={{backgroundColor: 'var(--text-primary)'}}></div>
-                            <div style={{backgroundColor: 'var(--text-primary)'}}></div>
-                        </div>
+                    {/* Tab Navigation */}
+                    <div className="flex justify-center mb-4 gap-8">
+                        <button 
+                            onClick={() => setActiveTab('all')}
+                            className={`flex flex-col items-center gap-1 pb-2 ${activeTab === 'all' ? 'border-b-2 border-current' : ''}`}
+                            style={{color: activeTab === 'all' ? 'var(--text-primary)' : 'var(--text-secondary)'}}
+                        >
+                            <span className="text-sm font-medium">ALL</span>
+                        </button>
+                        <button 
+                            onClick={() => setActiveTab('posts')}
+                            className={`flex flex-col items-center gap-1 pb-2 ${activeTab === 'posts' ? 'border-b-2 border-current' : ''}`}
+                            style={{color: activeTab === 'posts' ? 'var(--text-primary)' : 'var(--text-secondary)'}}
+                        >
+                            <div className="w-6 h-6 border-2 grid grid-cols-3 gap-0.5" style={{borderColor: 'currentColor'}}>
+                                <div style={{backgroundColor: 'currentColor'}}></div>
+                                <div style={{backgroundColor: 'currentColor'}}></div>
+                                <div style={{backgroundColor: 'currentColor'}}></div>
+                                <div style={{backgroundColor: 'currentColor'}}></div>
+                                <div style={{backgroundColor: 'currentColor'}}></div>
+                                <div style={{backgroundColor: 'currentColor'}}></div>
+                                <div style={{backgroundColor: 'currentColor'}}></div>
+                                <div style={{backgroundColor: 'currentColor'}}></div>
+                                <div style={{backgroundColor: 'currentColor'}}></div>
+                            </div>
+                            <span className="text-xs">POSTS</span>
+                        </button>
+                        {fullUser?.isYoutuber && fullUser?.YouTubeChannelLink && (
+                            <button 
+                                onClick={() => setActiveTab('videos')}
+                                className={`flex flex-col items-center gap-1 pb-2 ${activeTab === 'videos' ? 'border-b-2 border-current' : ''}`}
+                                style={{color: activeTab === 'videos' ? 'var(--text-primary)' : 'var(--text-secondary)'}}
+                            >
+                                <div className="w-6 h-6 flex items-center justify-center">
+                                    <span className="text-red-600 font-bold text-lg">▶</span>
+                                </div>
+                                <span className="text-xs">VIDEOS</span>
+                            </button>
+                        )}
                     </div>
-                    {posts.length === 0 ? (
+                    
+                    {/* Content Grid */}
+                    {getFilteredContent().length === 0 ? (
                         <div className="text-center py-12">
                             <div className="w-16 h-16 mx-auto mb-4 border-2 rounded-full flex items-center justify-center" style={{borderColor: 'var(--border-color)'}}>
                                 <User size={24} style={{color: 'var(--text-secondary)'}} />
                             </div>
-                            <p className="mb-4" style={{color: 'var(--text-secondary)'}}>No posts yet</p>
+                            <p className="mb-4" style={{color: 'var(--text-secondary)'}}>No content yet</p>
                             <button
                                 onClick={() => navigate('/create')}
                                 className="px-6 py-2 rounded-lg transition-colors hover:opacity-80"
                                 style={{backgroundColor: 'var(--text-primary)', color: 'var(--bg-primary)'}}
                             >
-                                Share your first post
+                                Create your first post
                             </button>
                         </div>
                     ) : (
                         <div className="grid grid-cols-3 gap-1">
-                            {posts.map((post) => (
+                            {getFilteredContent().map((item) => (
                                 <div 
-                                    key={post.id} 
-                                    onClick={() => navigate(`/post/${post.id}`)}
+                                    key={`${item.type}-${item.id}`}
+                                    onClick={() => item.type === 'post' ? navigate(`/post/${item.id}`) : window.open(item.url, '_blank')}
                                     className="aspect-square flex items-center justify-center relative group cursor-pointer" 
                                     style={{backgroundColor: 'var(--bg-secondary)'}}
                                 >
-                                    <div className="text-center p-2">
-                                        <p className="text-xs font-medium line-clamp-2" style={{color: 'var(--text-primary)'}}>{post.question}</p>
-                                    </div>
+                                    {item.type === 'video' ? (
+                                        <>
+                                            <img 
+                                                src={item.thumbnail} 
+                                                alt={item.title}
+                                                className="w-full h-full object-cover"
+                                            />
+                                            <div className="absolute inset-0 flex items-center justify-center">
+                                                <div className="w-8 h-8 bg-red-600 rounded-full flex items-center justify-center">
+                                                    <span className="text-white text-sm">▶</span>
+                                                </div>
+                                            </div>
+                                        </>
+                                    ) : (
+                                        <div className="text-center p-2">
+                                            <p className="text-xs font-medium line-clamp-2" style={{color: 'var(--text-primary)'}}>{item.question}</p>
+                                        </div>
+                                    )}
                                     <div className="absolute inset-0 bg-black bg-opacity-50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                                         <div className="text-white text-xs text-center">
-                                            <p>{post.comments?.length || 0} comments</p>
+                                            {item.type === 'video' ? (
+                                                <p>YouTube Video</p>
+                                            ) : (
+                                                <p>{item.comments?.length || 0} comments</p>
+                                            )}
                                         </div>
                                     </div>
                                 </div>
