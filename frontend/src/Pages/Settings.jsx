@@ -1,5 +1,4 @@
 import React from 'react'
-import UpdateProfile from '../Components/UpdateProfile'
 import { useTheme } from '../Context/ThemeContext'
 import { useAuth } from '../Context/AuthContext'
 import { User } from 'lucide-react'
