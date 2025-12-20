@@ -16,6 +16,14 @@ export default function Chat() {
 
     useEffect(() => {
         fetchConversations();
+        
+        const handleSelectChat = (event) => {
+            const { userId, user: userInfo } = event.detail;
+            setSelectedChat({ userId, user: userInfo });
+        };
+        
+        window.addEventListener('selectChat', handleSelectChat);
+        return () => window.removeEventListener('selectChat', handleSelectChat);
     }, []);
 
     useEffect(() => {

@@ -46,6 +46,21 @@ export default function UserProfile() {
         }
     };
 
+    const handleChatOpen = (userInfo) => {
+        navigate('/chat');
+        setTimeout(() => {
+            window.dispatchEvent(new CustomEvent('selectChat', { 
+                detail: { 
+                    userId: userInfo.id, 
+                    user: { 
+                        username: userInfo.username,
+                        email: userInfo.email || `${userInfo.username}@example.com`
+                    }
+                }
+            }));
+        }, 100);
+    };
+
     if (loading) {
         return (
             <div className="flex justify-center items-center h-screen" style={{backgroundColor: 'var(--bg-primary)'}}>
@@ -128,7 +143,7 @@ export default function UserProfile() {
                 {currentUser && currentUser.id !== user.id && (
                     <div className="flex gap-3 mb-8">
                         <FollowButton userId={user.id} username={user.username} onFollowChange={fetchUser} />
-                        <ChatButton userId={user.id} username={user.username} onChatOpen={(userInfo) => navigate('/chat', { state: { selectedUser: userInfo } })} />
+                        <ChatButton userId={user.id} username={user.username} onChatOpen={handleChatOpen} />
                     </div>
                 )}
 
