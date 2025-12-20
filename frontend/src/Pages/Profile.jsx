@@ -60,7 +60,9 @@ export default function Profile() {
             setEditData({
                 username: fullUser.username || '',
                 bio: fullUser.bio || '',
-                profilePictureUrl: fullUser.profilePictureUrl || ''
+                profilePictureUrl: fullUser.profilePictureUrl || '',
+                isYoutuber: fullUser.isYoutuber || false,
+                YouTubeChannelLink: fullUser.YouTubeChannelLink || ''
             });
         }
     }, [fullUser, isEditing]);
@@ -330,6 +332,34 @@ export default function Profile() {
                                 }}
                             />
                             <p className="text-xs" style={{color: 'var(--text-secondary)'}}>{editData.bio.length}/200</p>
+                            
+                            <div className="flex items-center justify-between p-3 rounded-lg border" style={{backgroundColor: 'var(--bg-secondary)', borderColor: 'var(--border-color)'}}>
+                                <span style={{color: 'var(--text-primary)'}}>Are you a YouTuber?</span>
+                                <label className="relative inline-flex items-center cursor-pointer">
+                                    <input
+                                        type="checkbox"
+                                        checked={editData.isYoutuber}
+                                        onChange={(e) => setEditData({...editData, isYoutuber: e.target.checked})}
+                                        className="sr-only peer"
+                                    />
+                                    <div className="w-11 h-6 bg-gray-200 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
+                                </label>
+                            </div>
+                            
+                            {editData.isYoutuber && (
+                                <input
+                                    type="url"
+                                    value={editData.YouTubeChannelLink}
+                                    onChange={(e) => setEditData({...editData, YouTubeChannelLink: e.target.value})}
+                                    placeholder="https://youtube.com/@yourchannel"
+                                    className="w-full p-2 border rounded-lg text-sm"
+                                    style={{
+                                        backgroundColor: 'var(--bg-secondary)',
+                                        borderColor: 'var(--border-color)',
+                                        color: 'var(--text-primary)'
+                                    }}
+                                />
+                            )}
                         </div>
                     ) : (
                         <>
