@@ -4,6 +4,7 @@ import { ArrowLeft, User } from 'lucide-react';
 import { useAuth } from '../Context/AuthContext';
 import API_BASE_URL from '../apiConfig';
 import FollowButton from '../Components/FollowButton';
+import ChatButton from '../Components/ChatButton';
 
 export default function UserProfile() {
     const { id } = useParams();
@@ -123,10 +124,11 @@ export default function UserProfile() {
                     </div>
                 </div>
 
-                {/* Follow Button */}
+                {/* Action Buttons */}
                 {currentUser && currentUser.id !== user.id && (
-                    <div className="mb-8">
+                    <div className="flex gap-3 mb-8">
                         <FollowButton userId={user.id} username={user.username} onFollowChange={fetchUser} />
+                        <ChatButton userId={user.id} username={user.username} onChatOpen={(userInfo) => navigate('/chat', { state: { selectedUser: userInfo } })} />
                     </div>
                 )}
 
