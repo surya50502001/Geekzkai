@@ -103,13 +103,16 @@ if (builder.Environment.IsProduction())
     if (string.IsNullOrEmpty(dbConnection)) throw new Exception("Database connection missing");
 }
 // DB
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+
 builder.Services.AddDbContext<AppDbContext>(options =>
 {
     if (builder.Environment.IsProduction())
-        options.UseNpgsql(dbConnection);
+        options.UseNpgsql(connectionString);
     else
-        options.UseSqlite(dbConnection ?? "Data Source=geekzkai.db");
+        options.UseSqlite(connectionString);
 });
+
 
 // Email Service
 builder.Services.AddScoped<EmailService>();

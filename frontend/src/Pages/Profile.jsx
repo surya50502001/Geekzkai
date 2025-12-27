@@ -305,15 +305,17 @@ export default function Profile() {
                 <div className="flex items-center gap-6 mb-8">
                     {/* Avatar */}
                     <div className="relative">
-                        <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-full flex items-center justify-center overflow-hidden" style={{backgroundColor: 'var(--bg-secondary)'}}>
+                        <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-full flex items-center justify-center overflow-hidden shadow-lg ring-4 ring-blue-500/20" style={{backgroundColor: 'var(--bg-secondary)'}}>
                             {fullUser.profilePictureUrl ? (
                                 <img src={fullUser.profilePictureUrl} className="w-full h-full object-cover" alt="Profile" />
                             ) : (
-                                <User size={32} style={{color: 'var(--text-secondary)'}} />
+                                <div className="w-full h-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center">
+                                    <span className="text-white font-bold text-xl">{fullUser.username[0].toUpperCase()}</span>
+                                </div>
                             )}
                         </div>
                         {isEditing && (
-                            <label className="absolute bottom-0 right-0 p-2 rounded-full cursor-pointer" style={{backgroundColor: '#3b82f6'}}>
+                            <label className="absolute bottom-0 right-0 p-2 rounded-full cursor-pointer shadow-lg transition-transform hover:scale-110" style={{backgroundColor: '#3b82f6'}}>
                                 <Camera size={16} color="white" />
                                 <input
                                     type="file"
@@ -337,22 +339,24 @@ export default function Profile() {
                     {/* Stats */}
                     <div className="flex-1">
                         <div className="flex justify-around text-center">
-                            <div>
-                                <p className="text-lg font-semibold" style={{color: 'var(--text-primary)'}}>{posts.length}</p>
+                            <div className="p-3 rounded-lg transition-all hover:bg-opacity-80" style={{backgroundColor: 'var(--bg-secondary)'}}>
+                                <p className="text-lg font-bold bg-gradient-to-r from-blue-500 to-purple-600 bg-clip-text text-transparent">{posts.length}</p>
                                 <p className="text-sm" style={{color: 'var(--text-secondary)'}}>Posts</p>
                             </div>
                             <button 
                                 onClick={() => navigate(`/user/${fullUser.id}/followers`)}
-                                className="p-2 rounded-lg transition-colors hover:opacity-80"
+                                className="p-3 rounded-lg transition-all hover:bg-opacity-80 hover:scale-105"
+                                style={{backgroundColor: 'var(--bg-secondary)'}}
                             >
-                                <p className="text-lg font-semibold" style={{color: 'var(--text-primary)'}}>{fullUser.followersCount || 0}</p>
+                                <p className="text-lg font-bold bg-gradient-to-r from-green-500 to-blue-500 bg-clip-text text-transparent">{fullUser.followersCount || 0}</p>
                                 <p className="text-sm" style={{color: 'var(--text-secondary)'}}>Followers</p>
                             </button>
                             <button 
                                 onClick={() => navigate(`/user/${fullUser.id}/following`)}
-                                className="p-2 rounded-lg transition-colors hover:opacity-80"
+                                className="p-3 rounded-lg transition-all hover:bg-opacity-80 hover:scale-105"
+                                style={{backgroundColor: 'var(--bg-secondary)'}}
                             >
-                                <p className="text-lg font-semibold" style={{color: 'var(--text-primary)'}}>{fullUser.followingCount || 0}</p>
+                                <p className="text-lg font-bold bg-gradient-to-r from-purple-500 to-pink-500 bg-clip-text text-transparent">{fullUser.followingCount || 0}</p>
                                 <p className="text-sm" style={{color: 'var(--text-secondary)'}}>Following</p>
                             </button>
                         </div>
@@ -427,22 +431,22 @@ export default function Profile() {
                     )}
                     
                     {/* Badges */}
-                    <div className="flex gap-2 mt-2">
+                    <div className="flex gap-2 mt-3">
                         {fullUser.isYoutuber && (
-                            <span className="inline-flex items-center px-2 py-1 rounded text-xs font-medium bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400">
-                                YouTuber
+                            <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-gradient-to-r from-red-500 to-red-600 text-white shadow-lg animate-pulse">
+                                <span className="mr-1">▶</span> YouTuber
                             </span>
                         )}
                         {fullUser.isAdmin && (
-                            <span className="inline-flex items-center px-2 py-1 rounded text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400">
-                                Admin
+                            <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-gradient-to-r from-blue-500 to-blue-600 text-white shadow-lg">
+                                <span className="mr-1">★</span> Admin
                             </span>
                         )}
                     </div>
                 </div>
 
                 {/* Action Buttons */}
-                <div className="flex gap-2 mb-8">
+                <div className="flex gap-3 mb-8">
                     {isEditing ? (
                         <>
                             <button
@@ -481,15 +485,24 @@ export default function Profile() {
                                     }
                                 }}
                                 disabled={saving}
-                                className="flex-1 py-2 px-4 text-sm font-medium rounded-lg transition-colors hover:opacity-80 disabled:opacity-50"
-                                style={{backgroundColor: '#3b82f6', color: 'white'}}
+                                className="flex-1 py-3 px-6 text-sm font-medium rounded-xl bg-gradient-to-r from-blue-500 to-purple-600 text-white shadow-lg transition-all duration-200 hover:shadow-xl hover:scale-105 disabled:opacity-50 disabled:scale-100"
                             >
-                                {saving ? 'Saving...' : 'Save'}
+                                {saving ? (
+                                    <div className="flex items-center justify-center gap-2">
+                                        <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                                        Saving...
+                                    </div>
+                                ) : (
+                                    <div className="flex items-center justify-center gap-2">
+                                        <Check size={16} />
+                                        Save
+                                    </div>
+                                )}
                             </button>
                             <button
                                 onClick={() => setIsEditing(false)}
-                                className="flex-1 py-2 px-4 text-sm font-medium rounded-lg transition-colors hover:opacity-80"
-                                style={{backgroundColor: 'var(--bg-secondary)', color: 'var(--text-primary)'}}
+                                className="flex-1 py-3 px-6 text-sm font-medium rounded-xl border-2 transition-all duration-200 hover:scale-105"
+                                style={{borderColor: 'var(--border-color)', color: 'var(--text-primary)', backgroundColor: 'var(--bg-secondary)'}}
                             >
                                 Cancel
                             </button>
@@ -498,46 +511,52 @@ export default function Profile() {
                         <>
                             <button
                                 onClick={() => setIsEditing(true)}
-                                className="flex-1 py-2 px-4 text-sm font-medium rounded-lg transition-colors hover:opacity-80"
+                                className="flex-1 py-3 px-6 text-sm font-medium rounded-xl transition-all duration-200 hover:scale-105 shadow-md hover:shadow-lg"
                                 style={{backgroundColor: 'var(--bg-secondary)', color: 'var(--text-primary)'}}
                             >
-                                Edit Profile
+                                <div className="flex items-center justify-center gap-2">
+                                    <Edit size={16} />
+                                    Edit Profile
+                                </div>
                             </button>
                             <button
                                 onClick={() => navigator.clipboard.writeText(window.location.href)}
-                                className="flex-1 py-2 px-4 text-sm font-medium rounded-lg transition-colors hover:opacity-80"
+                                className="flex-1 py-3 px-6 text-sm font-medium rounded-xl transition-all duration-200 hover:scale-105 shadow-md hover:shadow-lg"
                                 style={{backgroundColor: 'var(--bg-secondary)', color: 'var(--text-primary)'}}
                             >
-                                Share Profile
+                                <div className="flex items-center justify-center gap-2">
+                                    <Share2 size={16} />
+                                    Share Profile
+                                </div>
                             </button>
                         </>
                     )}
-                    
-                    {/* Save Message */}
-                    {saveMessage && (
-                        <div className={`mt-3 p-2 rounded text-sm text-center ${saveMessage.includes('success') ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}`}>
-                            {saveMessage}
-                        </div>
-                    )}
                 </div>
+                
+                {/* Save Message */}
+                {saveMessage && (
+                    <div className={`mb-6 p-4 rounded-xl text-center font-medium shadow-lg ${saveMessage.includes('success') ? 'bg-gradient-to-r from-green-500 to-green-600 text-white' : 'bg-gradient-to-r from-red-500 to-red-600 text-white'}`}>
+                        {saveMessage}
+                    </div>
+                )}
 
                 {/* Posts Grid */}
                 <div className="border-t pt-4" style={{borderColor: 'var(--border-color)'}}>
                     {/* Tab Navigation */}
-                    <div className="flex justify-center mb-4 gap-8">
+                    <div className="flex justify-center mb-6 gap-8 p-2 rounded-xl" style={{backgroundColor: 'var(--bg-secondary)'}}>
                         <button 
                             onClick={() => setActiveTab('all')}
-                            className={`flex flex-col items-center gap-1 pb-2 ${activeTab === 'all' ? 'border-b-2 border-current' : ''}`}
-                            style={{color: activeTab === 'all' ? 'var(--text-primary)' : 'var(--text-secondary)'}}
+                            className={`flex flex-col items-center gap-2 pb-3 px-4 py-2 rounded-lg transition-all duration-200 ${activeTab === 'all' ? 'bg-gradient-to-r from-blue-500 to-purple-600 text-white shadow-lg scale-105' : 'hover:scale-105'}`}
+                            style={{color: activeTab === 'all' ? 'white' : 'var(--text-secondary)'}}
                         >
-                            <span className="text-sm font-medium">ALL</span>
+                            <span className="text-sm font-bold">ALL</span>
                         </button>
                         <button 
                             onClick={() => setActiveTab('posts')}
-                            className={`flex flex-col items-center gap-1 pb-2 ${activeTab === 'posts' ? 'border-b-2 border-current' : ''}`}
-                            style={{color: activeTab === 'posts' ? 'var(--text-primary)' : 'var(--text-secondary)'}}
+                            className={`flex flex-col items-center gap-2 pb-3 px-4 py-2 rounded-lg transition-all duration-200 ${activeTab === 'posts' ? 'bg-gradient-to-r from-blue-500 to-purple-600 text-white shadow-lg scale-105' : 'hover:scale-105'}`}
+                            style={{color: activeTab === 'posts' ? 'white' : 'var(--text-secondary)'}}
                         >
-                            <div className="w-6 h-6 border-2 grid grid-cols-3 gap-0.5" style={{borderColor: 'currentColor'}}>
+                            <div className="w-5 h-5 border-2 grid grid-cols-3 gap-0.5" style={{borderColor: 'currentColor'}}>
                                 <div style={{backgroundColor: 'currentColor'}}></div>
                                 <div style={{backgroundColor: 'currentColor'}}></div>
                                 <div style={{backgroundColor: 'currentColor'}}></div>
@@ -548,18 +567,18 @@ export default function Profile() {
                                 <div style={{backgroundColor: 'currentColor'}}></div>
                                 <div style={{backgroundColor: 'currentColor'}}></div>
                             </div>
-                            <span className="text-xs">POSTS</span>
+                            <span className="text-xs font-medium">POSTS</span>
                         </button>
                         {fullUser?.isYoutuber && fullUser?.YouTubeChannelLink && (
                             <button 
                                 onClick={() => setActiveTab('videos')}
-                                className={`flex flex-col items-center gap-1 pb-2 ${activeTab === 'videos' ? 'border-b-2 border-current' : ''}`}
-                                style={{color: activeTab === 'videos' ? 'var(--text-primary)' : 'var(--text-secondary)'}}
+                                className={`flex flex-col items-center gap-2 pb-3 px-4 py-2 rounded-lg transition-all duration-200 ${activeTab === 'videos' ? 'bg-gradient-to-r from-red-500 to-red-600 text-white shadow-lg scale-105' : 'hover:scale-105'}`}
+                                style={{color: activeTab === 'videos' ? 'white' : 'var(--text-secondary)'}}
                             >
-                                <div className="w-6 h-6 flex items-center justify-center">
-                                    <span className="text-red-600 font-bold text-lg">▶</span>
+                                <div className="w-5 h-5 flex items-center justify-center">
+                                    <span className="text-lg font-bold">▶</span>
                                 </div>
-                                <span className="text-xs">VIDEOS</span>
+                                <span className="text-xs font-medium">VIDEOS</span>
                             </button>
                         )}
                     </div>
