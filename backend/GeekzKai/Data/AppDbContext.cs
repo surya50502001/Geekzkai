@@ -114,9 +114,8 @@ namespace geekzKai.Data
             // UPVOTE — USER
             modelBuilder.Entity<Upvote>()
                 .HasOne(u => u.User)
-                .WithMany()
+                .WithMany(u => u.Upvotes)
                 .HasForeignKey(u => u.UserId)
-                .HasPrincipalKey(u => u.Id)
                 .OnDelete(DeleteBehavior.Cascade);
 
             // UPVOTE — POST

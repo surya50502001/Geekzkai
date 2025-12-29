@@ -107,10 +107,7 @@ var connectionString = builder.Configuration.GetConnectionString("DefaultConnect
 
 builder.Services.AddDbContext<AppDbContext>(options =>
 {
-    if (builder.Environment.IsProduction())
-        options.UseNpgsql(connectionString);
-    else
-        options.UseSqlite(connectionString);
+    options.UseNpgsql(connectionString);
 });
 
 
