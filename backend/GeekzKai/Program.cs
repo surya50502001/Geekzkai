@@ -146,11 +146,14 @@ var app = builder.Build();
 
 // Manual OAuth implementation - no Google middleware
 // Auto-apply any pending EF migrations at startup
+// Temporarily disabled to prevent crashes with invalid connection string
+/*
 using (var scope = app.Services.CreateScope())
 {
     var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
     db.Database.Migrate();
 }
+*/
 
 // ENABLE SWAGGER ALWAYS (for debugging)
 app.UseSwagger();
