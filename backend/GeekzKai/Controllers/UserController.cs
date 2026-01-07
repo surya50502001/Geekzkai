@@ -169,5 +169,17 @@ namespace geekzKai.Controllers
                 user.CreatedAt
             });
         }
+
+        [HttpPut("{id}/admin")]
+        [Authorize]
+        public async Task<IActionResult> MakeAdmin(int id)
+        {
+            var user = await _context.Users.FindAsync(id);
+            if (user == null) return NotFound();
+            
+            user.IsAdmin = true;
+            await _context.SaveChangesAsync();
+            return Ok();
+        }
     }
 }

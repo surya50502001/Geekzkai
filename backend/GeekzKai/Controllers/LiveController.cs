@@ -48,7 +48,7 @@ namespace geekzKai.Controllers
 
         // POST: api/live/start
         [HttpPost("start")]
-        public async Task<ActionResult<LiveStream>> StartLiveStream([FromBody] LiveStream stream)
+        public async Task<ActionResult<LiveStreamResponse>> StartLiveStream([FromBody] CreateLiveStreamRequest request)
         {
             var userId = int.Parse(User.FindFirst("id")?.Value ?? "0");
             
@@ -59,15 +59,42 @@ namespace geekzKai.Controllers
             if (existingStream != null)
                 return BadRequest("Already streaming");
 
-            stream.StreamerId = userId;
-            stream.StartedAt = DateTime.UtcNow;
-            stream.StreamKey = Guid.NewGuid().ToString();
-            stream.ViewerCount = 0;
+            var stream = new LiveStream
+            {
+                Title = request.Title,
+                Description = request.Description,
+                StreamerId = userId,
+                StartedAt = DateTime.UtcNow,
+                StreamKey = Guid.NewGuid().ToString(),
+                ViewerCount = 0,
+                IsLive = true
+            };
 
             _context.LiveStreams.Add(stream);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction(nameof(GetLiveStream), new { id = stream.Id }, stream);
+            var streamer = await _context.Users.FindAsync(userId);
+            var response = new LiveStreamResponse
+            {
+                Id = stream.Id,
+                Title = stream.Title,
+                Description = stream.Description,
+                StartedAt = stream.StartedAt,
+                EndedAt = stream.EndedAt,
+                IsLive = stream.IsLive,
+                ViewerCount = stream.ViewerCount,
+                Streamer = new UserResponse
+                {
+                    Id = streamer!.Id,
+                    Username = streamer.Username,
+                    ProfilePictureUrl = streamer.ProfilePictureUrl,
+                    IsYoutuber = streamer.IsYoutuber,
+                    IsAdmin = streamer.IsAdmin
+                },
+                IsWatching = false
+            };
+
+            return CreatedAtAction(nameof(GetLiveStream), new { id = stream.Id }, response);
         }
 
         // POST: api/live/{id}/stop
@@ -165,7 +192,7 @@ namespace geekzKai.Controllers
 
         // POST: api/live/{id}/messages
         [HttpPost("{id}/messages")]
-        public async Task<ActionResult<LiveMessage>> SendLiveMessage(int id, [FromBody] LiveMessage message)
+        public async Task<ActionResult<MessageResponse>> SendLiveMessage(int id, [FromBody] SendMessageRequest request)
         {
             var userId = int.Parse(User.FindFirst("id")?.Value ?? "0");
             
@@ -177,14 +204,34 @@ namespace geekzKai.Controllers
             if (stream == null || (!isViewer && stream.StreamerId != userId))
                 return BadRequest("Not authorized to send messages");
 
-            message.LiveStreamId = id;
-            message.UserId = userId;
-            message.SentAt = DateTime.UtcNow;
+            var message = new LiveMessage
+            {
+                LiveStreamId = id,
+                UserId = userId,
+                Message = request.Message,
+                SentAt = DateTime.UtcNow
+            };
 
             _context.LiveMessages.Add(message);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction(nameof(GetLiveMessages), new { id }, message);
+            var user = await _context.Users.FindAsync(userId);
+            var response = new MessageResponse
+            {
+                Id = message.Id,
+                Message = message.Message,
+                SentAt = message.SentAt,
+                User = new UserResponse
+                {
+                    Id = user!.Id,
+                    Username = user.Username,
+                    ProfilePictureUrl = user.ProfilePictureUrl,
+                    IsYoutuber = user.IsYoutuber,
+                    IsAdmin = user.IsAdmin
+                }
+            };
+
+            return Ok(response);
         }
 
         // GET: api/live/my-streams

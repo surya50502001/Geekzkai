@@ -48,15 +48,22 @@ namespace geekzKai.Controllers
 
         // POST: api/room
         [HttpPost]
-        public async Task<ActionResult<Room>> CreateRoom([FromBody] Room room)
+        public async Task<ActionResult<RoomResponse>> CreateRoom([FromBody] CreateRoomRequest request)
         {
             var userId = int.Parse(User.FindFirst("id")?.Value ?? "0");
             
-            room.CreatorId = userId;
-            room.CreatedAt = DateTime.UtcNow;
-            room.CurrentParticipants = 1;
+            var room = new Room
+            {
+                Title = request.Title,
+                Description = request.Description,
+                MaxParticipants = request.MaxParticipants,
+                CreatorId = userId,
+                CreatedAt = DateTime.UtcNow,
+                CurrentParticipants = 1
+            };
 
             _context.Rooms.Add(room);
+            await _context.SaveChangesAsync();
             
             // Add creator as first participant
             var participant = new RoomParticipant
@@ -66,13 +73,31 @@ namespace geekzKai.Controllers
                 JoinedAt = DateTime.UtcNow
             };
             
-            await _context.SaveChangesAsync();
-            
-            participant.RoomId = room.Id;
             _context.RoomParticipants.Add(participant);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction(nameof(GetRoom), new { id = room.Id }, room);
+            var creator = await _context.Users.FindAsync(userId);
+            var response = new RoomResponse
+            {
+                Id = room.Id,
+                Title = room.Title,
+                Description = room.Description,
+                CreatedAt = room.CreatedAt,
+                IsActive = room.IsActive,
+                MaxParticipants = room.MaxParticipants,
+                CurrentParticipants = room.CurrentParticipants,
+                Creator = new UserResponse
+                {
+                    Id = creator!.Id,
+                    Username = creator.Username,
+                    ProfilePictureUrl = creator.ProfilePictureUrl,
+                    IsYoutuber = creator.IsYoutuber,
+                    IsAdmin = creator.IsAdmin
+                },
+                IsJoined = true
+            };
+
+            return CreatedAtAction(nameof(GetRoom), new { id = room.Id }, response);
         }
 
         // POST: api/room/{id}/join
@@ -143,7 +168,7 @@ namespace geekzKai.Controllers
 
         // POST: api/room/{id}/messages
         [HttpPost("{id}/messages")]
-        public async Task<ActionResult<RoomMessage>> SendMessage(int id, [FromBody] RoomMessage message)
+        public async Task<ActionResult<MessageResponse>> SendMessage(int id, [FromBody] SendMessageRequest request)
         {
             var userId = int.Parse(User.FindFirst("id")?.Value ?? "0");
             
@@ -154,14 +179,34 @@ namespace geekzKai.Controllers
             if (participant == null)
                 return BadRequest("Not in room");
 
-            message.RoomId = id;
-            message.UserId = userId;
-            message.SentAt = DateTime.UtcNow;
+            var message = new RoomMessage
+            {
+                RoomId = id,
+                UserId = userId,
+                Message = request.Message,
+                SentAt = DateTime.UtcNow
+            };
 
             _context.RoomMessages.Add(message);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction(nameof(GetRoomMessages), new { id }, message);
+            var user = await _context.Users.FindAsync(userId);
+            var response = new MessageResponse
+            {
+                Id = message.Id,
+                Message = message.Message,
+                SentAt = message.SentAt,
+                User = new UserResponse
+                {
+                    Id = user!.Id,
+                    Username = user.Username,
+                    ProfilePictureUrl = user.ProfilePictureUrl,
+                    IsYoutuber = user.IsYoutuber,
+                    IsAdmin = user.IsAdmin
+                }
+            };
+
+            return Ok(response);
         }
 
         // DELETE: api/room/{id}

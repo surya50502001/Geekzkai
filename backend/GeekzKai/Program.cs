@@ -114,6 +114,9 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 // Email Service
 builder.Services.AddScoped<EmailService>();
 
+// Notification Service
+builder.Services.AddScoped<geekzKai.Services.INotificationService, geekzKai.Services.NotificationService>();
+
 // JWT Authentication
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
