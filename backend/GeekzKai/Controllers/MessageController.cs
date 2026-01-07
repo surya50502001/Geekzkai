@@ -23,7 +23,7 @@ namespace geekzKai.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> SendMessage([FromBody] SendMessageRequest request)
+        public async Task<IActionResult> SendMessage([FromBody] SendDirectMessageRequest request)
         {
             var currentUserId = int.Parse(User.FindFirst("id")?.Value ?? "0");
 
@@ -124,7 +124,7 @@ namespace geekzKai.Controllers
         }
     }
 
-    public class SendMessageRequest
+    public class SendDirectMessageRequest
     {
         public int ReceiverId { get; set; }
         public string Content { get; set; } = string.Empty;

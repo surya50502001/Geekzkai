@@ -127,7 +127,7 @@ namespace geekzKai.Controllers
             }
         }
 
-        private async Task<TokenResponse> ExchangeCodeForToken(string code)
+        private async Task<TokenResponse?> ExchangeCodeForToken(string code)
         {
             var clientId = _configuration["Google:ClientId"] ?? Environment.GetEnvironmentVariable("Google__ClientId");
             var clientSecret = _configuration["Google:ClientSecret"] ?? Environment.GetEnvironmentVariable("Google__ClientSecret");
@@ -176,18 +176,18 @@ namespace geekzKai.Controllers
 
         public class TokenResponse
         {
-            public string access_token { get; set; }
-            public string AccessToken => access_token;
+            public string? access_token { get; set; }
+            public string? AccessToken => access_token;
         }
 
         public class GoogleUserInfo
         {
-            public string email { get; set; }
-            public string name { get; set; }
-            public string picture { get; set; }
-            public string Email => email;
-            public string Name => name;
-            public string Picture => picture;
+            public string? email { get; set; }
+            public string? name { get; set; }
+            public string? picture { get; set; }
+            public string? Email => email;
+            public string? Name => name;
+            public string? Picture => picture;
         }
 
         private string GenerateJwtToken(User user)
