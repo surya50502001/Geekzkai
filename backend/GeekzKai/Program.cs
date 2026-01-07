@@ -1,11 +1,11 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using geekzKai.Data;
+using GeekzKai.Data;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using DotNetEnv;
 using Microsoft.AspNetCore.HttpOverrides;
-using geekzKai.Services;
+using GeekzKai.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -115,7 +115,7 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 builder.Services.AddScoped<EmailService>();
 
 // Notification Service
-builder.Services.AddScoped<geekzKai.Services.INotificationService, geekzKai.Services.NotificationService>();
+builder.Services.AddScoped<GeekzKai.Services.INotificationService, GeekzKai.Services.NotificationService>();
 
 // JWT Authentication
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
@@ -187,7 +187,7 @@ app.UseAuthorization();
 app.MapControllers();
 
 // SignalR Hub
-app.MapHub<geekzKai.Hubs.ChatHub>("/chathub");
+app.MapHub<GeekzKai.Hubs.ChatHub>("/chathub");
 
 // SPA fallback routing - serve index.html for non-API routes
 app.MapFallbackToFile("index.html");
