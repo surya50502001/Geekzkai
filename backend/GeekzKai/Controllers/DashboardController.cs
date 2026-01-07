@@ -1,9 +1,9 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authorization;
-using geekzKai.Data;
+using GeekzKai.Data;
 
-namespace geekzKai.Controllers
+namespace GeekzKai.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
