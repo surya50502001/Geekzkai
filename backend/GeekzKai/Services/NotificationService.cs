@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.SignalR;
 using geekzKai.Hubs;
 using geekzKai.Data;
 using geekzKai.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace geekzKai.Services
 {
