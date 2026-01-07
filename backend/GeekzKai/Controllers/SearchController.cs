@@ -33,21 +33,21 @@ namespace geekzKai.Controllers
         }
 
         [HttpGet("users")]
-        public async Task<IActionResult> SearchUsers(string query, int limit = 10)
+        public async Task<IActionResult> GetUsers(string query, int limit = 10)
         {
             var users = await SearchUsers(query, limit);
             return Ok(users);
         }
 
         [HttpGet("posts")]
-        public async Task<IActionResult> SearchPosts(string query, int limit = 10)
+        public async Task<IActionResult> GetPosts(string query, int limit = 10)
         {
             var posts = await SearchPosts(query, limit);
             return Ok(posts);
         }
 
         [HttpGet("rooms")]
-        public async Task<IActionResult> SearchRooms(string query, int limit = 10)
+        public async Task<IActionResult> GetRooms(string query, int limit = 10)
         {
             var rooms = await SearchRooms(query, limit);
             return Ok(rooms);
