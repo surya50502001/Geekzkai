@@ -27,7 +27,7 @@ const CreateRoom = () => {
 
             if (response.ok) {
                 const room = await response.json();
-                navigate(`/room/${room.id}`);
+                navigate(`/rooms`);
             } else {
                 alert('Failed to create room');
             }

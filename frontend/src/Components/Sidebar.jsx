@@ -1,4 +1,4 @@
-import { Home, Settings, Plus, MessageCircle, Search } from "lucide-react";
+import { Home, Settings, Plus, MessageCircle, Search, Users } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 import Resizable from "./Resizable";
 
@@ -8,6 +8,7 @@ export default function Sidebar() {
     const navItems = [
         { to: "/", icon: Home, label: "Home" },
         { to: "/create", icon: Plus, label: "Create" },
+        { to: "/rooms", icon: Users, label: "Rooms" },
         { to: "/chat", icon: MessageCircle, label: "Chat" },
         { to: "/search", icon: Search, label: "Search" },
         { to: "/settings", icon: Settings, label: "Settings" },
