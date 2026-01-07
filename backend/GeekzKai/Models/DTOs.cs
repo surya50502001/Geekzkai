@@ -1,4 +1,4 @@
-namespace geekzKai.Models
+namespace GeekzKai.Models
 {
     public class CreateRoomRequest
     {

@@ -1,9 +1,9 @@
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.AspNetCore.Authorization;
-using geekzKai.Data;
+using GeekzKai.Data;
 using Microsoft.EntityFrameworkCore;
 
-namespace geekzKai.Hubs
+namespace GeekzKai.Hubs
 {
     [Authorize]
     public class ChatHub : Hub

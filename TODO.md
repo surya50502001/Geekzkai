@@ -1,29 +1,50 @@
-# EF Core Relationship Fix
+# Fix Namespace Case Mismatch in GeekzKai Project
 
-## Issue
-- EF Core warning: "The foreign key property 'Upvote.UserId1' was created in shadow state"
-- Application crashing on startup due to database connection failure
+## Overview
+The project has a namespace case mismatch: project name is 'GeekzKai' but namespaces are 'geekzKai'. This causes build errors in Docker. Need to update all namespaces and using statements to 'GeekzKai'.
 
-## Root Cause
-- Upvote-User relationship configuration was incomplete
-- Production database connection string is invalid/missing
+## Steps
+- [ ] Update namespaces in all model files (Models/*.cs)
+- [ ] Update namespaces in Data/AppDbContext.cs
+- [ ] Update namespaces in Services/*.cs
+- [ ] Update namespaces in Hubs/*.cs
+- [ ] Update using statements in Controllers/*.cs
+- [ ] Update using statements in Program.cs
+- [ ] Update migration files (Migrations/*.cs) - Note: Migrations are auto-generated, may need to regenerate after changes
+- [ ] Test build to ensure errors are resolved
 
-## Solution Applied
-- [x] Fixed Upvote-User relationship in AppDbContext.cs
-- [x] Updated Program.cs to always use PostgreSQL
-- [x] Created FixUpvoteUserRelationship migration
-- [x] Temporarily disabled auto-migration to prevent crashes
+## Files to Update
+### Models
+- Comment.cs
+- DTOs.cs
+- Follow.cs
+- LiveStream.cs
+- LoginRequest.cs
+- Message.cs
+- Notification.cs
+- Post.cs
+- RegisterRequest.cs
+- Room.cs
+- UpdateProfileRequest.cs
+- Upvote.cs
+- User.cs
 
-## Next Steps
-1. **Update Render environment variables** with correct PostgreSQL connection string:
-   ```
-   ConnectionStrings__DefaultConnection=postgresql://username:password@hostname:port/database
-   ```
-2. **Deploy the updated code** to Render
-3. **Re-enable auto-migration** in Program.cs
-4. **Run migration** to apply the relationship fix
+### Data
+- AppDbContext.cs
 
-## Files Modified
-- backend/GeekzKai/Data/AppDbContext.cs (relationship fix)
-- backend/GeekzKai/Program.cs (PostgreSQL config + temp migration disable)
-- backend/GeekzKai/.env (PostgreSQL connection string format)
+### Services
+- EmailService.cs
+- NotificationService.cs
+
+### Hubs
+- ChatHub.cs
+
+### Controllers
+- All controllers using geekzKai.Models, geekzKai.Data, etc.
+
+### Program.cs
+- Update using statements and service registrations
+
+### Migrations
+- AppDbContextModelSnapshot.cs
+- InitialCreate.Designer.cs

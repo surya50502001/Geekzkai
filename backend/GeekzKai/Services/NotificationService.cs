@@ -1,10 +1,10 @@
 using Microsoft.AspNetCore.SignalR;
-using geekzKai.Hubs;
-using geekzKai.Data;
-using geekzKai.Models;
+using GeekzKai.Hubs;
+using GeekzKai.Data;
+using GeekzKai.Models;
 using Microsoft.EntityFrameworkCore;
 
-namespace geekzKai.Services
+namespace GeekzKai.Services
 {
     public interface INotificationService
     {

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace geekzKai.Models
+namespace GeekzKai.Models
 {
     public class Post
     {

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace geekzKai.Models
+namespace GeekzKai.Models
 {
     public class Upvote
     {

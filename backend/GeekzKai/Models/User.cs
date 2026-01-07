@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
-namespace geekzKai.Models
+namespace GeekzKai.Models
 {
     public class User
     {

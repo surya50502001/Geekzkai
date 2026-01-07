@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using geekzKai.Models;
+using GeekzKai.Models;
 
-namespace geekzKai.Data
+namespace GeekzKai.Data
 {
     public class AppDbContext : DbContext
     {
