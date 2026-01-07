@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 using geekzKai.Data;
+using geekzKai.Models;
 
 namespace geekzKai.Controllers
 {
