@@ -4,10 +4,10 @@ using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
-using geekzKai.Data;
-using geekzKai.Models;
+using GeekzKai.Data;
+using GeekzKai.Models;
 
-namespace geekzKai.Controllers
+namespace GeekzKai.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]

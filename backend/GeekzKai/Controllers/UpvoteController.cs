@@ -1,11 +1,11 @@
-using geekzKai.Data;
-using geekzKai.Models;
+using GeekzKai.Data;
+using GeekzKai.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-namespace geekzKai.Controllers
+namespace GeekzKai.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
