@@ -92,6 +92,7 @@ function App() {
 
                         <Route path="/create" element={<PrivateRoute><Create /></PrivateRoute>} />
                         <Route path="/create/post" element={<PrivateRoute><CreatePost /></PrivateRoute>} />
+                        <Route path="/create/room" element={<PrivateRoute><CreateRoom /></PrivateRoute>} />
                         <Route path="/rooms" element={<PrivateRoute><Rooms /></PrivateRoute>} />
                         <Route path="/room/:id" element={<PrivateRoute><Room /></PrivateRoute>} />
                         <Route path="/create/live" element={<PrivateRoute><div className="p-8 text-center" style={{backgroundColor: 'var(--bg-primary)', color: 'var(--text-primary)'}}>Go Live - Coming Soon</div></PrivateRoute>} />
