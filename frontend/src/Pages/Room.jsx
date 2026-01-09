@@ -25,7 +25,13 @@ function Room() {
             console.log('Fetching room details for ID:', id);
             console.log('API URL:', `${API_BASE_URL}/room/${id}`);
             
-            const response = await fetch(`${API_BASE_URL}/room/${id}`);
+            const headers = {};
+            const token = localStorage.getItem('token');
+            if (token) {
+                headers['Authorization'] = `Bearer ${token}`;
+            }
+            
+            const response = await fetch(`${API_BASE_URL}/room/${id}`, { headers });
             console.log('Room fetch response status:', response.status);
             
             if (response.ok) {
@@ -34,8 +40,7 @@ function Room() {
                 setRoom(data);
                 setMembers(data.participants || []);
             } else {
-                const errorText = await response.text();
-                console.error('Room fetch error:', response.status, errorText);
+                console.error('Room fetch error:', response.status);
             }
         } catch (error) {
             console.error('Error fetching room:', error);
