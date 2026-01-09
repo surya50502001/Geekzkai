@@ -154,6 +154,18 @@ namespace GeekzKai.Controllers
             return Ok();
         }
 
+        // GET: api/room/{id}/membership
+        [HttpGet("{id}/membership")]
+        public async Task<ActionResult<object>> GetMembership(int id)
+        {
+            var userId = int.Parse(User.FindFirst("id")?.Value ?? "0");
+            
+            var participant = await _context.RoomParticipants
+                .FirstOrDefaultAsync(p => p.RoomId == id && p.UserId == userId && p.IsActive);
+
+            return Ok(new { isMember = participant != null });
+        }
+
         // GET: api/room/{id}/messages
         [HttpGet("{id}/messages")]
         public async Task<ActionResult<IEnumerable<RoomMessage>>> GetRoomMessages(int id)

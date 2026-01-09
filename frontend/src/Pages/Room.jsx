@@ -1,60 +1,32 @@
-import { useState, useEffect, useRef } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import { useParams, Link } from 'react-router-dom';
+import { ArrowLeft, Users, MessageCircle } from 'lucide-react';
 import { useAuth } from '../Context/AuthContext';
+import ChatRoom from '../Components/ChatRoom';
+import API_BASE_URL from '../apiConfig';
 
-const Room = () => {
-    const { id } = useParams();
-    const navigate = useNavigate();
+function Room() {
+    const { roomId } = useParams();
     const { user } = useAuth();
     const [room, setRoom] = useState(null);
-    const [messages, setMessages] = useState([]);
-    const [newMessage, setNewMessage] = useState('');
+    const [members, setMembers] = useState([]);
     const [loading, setLoading] = useState(true);
-    const [isJoined, setIsJoined] = useState(false);
-    const [participants, setParticipants] = useState([]);
-    const messagesEndRef = useRef(null);
-    const wsRef = useRef(null);
-
-    const scrollToBottom = () => {
-        messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-    };
+    const [joined, setJoined] = useState(false);
 
     useEffect(() => {
-        fetchRoom();
-        fetchMessages();
-        
-        // Setup WebSocket connection
-        const ws = new WebSocket(`${import.meta.env.VITE_WS_URL || 'ws://localhost:3001'}/room/${id}`);
-        wsRef.current = ws;
-        
-        ws.onmessage = (event) => {
-            const data = JSON.parse(event.data);
-            if (data.type === 'message') {
-                setMessages(prev => [...prev, data.message]);
-            } else if (data.type === 'userJoined' || data.type === 'userLeft') {
-                fetchRoom(); // Refresh room data
-            }
-        };
-        
-        return () => {
-            ws.close();
-        };
-    }, [id]);
+        fetchRoomDetails();
+        if (user) {
+            checkMembership();
+        }
+    }, [roomId, user]);
 
-    useEffect(() => {
-        scrollToBottom();
-    }, [messages]);
-
-    const fetchRoom = async () => {
+    const fetchRoomDetails = async () => {
         try {
-            const token = localStorage.getItem('token');
-            const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/room/${id}`, {
-                headers: { 'Authorization': `Bearer ${token}` }
-            });
+            const response = await fetch(`${API_BASE_URL}/rooms/${roomId}`);
             if (response.ok) {
                 const data = await response.json();
                 setRoom(data);
-                setIsJoined(data.isJoined || false);
+                setMembers(data.members || []);
             }
         } catch (error) {
             console.error('Error fetching room:', error);
@@ -63,194 +35,216 @@ const Room = () => {
         }
     };
 
-    const fetchMessages = async () => {
+    const checkMembership = async () => {
         try {
-            const token = localStorage.getItem('token');
-            const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/room/${id}/messages`, {
-                headers: { 'Authorization': `Bearer ${token}` }
+            const response = await fetch(`${API_BASE_URL}/rooms/${roomId}/membership`, {
+                headers: {
+                    'Authorization': `Bearer ${localStorage.getItem('token')}`
+                }
             });
             if (response.ok) {
                 const data = await response.json();
-                setMessages(data);
+                setJoined(data.isMember);
             }
         } catch (error) {
-            console.error('Error fetching messages:', error);
+            console.error('Error checking membership:', error);
         }
     };
 
-    const joinRoom = async () => {
+    const handleJoinRoom = async () => {
+        if (!user) return;
+        
         try {
-            const token = localStorage.getItem('token');
-            const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/room/${id}/join`, {
+            const response = await fetch(`${API_BASE_URL}/rooms/${roomId}/join`, {
                 method: 'POST',
-                headers: { 'Authorization': `Bearer ${token}` }
+                headers: {
+                    'Authorization': `Bearer ${localStorage.getItem('token')}`
+                }
             });
             if (response.ok) {
-                setIsJoined(true);
-                fetchRoom();
-            } else {
-                const error = await response.text();
-                alert(error);
+                setJoined(true);
+                fetchRoomDetails(); // Refresh to get updated member count
             }
         } catch (error) {
             console.error('Error joining room:', error);
         }
     };
 
-    const leaveRoom = async () => {
-        try {
-            const token = localStorage.getItem('token');
-            const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/room/${id}/leave`, {
-                method: 'POST',
-                headers: { 'Authorization': `Bearer ${token}` }
-            });
-            if (response.ok) {
-                setIsJoined(false);
-                fetchRoom();
-            }
-        } catch (error) {
-            console.error('Error leaving room:', error);
-        }
-    };
+    if (loading) {
+        return (
+            <div className="min-h-screen flex items-center justify-center">
+                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-600"></div>
+            </div>
+        );
+    }
 
-    const sendMessage = async (e) => {
-        e.preventDefault();
-        if (!newMessage.trim() || !isJoined) return;
-
-        try {
-            const token = localStorage.getItem('token');
-            const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/room/${id}/messages`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`
-                },
-                body: JSON.stringify({ message: newMessage })
-            });
-            if (response.ok) {
-                const messageData = await response.json();
-                setNewMessage('');
-                // Send via WebSocket for real-time updates
-                if (wsRef.current?.readyState === WebSocket.OPEN) {
-                    wsRef.current.send(JSON.stringify({
-                        type: 'message',
-                        message: messageData
-                    }));
-                }
-            }
-        } catch (error) {
-            console.error('Error sending message:', error);
-        }
-    };
-
-    if (loading) return <div className="p-8 text-center">Loading...</div>;
-    if (!room) return <div className="p-8 text-center">Room not found</div>;
+    if (!room) {
+        return (
+            <div className="min-h-screen flex items-center justify-center">
+                <div className="text-center">
+                    <h2 className="text-2xl font-bold mb-4" style={{ color: 'var(--text-primary)' }}>
+                        Room not found
+                    </h2>
+                    <Link 
+                        to="/rooms" 
+                        className="text-purple-600 hover:text-purple-700"
+                    >
+                        Back to Rooms
+                    </Link>
+                </div>
+            </div>
+        );
+    }
 
     return (
-        <div className="max-w-4xl mx-auto p-6" style={{backgroundColor: 'var(--bg-primary)', color: 'var(--text-primary)'}}>
-            <div className="mb-6">
-                <button onClick={() => navigate('/rooms')} className="text-blue-500 hover:underline mb-4">← Back to Rooms</button>
-                <h1 className="text-3xl font-bold">{room.title}</h1>
-                <p className="text-gray-600 mt-2">{room.description}</p>
-                <div className="flex items-center gap-4 mt-4">
-                    <span>👥 {room.currentParticipants}/{room.maxParticipants}</span>
-                    <span>👑 {room.creator?.username}</span>
-                    {!isJoined ? (
-                        <button onClick={joinRoom} className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700">
+        <div className="min-h-screen" style={{ backgroundColor: 'var(--bg-primary)' }}>
+            <div className="max-w-7xl mx-auto px-6 py-8">
+                {/* Header */}
+                <div className="flex items-center gap-4 mb-6">
+                    <Link 
+                        to="/rooms"
+                        className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+                    >
+                        <ArrowLeft size={24} style={{ color: 'var(--text-primary)' }} />
+                    </Link>
+                    <div className="flex-1">
+                        <h1 className="text-3xl font-bold" style={{ color: 'var(--text-primary)' }}>
+                            {room.name}
+                        </h1>
+                        <p className="text-lg mt-2" style={{ color: 'var(--text-secondary)' }}>
+                            {room.description}
+                        </p>
+                        <div className="flex items-center gap-4 mt-3">
+                            <div className="flex items-center gap-2" style={{ color: 'var(--text-secondary)' }}>
+                                <Users size={16} />
+                                <span>{members.length} members</span>
+                            </div>
+                            <div className="flex items-center gap-2" style={{ color: 'var(--text-secondary)' }}>
+                                <MessageCircle size={16} />
+                                <span>Active chat</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    {user && !joined && (
+                        <button
+                            onClick={handleJoinRoom}
+                            className="px-6 py-3 rounded-lg bg-gradient-to-r from-purple-600 to-pink-600 text-white hover:from-purple-700 hover:to-pink-700 transition-all font-semibold"
+                        >
                             Join Room
-                        </button>
-                    ) : (
-                        <button onClick={leaveRoom} className="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700">
-                            Leave Room
                         </button>
                     )}
                 </div>
-            </div>
 
-            {isJoined ? (
+                {/* Main Content */}
                 <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
-                    {/* Participants Panel */}
-                    <div className="lg:col-span-1">
-                        <div className="border rounded-lg p-4" style={{borderColor: 'var(--border-color)', backgroundColor: 'var(--bg-secondary)'}}>
-                            <h3 className="text-lg font-semibold mb-4">Participants ({room.currentParticipants})</h3>
-                            <div className="space-y-2">
-                                {room.participants?.map((participant) => (
-                                    <div key={participant.id} className="flex items-center gap-2">
-                                        <img 
-                                            src={participant.profilePictureUrl || '/default-avatar.png'} 
-                                            alt={participant.username}
-                                            className="w-8 h-8 rounded-full"
-                                        />
-                                        <span className="text-sm">{participant.username}</span>
-                                        {participant.id === room.creator?.id && (
-                                            <span className="text-xs bg-yellow-500 text-black px-2 py-1 rounded">Host</span>
+                    {/* Chat Area */}
+                    <div className="lg:col-span-3">
+                        <div 
+                            className="rounded-xl border shadow-lg h-[600px]"
+                            style={{ 
+                                backgroundColor: 'var(--bg-secondary)',
+                                borderColor: 'var(--border-color)'
+                            }}
+                        >
+                            {user && joined ? (
+                                <ChatRoom roomId={roomId} roomName={room.name} />
+                            ) : (
+                                <div className="h-full flex items-center justify-center">
+                                    <div className="text-center">
+                                        <MessageCircle size={48} className="mx-auto mb-4 text-gray-400" />
+                                        <h3 className="text-xl font-semibold mb-2" style={{ color: 'var(--text-primary)' }}>
+                                            {!user ? 'Login Required' : 'Join to Chat'}
+                                        </h3>
+                                        <p className="mb-4" style={{ color: 'var(--text-secondary)' }}>
+                                            {!user 
+                                                ? 'Please login to participate in room discussions'
+                                                : 'Join this room to start chatting with other members'
+                                            }
+                                        </p>
+                                        {!user ? (
+                                            <Link
+                                                to="/login"
+                                                className="inline-flex items-center gap-2 px-6 py-3 rounded-lg bg-gradient-to-r from-purple-600 to-pink-600 text-white hover:from-purple-700 hover:to-pink-700 transition-all font-semibold"
+                                            >
+                                                Login
+                                            </Link>
+                                        ) : (
+                                            <button
+                                                onClick={handleJoinRoom}
+                                                className="inline-flex items-center gap-2 px-6 py-3 rounded-lg bg-gradient-to-r from-purple-600 to-pink-600 text-white hover:from-purple-700 hover:to-pink-700 transition-all font-semibold"
+                                            >
+                                                Join Room
+                                            </button>
                                         )}
+                                    </div>
+                                </div>
+                            )}
+                        </div>
+                    </div>
+
+                    {/* Sidebar */}
+                    <div className="space-y-6">
+                        {/* Room Info */}
+                        <div 
+                            className="p-6 rounded-xl border"
+                            style={{ 
+                                backgroundColor: 'var(--bg-secondary)',
+                                borderColor: 'var(--border-color)'
+                            }}
+                        >
+                            <h3 className="text-lg font-semibold mb-4" style={{ color: 'var(--text-primary)' }}>
+                                Room Info
+                            </h3>
+                            <div className="space-y-3">
+                                <div>
+                                    <span className="text-sm font-medium" style={{ color: 'var(--text-secondary)' }}>
+                                        Created by
+                                    </span>
+                                    <p style={{ color: 'var(--text-primary)' }}>
+                                        {room.createdBy || 'Anonymous'}
+                                    </p>
+                                </div>
+                                <div>
+                                    <span className="text-sm font-medium" style={{ color: 'var(--text-secondary)' }}>
+                                        Category
+                                    </span>
+                                    <p style={{ color: 'var(--text-primary)' }}>
+                                        {room.category || 'General'}
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Members List */}
+                        <div 
+                            className="p-6 rounded-xl border"
+                            style={{ 
+                                backgroundColor: 'var(--bg-secondary)',
+                                borderColor: 'var(--border-color)'
+                            }}
+                        >
+                            <h3 className="text-lg font-semibold mb-4" style={{ color: 'var(--text-primary)' }}>
+                                Members ({members.length})
+                            </h3>
+                            <div className="space-y-2 max-h-48 overflow-y-auto">
+                                {members.map((member, index) => (
+                                    <div key={index} className="flex items-center gap-3">
+                                        <div className="w-8 h-8 rounded-full bg-gradient-to-r from-purple-600 to-pink-600 flex items-center justify-center text-white text-sm font-semibold">
+                                            {member.username?.[0]?.toUpperCase() || 'U'}
+                                        </div>
+                                        <span style={{ color: 'var(--text-primary)' }}>
+                                            {member.username || `User ${index + 1}`}
+                                        </span>
                                     </div>
                                 ))}
                             </div>
                         </div>
                     </div>
-                    
-                    {/* Chat Panel */}
-                    <div className="lg:col-span-3">
-                        <div className="border rounded-lg p-4" style={{borderColor: 'var(--border-color)', backgroundColor: 'var(--bg-secondary)'}}>
-                            <h3 className="text-xl font-semibold mb-4">Room Chat</h3>
-                            <div className="h-96 overflow-y-auto mb-4 p-3 border rounded" style={{borderColor: 'var(--border-color)', backgroundColor: 'var(--bg-primary)'}}>
-                                {messages.length === 0 ? (
-                                    <div className="text-center text-gray-500 mt-8">
-                                        <p>No messages yet. Start the conversation!</p>
-                                    </div>
-                                ) : (
-                                    messages.map((msg) => (
-                                        <div key={msg.id} className="mb-3 p-2 rounded" style={{backgroundColor: msg.user?.id === user?.id ? 'var(--bg-secondary)' : 'transparent'}}>
-                                            <div className="flex items-center gap-2 mb-1">
-                                                <img 
-                                                    src={msg.user?.profilePictureUrl || '/default-avatar.png'} 
-                                                    alt={msg.user?.username}
-                                                    className="w-6 h-6 rounded-full"
-                                                />
-                                                <span className="font-semibold text-blue-500">{msg.user?.username}</span>
-                                                <span className="text-xs text-gray-500">
-                                                    {new Date(msg.sentAt).toLocaleTimeString()}
-                                                </span>
-                                            </div>
-                                            <p className="ml-8">{msg.message}</p>
-                                        </div>
-                                    ))
-                                )}
-                                <div ref={messagesEndRef} />
-                            </div>
-                            <form onSubmit={sendMessage} className="flex gap-2">
-                                <input
-                                    type="text"
-                                    value={newMessage}
-                                    onChange={(e) => setNewMessage(e.target.value)}
-                                    placeholder="Type a message..."
-                                    className="flex-1 p-3 border rounded-lg"
-                                    style={{backgroundColor: 'var(--bg-primary)', color: 'var(--text-primary)', borderColor: 'var(--border-color)'}}
-                                    disabled={!isJoined}
-                                />
-                                <button 
-                                    type="submit" 
-                                    disabled={!newMessage.trim() || !isJoined}
-                                    className="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 disabled:opacity-50"
-                                >
-                                    Send
-                                </button>
-                            </form>
-                        </div>
-                    </div>
                 </div>
-            ) : (
-                <div className="text-center py-12">
-                    <p className="text-gray-500 mb-4">Join the room to participate in the discussion</p>
-                    <button onClick={joinRoom} className="bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700">
-                        Join Room
-                    </button>
-                </div>
-            )}
+            </div>
         </div>
     );
-};
+}
 
 export default Room;
