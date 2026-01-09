@@ -16,7 +16,7 @@ const CreateRoom = () => {
 
         try {
             const token = localStorage.getItem('token');
-            const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/rooms`, {
+            const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/room`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
