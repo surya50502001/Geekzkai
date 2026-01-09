@@ -1,4 +1,4 @@
-import { Home, Search, Plus, MessageCircle, User } from "lucide-react";
+import { Home, Search, Plus, MessageCircle, User, Users } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { useAuth } from "../Context/AuthContext";
@@ -20,6 +20,7 @@ export default function BottomNavbar() {
     const navItems = [
         { to: "/", icon: Home, label: "Home" },
         { to: "/search", icon: Search, label: "Search" },
+        { to: "/rooms", icon: Users, label: "Rooms" },
         { to: "/chat", icon: MessageCircle, label: "Chat" },
     ];
 

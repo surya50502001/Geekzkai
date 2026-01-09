@@ -12,12 +12,14 @@ const Rooms = () => {
     const fetchRooms = async () => {
         try {
             const token = localStorage.getItem('token');
-            const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/room`, {
+            const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/rooms`, {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
             if (response.ok) {
                 const data = await response.json();
                 setRooms(data);
+            } else {
+                console.error('Failed to fetch rooms:', response.status);
             }
         } catch (error) {
             console.error('Error fetching rooms:', error);
@@ -32,9 +34,14 @@ const Rooms = () => {
         <div className="max-w-6xl mx-auto p-6" style={{backgroundColor: 'var(--bg-primary)', color: 'var(--text-primary)'}}>
             <div className="flex justify-between items-center mb-6">
                 <h1 className="text-3xl font-bold">Active Rooms</h1>
-                <Link to="/create/room" className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
-                    Create Room
-                </Link>
+                <div className="flex gap-2">
+                    <button onClick={fetchRooms} className="bg-gray-600 text-white px-4 py-2 rounded hover:bg-gray-700">
+                        Refresh
+                    </button>
+                    <Link to="/create/room" className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
+                        Create Room
+                    </Link>
+                </div>
             </div>
 
             {rooms.length === 0 ? (
