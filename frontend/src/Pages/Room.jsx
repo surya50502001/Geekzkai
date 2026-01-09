@@ -64,11 +64,16 @@ function Room() {
                 const contentType = response.headers.get('content-type');
                 if (contentType && contentType.includes('application/json')) {
                     const data = await response.json();
-                    setJoined(data.isMember);
+                    setJoined(data.isMember || data.joined || false);
+                } else {
+                    // If membership endpoint doesn't exist, assume not joined
+                    setJoined(false);
                 }
+            } else {
+                setJoined(false);
             }
         } catch (error) {
-            // Silently fail - membership check is optional
+            setJoined(false);
         }
     };
 
