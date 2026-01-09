@@ -51,14 +51,19 @@ function Room() {
 
     const checkMembership = async () => {
         try {
+            const token = localStorage.getItem('token');
+            if (!token) return;
+            
             const response = await fetch(`${API_BASE_URL}/room/${id}/membership`, {
                 headers: {
-                    'Authorization': `Bearer ${localStorage.getItem('token')}`
+                    'Authorization': `Bearer ${token}`
                 }
             });
             if (response.ok) {
                 const data = await response.json();
                 setJoined(data.isMember);
+            } else if (response.status === 401) {
+                console.log('Not authenticated for membership check');
             }
         } catch (error) {
             console.error('Error checking membership:', error);
@@ -69,15 +74,21 @@ function Room() {
         if (!user) return;
         
         try {
+            const token = localStorage.getItem('token');
+            if (!token) return;
+            
             const response = await fetch(`${API_BASE_URL}/room/${id}/join`, {
                 method: 'POST',
                 headers: {
-                    'Authorization': `Bearer ${localStorage.getItem('token')}`
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json'
                 }
             });
             if (response.ok) {
                 setJoined(true);
-                fetchRoomDetails(); // Refresh to get updated member count
+                fetchRoomDetails();
+            } else {
+                console.error('Failed to join room:', response.status);
             }
         } catch (error) {
             console.error('Error joining room:', error);
