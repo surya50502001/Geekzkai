@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { ArrowLeft, Users, MessageCircle } from 'lucide-react';
+import { ArrowLeft, Users, MessageCircle, LogOut } from 'lucide-react';
 import { useAuth } from '../Context/AuthContext';
 import ChatRoom from '../Components/ChatRoom';
 import API_BASE_URL from '../apiConfig';
@@ -59,14 +59,16 @@ function Room() {
                     'Authorization': `Bearer ${token}`
                 }
             });
+            
             if (response.ok) {
-                const data = await response.json();
-                setJoined(data.isMember);
-            } else if (response.status === 401) {
-                console.log('Not authenticated for membership check');
+                const contentType = response.headers.get('content-type');
+                if (contentType && contentType.includes('application/json')) {
+                    const data = await response.json();
+                    setJoined(data.isMember);
+                }
             }
         } catch (error) {
-            console.error('Error checking membership:', error);
+            // Silently fail - membership check is optional
         }
     };
 
@@ -92,6 +94,29 @@ function Room() {
             }
         } catch (error) {
             console.error('Error joining room:', error);
+        }
+    };
+
+    const handleLeaveRoom = async () => {
+        if (!user) return;
+        
+        try {
+            const token = localStorage.getItem('token');
+            if (!token) return;
+            
+            const response = await fetch(`${API_BASE_URL}/room/${id}/leave`, {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json'
+                }
+            });
+            if (response.ok) {
+                setJoined(false);
+                fetchRoomDetails();
+            }
+        } catch (error) {
+            console.error('Error leaving room:', error);
         }
     };
 
@@ -151,13 +176,23 @@ function Room() {
                         </div>
                     </div>
                     
-                    {user && !joined && (
-                        <button
-                            onClick={handleJoinRoom}
-                            className="px-6 py-3 rounded-lg bg-gradient-to-r from-purple-600 to-pink-600 text-white hover:from-purple-700 hover:to-pink-700 transition-all font-semibold"
-                        >
-                            Join Room
-                        </button>
+                    {user && (
+                        joined ? (
+                            <button
+                                onClick={handleLeaveRoom}
+                                className="px-6 py-3 rounded-lg bg-red-600 text-white hover:bg-red-700 transition-all font-semibold flex items-center gap-2"
+                            >
+                                <LogOut size={20} />
+                                Leave Room
+                            </button>
+                        ) : (
+                            <button
+                                onClick={handleJoinRoom}
+                                className="px-6 py-3 rounded-lg bg-gradient-to-r from-purple-600 to-pink-600 text-white hover:from-purple-700 hover:to-pink-700 transition-all font-semibold"
+                            >
+                                Enter Room
+                            </button>
+                        )
                     )}
                 </div>
 
@@ -184,7 +219,7 @@ function Room() {
                                         <p className="mb-4" style={{ color: 'var(--text-secondary)' }}>
                                             {!user 
                                                 ? 'Please login to participate in room discussions'
-                                                : 'Join this room to start chatting with other members'
+                                                : 'Enter this room to start chatting with other members'
                                             }
                                         </p>
                                         {!user ? (
@@ -199,7 +234,7 @@ function Room() {
                                                 onClick={handleJoinRoom}
                                                 className="inline-flex items-center gap-2 px-6 py-3 rounded-lg bg-gradient-to-r from-purple-600 to-pink-600 text-white hover:from-purple-700 hover:to-pink-700 transition-all font-semibold"
                                             >
-                                                Join Room
+                                                Enter Room
                                             </button>
                                         )}
                                     </div>
