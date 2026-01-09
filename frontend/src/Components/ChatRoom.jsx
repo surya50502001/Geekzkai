@@ -27,14 +27,14 @@ function ChatRoom({ roomId, roomName }) {
             const token = localStorage.getItem('token');
             if (!token) return;
 
-            // Start SignalR connection
-            await signalRService.startConnection(token);
-            
-            // Join room
-            await signalRService.joinRoom(roomId);
-            
-            // Load existing messages
             try {
+                // Start SignalR connection
+                await signalRService.startConnection(token);
+                
+                // Join room
+                await signalRService.joinRoom(roomId);
+                
+                // Load existing messages
                 const response = await fetch(`${API_BASE_URL}/room/${roomId}/messages`, {
                     headers: {
                         'Authorization': `Bearer ${token}`
@@ -50,28 +50,28 @@ function ChatRoom({ roomId, roomName }) {
                         userId: msg.userId
                     })));
                 }
+
+                // Set up event listeners
+                signalRService.onReceiveMessage((messageData) => {
+                    setMessages(prev => [...prev, {
+                        id: Date.now(),
+                        username: messageData.User.Username,
+                        message: messageData.Message,
+                        timestamp: messageData.SentAt,
+                        userId: messageData.User.Id
+                    }]);
+                });
+
+                signalRService.onUserJoined((username) => {
+                    setOnlineUsers(prev => [...new Set([...prev, username])]);
+                });
+
+                signalRService.onUserLeft((username) => {
+                    setOnlineUsers(prev => prev.filter(u => u !== username));
+                });
             } catch (error) {
-                console.error('Error loading messages:', error);
+                console.error('Error initializing chat:', error);
             }
-
-            // Set up event listeners
-            signalRService.onReceiveMessage((messageData) => {
-                setMessages(prev => [...prev, {
-                    id: Date.now(),
-                    username: messageData.User.Username,
-                    message: messageData.Message,
-                    timestamp: messageData.SentAt,
-                    userId: messageData.User.Id
-                }]);
-            });
-
-            signalRService.onUserJoined((username) => {
-                setOnlineUsers(prev => [...new Set([...prev, username])]);
-            });
-
-            signalRService.onUserLeft((username) => {
-                setOnlineUsers(prev => prev.filter(u => u !== username));
-            });
         };
 
         initializeChat();

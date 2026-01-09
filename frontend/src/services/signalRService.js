@@ -12,11 +12,12 @@ class SignalRService {
             await this.stopConnection();
         }
 
+        const hubUrl = `${API_BASE_URL}/chathub`;
+        console.log('Connecting to SignalR hub:', hubUrl);
+
         this.connection = new HubConnectionBuilder()
-            .withUrl(`${API_BASE_URL}/chathub`, {
-                accessTokenFactory: () => token,
-                skipNegotiation: true,
-                transport: 1 // WebSockets
+            .withUrl(hubUrl, {
+                accessTokenFactory: () => token
             })
             .withAutomaticReconnect()
             .configureLogging(LogLevel.Information)
@@ -29,6 +30,7 @@ class SignalRService {
         } catch (error) {
             console.error('SignalR Connection Error:', error);
             this.isConnected = false;
+            throw error;
         }
     }
 
