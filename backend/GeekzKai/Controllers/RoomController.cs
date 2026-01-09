@@ -23,17 +23,26 @@ namespace GeekzKai.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Room>>> GetRooms()
         {
-            return await _context.Rooms
+            Console.WriteLine("Getting all rooms");
+            
+            var rooms = await _context.Rooms
                 .Include(r => r.Creator)
                 .Where(r => r.IsActive)
                 .OrderByDescending(r => r.CreatedAt)
                 .ToListAsync();
+                
+            Console.WriteLine($"Found {rooms.Count} active rooms");
+            
+            return rooms;
         }
 
         // GET: api/room/{id}
         [HttpGet("{id}")]
+        [AllowAnonymous] // Temporarily allow anonymous access for debugging
         public async Task<ActionResult<Room>> GetRoom(int id)
         {
+            Console.WriteLine($"Getting room with ID: {id}");
+            
             var room = await _context.Rooms
                 .Include(r => r.Creator)
                 .Include(r => r.Participants)
@@ -41,8 +50,12 @@ namespace GeekzKai.Controllers
                 .FirstOrDefaultAsync(r => r.Id == id);
 
             if (room == null)
-                return NotFound();
+            {
+                Console.WriteLine($"Room with ID {id} not found");
+                return NotFound($"Room with ID {id} not found");
+            }
 
+            Console.WriteLine($"Room found: {room.Title}");
             return room;
         }
 

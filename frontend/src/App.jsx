@@ -8,6 +8,7 @@ import CreatePost from "./Pages/CreatePost";
 import CreateRoom from "./Pages/CreateRoom";
 import Room from "./Pages/Room";
 import Rooms from "./Pages/Rooms";
+import RoomDebug from "./Pages/RoomDebug";
 import Chat from "./Pages/Chat";
 
 import { Navigate } from "react-router-dom";
@@ -94,6 +95,7 @@ function App() {
                         <Route path="/create/post" element={<PrivateRoute><CreatePost /></PrivateRoute>} />
                         <Route path="/create/room" element={<PrivateRoute><CreateRoom /></PrivateRoute>} />
                         <Route path="/rooms" element={<PrivateRoute><Rooms /></PrivateRoute>} />
+                        <Route path="/room-debug" element={<RoomDebug />} />
                         <Route path="/room/:id" element={<PrivateRoute><Room /></PrivateRoute>} />
                         <Route path="/create/live" element={<PrivateRoute><div className="p-8 text-center" style={{backgroundColor: 'var(--bg-primary)', color: 'var(--text-primary)'}}>Go Live - Coming Soon</div></PrivateRoute>} />
                         <Route path="/chat" element={<PrivateRoute><Chat /></PrivateRoute>} />

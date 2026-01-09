@@ -22,11 +22,20 @@ function Room() {
 
     const fetchRoomDetails = async () => {
         try {
+            console.log('Fetching room details for ID:', id);
+            console.log('API URL:', `${API_BASE_URL}/room/${id}`);
+            
             const response = await fetch(`${API_BASE_URL}/room/${id}`);
+            console.log('Room fetch response status:', response.status);
+            
             if (response.ok) {
                 const data = await response.json();
+                console.log('Room data received:', data);
                 setRoom(data);
                 setMembers(data.participants || []);
+            } else {
+                const errorText = await response.text();
+                console.error('Room fetch error:', response.status, errorText);
             }
         } catch (error) {
             console.error('Error fetching room:', error);
