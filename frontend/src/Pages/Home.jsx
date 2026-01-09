@@ -94,8 +94,8 @@ function Home() {
     return (
         <div className="min-h-screen">
             <div className="relative overflow-hidden">
-                <div className="absolute inset-0 bg-gradient-to-br from-slate-500/10 via-gray-500/10 to-slate-600/10 animate-pulse"></div>
-                <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(100,116,139,0.2),transparent_50%)] animate-pulse"></div>
+                <div className="absolute inset-0 bg-gradient-to-br from-purple-500/20 via-pink-500/20 to-blue-500/20 animate-pulse"></div>
+                <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(147,51,234,0.3),transparent_50%)] animate-pulse"></div>
                 
                 <div className="relative max-w-7xl mx-auto px-6 py-20">
                     <div className="text-center">
@@ -103,7 +103,7 @@ function Home() {
                             <Star size={16} style={{color: 'var(--text-primary)'}} />
                             Welcome to GeekzKai Community
                         </div>
-                        <h1 className="text-5xl md:text-6xl font-bold mb-6 bg-gradient-to-r from-slate-600 via-gray-700 to-slate-800 bg-clip-text text-transparent animate-pulse">
+                        <h1 className="text-5xl md:text-6xl font-bold mb-6 bg-gradient-to-r from-purple-600 via-pink-500 to-blue-600 bg-clip-text text-transparent animate-pulse">
                             GeekzKai 👾
                         </h1>
                         <p className="text-xl mb-8 max-w-2xl mx-auto leading-relaxed" style={{color: 'var(--text-primary)'}}>
@@ -114,14 +114,14 @@ function Home() {
                             <div className="flex justify-center gap-4">
                                 <Link
                                     to="/create"
-                                    className="inline-flex items-center gap-2 px-8 py-4 rounded-xl font-semibold transition-all duration-300 shadow-lg hover:shadow-2xl transform hover:-translate-y-2 bg-gradient-to-r from-slate-600 to-gray-700 hover:from-slate-700 hover:to-gray-800 text-white"
+                                    className="inline-flex items-center gap-2 px-8 py-4 rounded-xl font-semibold transition-all duration-300 shadow-lg hover:shadow-2xl transform hover:-translate-y-2 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white"
                                 >
                                     <MessageCircle size={20} />
                                     Create Post
                                 </Link>
                                 <Link
                                     to="/search"
-                                    className="inline-flex items-center gap-2 px-8 py-4 rounded-xl font-semibold border-2 border-slate-600 transition-all duration-300 shadow-lg hover:shadow-2xl transform hover:-translate-y-2 hover:bg-slate-600 hover:text-white"
+                                    className="inline-flex items-center gap-2 px-8 py-4 rounded-xl font-semibold border-2 border-purple-600 transition-all duration-300 shadow-lg hover:shadow-2xl transform hover:-translate-y-2 hover:bg-gradient-to-r hover:from-purple-600 hover:to-pink-600 hover:text-white"
                                     style={{backgroundColor: 'var(--bg-primary)', color: 'var(--text-primary)'}}
                                 >
                                     <TrendingUp size={20} />
@@ -132,13 +132,13 @@ function Home() {
                             <div className="flex flex-col sm:flex-row gap-4 justify-center">
                                 <Link
                                     to="/login"
-                                    className="inline-flex items-center gap-2 px-8 py-4 rounded-xl font-semibold transition-all duration-300 shadow-lg hover:shadow-2xl transform hover:-translate-y-2 bg-gradient-to-r from-slate-600 to-gray-700 hover:from-slate-700 hover:to-gray-800 text-white"
+                                    className="inline-flex items-center gap-2 px-8 py-4 rounded-xl font-semibold transition-all duration-300 shadow-lg hover:shadow-2xl transform hover:-translate-y-2 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white"
                                 >
                                     Get Started
                                 </Link>
                                 <Link
                                     to="/register"
-                                    className="inline-flex items-center gap-2 px-8 py-4 rounded-xl font-semibold border-2 border-slate-600 transition-all duration-300 shadow-lg hover:shadow-2xl transform hover:-translate-y-2 hover:bg-slate-600 hover:text-white"
+                                    className="inline-flex items-center gap-2 px-8 py-4 rounded-xl font-semibold border-2 border-purple-600 transition-all duration-300 shadow-lg hover:shadow-2xl transform hover:-translate-y-2 hover:bg-gradient-to-r hover:from-purple-600 hover:to-pink-600 hover:text-white"
                                     style={{backgroundColor: 'var(--bg-primary)', color: 'var(--text-primary)'}}
                                 >
                                     Join Community
@@ -151,22 +151,22 @@ function Home() {
 
             <div className="max-w-7xl mx-auto px-6 py-16">
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                    <div className="text-center p-8 rounded-2xl shadow-lg border-2 border-slate-500/30 hover:border-slate-600 transition-all duration-300 hover:shadow-2xl transform hover:-translate-y-2" style={{backgroundColor: 'var(--bg-secondary)'}}>
-                        <div className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 bg-gradient-to-br from-slate-600 to-gray-700">
+                    <div className="text-center p-8 rounded-2xl shadow-lg border-2 border-purple-500/30 hover:border-purple-600 transition-all duration-300 hover:shadow-2xl transform hover:-translate-y-2" style={{backgroundColor: 'var(--bg-secondary)'}}>
+                        <div className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 bg-gradient-to-br from-purple-600 to-pink-600">
                             <Users className="text-white" size={32} />
                         </div>
                         <h3 className="text-2xl font-bold mb-2" style={{color: 'var(--text-primary)'}}>Active Community</h3>
                         <p style={{color: 'var(--text-secondary)'}}>Connect with passionate anime fans worldwide</p>
                     </div>
                     <div className="text-center p-8 rounded-2xl shadow-lg border-2 border-slate-500/30 hover:border-slate-600 transition-all duration-300 hover:shadow-2xl transform hover:-translate-y-2" style={{backgroundColor: 'var(--bg-secondary)'}}>
-                        <div className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 bg-gradient-to-br from-slate-600 to-gray-700">
+                        <div className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 bg-gradient-to-br from-blue-600 to-purple-600">
                             <MessageCircle className="text-white" size={32} />
                         </div>
                         <h3 className="text-2xl font-bold mb-2" style={{color: 'var(--text-primary)'}}>Rich Discussions</h3>
                         <p style={{color: 'var(--text-secondary)'}}>Dive deep into anime theories and analysis</p>
                     </div>
-                    <div className="text-center p-8 rounded-2xl shadow-lg border-2 border-slate-500/30 hover:border-slate-600 transition-all duration-300 hover:shadow-2xl transform hover:-translate-y-2" style={{backgroundColor: 'var(--bg-secondary)'}}>
-                        <div className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 bg-gradient-to-br from-slate-600 to-gray-700">
+                    <div className="text-center p-8 rounded-2xl shadow-lg border-2 border-pink-500/30 hover:border-pink-600 transition-all duration-300 hover:shadow-2xl transform hover:-translate-y-2" style={{backgroundColor: 'var(--bg-secondary)'}}>
+                        <div className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 bg-gradient-to-br from-pink-600 to-orange-600">
                             <TrendingUp className="text-white" size={32} />
                         </div>
                         <h3 className="text-2xl font-bold mb-2" style={{color: 'var(--text-primary)'}}>Trending Content</h3>
