@@ -120,6 +120,13 @@ function Home() {
                                     Create Post
                                 </Link>
                                 <Link
+                                    to="/rooms"
+                                    className="inline-flex items-center gap-2 px-8 py-4 rounded-xl font-semibold transition-all duration-300 shadow-lg hover:shadow-2xl transform hover:-translate-y-2 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white"
+                                >
+                                    <Users size={20} />
+                                    Join Rooms
+                                </Link>
+                                <Link
                                     to="/search"
                                     className="inline-flex items-center gap-2 px-8 py-4 rounded-xl font-semibold border-2 border-purple-600 transition-all duration-300 shadow-lg hover:shadow-2xl transform hover:-translate-y-2 hover:bg-gradient-to-r hover:from-purple-600 hover:to-pink-600 hover:text-white"
                                     style={{backgroundColor: 'var(--bg-primary)', color: 'var(--text-primary)'}}

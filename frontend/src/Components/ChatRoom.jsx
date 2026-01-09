@@ -35,7 +35,7 @@ function ChatRoom({ roomId, roomName }) {
             
             // Load existing messages
             try {
-                const response = await fetch(`${API_BASE_URL}/rooms/${roomId}/messages`, {
+                const response = await fetch(`${API_BASE_URL}/room/${roomId}/messages`, {
                     headers: {
                         'Authorization': `Bearer ${token}`
                     }

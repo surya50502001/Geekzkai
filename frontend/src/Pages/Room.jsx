@@ -6,7 +6,7 @@ import ChatRoom from '../Components/ChatRoom';
 import API_BASE_URL from '../apiConfig';
 
 function Room() {
-    const { roomId } = useParams();
+    const { id } = useParams();
     const { user } = useAuth();
     const [room, setRoom] = useState(null);
     const [members, setMembers] = useState([]);
@@ -18,15 +18,15 @@ function Room() {
         if (user) {
             checkMembership();
         }
-    }, [roomId, user]);
+    }, [id, user]);
 
     const fetchRoomDetails = async () => {
         try {
-            const response = await fetch(`${API_BASE_URL}/rooms/${roomId}`);
+            const response = await fetch(`${API_BASE_URL}/room/${id}`);
             if (response.ok) {
                 const data = await response.json();
                 setRoom(data);
-                setMembers(data.members || []);
+                setMembers(data.participants || []);
             }
         } catch (error) {
             console.error('Error fetching room:', error);
@@ -37,7 +37,7 @@ function Room() {
 
     const checkMembership = async () => {
         try {
-            const response = await fetch(`${API_BASE_URL}/rooms/${roomId}/membership`, {
+            const response = await fetch(`${API_BASE_URL}/room/${id}/membership`, {
                 headers: {
                     'Authorization': `Bearer ${localStorage.getItem('token')}`
                 }
@@ -55,7 +55,7 @@ function Room() {
         if (!user) return;
         
         try {
-            const response = await fetch(`${API_BASE_URL}/rooms/${roomId}/join`, {
+            const response = await fetch(`${API_BASE_URL}/room/${id}/join`, {
                 method: 'POST',
                 headers: {
                     'Authorization': `Bearer ${localStorage.getItem('token')}`
@@ -109,7 +109,7 @@ function Room() {
                     </Link>
                     <div className="flex-1">
                         <h1 className="text-3xl font-bold" style={{ color: 'var(--text-primary)' }}>
-                            {room.name}
+                            {room.title}
                         </h1>
                         <p className="text-lg mt-2" style={{ color: 'var(--text-secondary)' }}>
                             {room.description}
@@ -148,7 +148,7 @@ function Room() {
                             }}
                         >
                             {user && joined ? (
-                                <ChatRoom roomId={roomId} roomName={room.name} />
+                                <ChatRoom roomId={id} roomName={room.title} />
                             ) : (
                                 <div className="h-full flex items-center justify-center">
                                     <div className="text-center">
@@ -202,7 +202,7 @@ function Room() {
                                         Created by
                                     </span>
                                     <p style={{ color: 'var(--text-primary)' }}>
-                                        {room.createdBy || 'Anonymous'}
+                                        {room.creator?.username || 'Anonymous'}
                                     </p>
                                 </div>
                                 <div>
@@ -228,13 +228,13 @@ function Room() {
                                 Members ({members.length})
                             </h3>
                             <div className="space-y-2 max-h-48 overflow-y-auto">
-                                {members.map((member, index) => (
-                                    <div key={index} className="flex items-center gap-3">
+                                {members.map((participant, index) => (
+                                    <div key={participant.user?.id || index} className="flex items-center gap-3">
                                         <div className="w-8 h-8 rounded-full bg-gradient-to-r from-purple-600 to-pink-600 flex items-center justify-center text-white text-sm font-semibold">
-                                            {member.username?.[0]?.toUpperCase() || 'U'}
+                                            {participant.user?.username?.[0]?.toUpperCase() || 'U'}
                                         </div>
                                         <span style={{ color: 'var(--text-primary)' }}>
-                                            {member.username || `User ${index + 1}`}
+                                            {participant.user?.username || `User ${index + 1}`}
                                         </span>
                                     </div>
                                 ))}
