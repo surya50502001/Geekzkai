@@ -1,19 +1,49 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
+import { useAuth } from '../Context/AuthContext';
 
 const Room = () => {
     const { id } = useParams();
     const navigate = useNavigate();
+    const { user } = useAuth();
     const [room, setRoom] = useState(null);
     const [messages, setMessages] = useState([]);
     const [newMessage, setNewMessage] = useState('');
     const [loading, setLoading] = useState(true);
     const [isJoined, setIsJoined] = useState(false);
+    const [participants, setParticipants] = useState([]);
+    const messagesEndRef = useRef(null);
+    const wsRef = useRef(null);
+
+    const scrollToBottom = () => {
+        messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    };
 
     useEffect(() => {
         fetchRoom();
         fetchMessages();
+        
+        // Setup WebSocket connection
+        const ws = new WebSocket(`${import.meta.env.VITE_WS_URL || 'ws://localhost:3001'}/room/${id}`);
+        wsRef.current = ws;
+        
+        ws.onmessage = (event) => {
+            const data = JSON.parse(event.data);
+            if (data.type === 'message') {
+                setMessages(prev => [...prev, data.message]);
+            } else if (data.type === 'userJoined' || data.type === 'userLeft') {
+                fetchRoom(); // Refresh room data
+            }
+        };
+        
+        return () => {
+            ws.close();
+        };
     }, [id]);
+
+    useEffect(() => {
+        scrollToBottom();
+    }, [messages]);
 
     const fetchRoom = async () => {
         try {
@@ -85,7 +115,7 @@ const Room = () => {
 
     const sendMessage = async (e) => {
         e.preventDefault();
-        if (!newMessage.trim()) return;
+        if (!newMessage.trim() || !isJoined) return;
 
         try {
             const token = localStorage.getItem('token');
@@ -98,8 +128,15 @@ const Room = () => {
                 body: JSON.stringify({ message: newMessage })
             });
             if (response.ok) {
+                const messageData = await response.json();
                 setNewMessage('');
-                fetchMessages();
+                // Send via WebSocket for real-time updates
+                if (wsRef.current?.readyState === WebSocket.OPEN) {
+                    wsRef.current.send(JSON.stringify({
+                        type: 'message',
+                        message: messageData
+                    }));
+                }
             }
         } catch (error) {
             console.error('Error sending message:', error);
@@ -130,33 +167,86 @@ const Room = () => {
                 </div>
             </div>
 
-            {isJoined && (
-                <div className="border rounded-lg p-4" style={{borderColor: 'var(--border-color)', backgroundColor: 'var(--bg-secondary)'}}>
-                    <h3 className="text-xl font-semibold mb-4">Chat</h3>
-                    <div className="h-64 overflow-y-auto mb-4 p-3 border rounded" style={{borderColor: 'var(--border-color)'}}>
-                        {messages.map((msg) => (
-                            <div key={msg.id} className="mb-2">
-                                <span className="font-semibold text-blue-500">{msg.user?.username}: </span>
-                                <span>{msg.message}</span>
-                                <span className="text-xs text-gray-500 ml-2">
-                                    {new Date(msg.sentAt).toLocaleTimeString()}
-                                </span>
+            {isJoined ? (
+                <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
+                    {/* Participants Panel */}
+                    <div className="lg:col-span-1">
+                        <div className="border rounded-lg p-4" style={{borderColor: 'var(--border-color)', backgroundColor: 'var(--bg-secondary)'}}>
+                            <h3 className="text-lg font-semibold mb-4">Participants ({room.currentParticipants})</h3>
+                            <div className="space-y-2">
+                                {room.participants?.map((participant) => (
+                                    <div key={participant.id} className="flex items-center gap-2">
+                                        <img 
+                                            src={participant.profilePictureUrl || '/default-avatar.png'} 
+                                            alt={participant.username}
+                                            className="w-8 h-8 rounded-full"
+                                        />
+                                        <span className="text-sm">{participant.username}</span>
+                                        {participant.id === room.creator?.id && (
+                                            <span className="text-xs bg-yellow-500 text-black px-2 py-1 rounded">Host</span>
+                                        )}
+                                    </div>
+                                ))}
                             </div>
-                        ))}
+                        </div>
                     </div>
-                    <form onSubmit={sendMessage} className="flex gap-2">
-                        <input
-                            type="text"
-                            value={newMessage}
-                            onChange={(e) => setNewMessage(e.target.value)}
-                            placeholder="Type a message..."
-                            className="flex-1 p-2 border rounded"
-                            style={{backgroundColor: 'var(--bg-primary)', color: 'var(--text-primary)', borderColor: 'var(--border-color)'}}
-                        />
-                        <button type="submit" className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
-                            Send
-                        </button>
-                    </form>
+                    
+                    {/* Chat Panel */}
+                    <div className="lg:col-span-3">
+                        <div className="border rounded-lg p-4" style={{borderColor: 'var(--border-color)', backgroundColor: 'var(--bg-secondary)'}}>
+                            <h3 className="text-xl font-semibold mb-4">Room Chat</h3>
+                            <div className="h-96 overflow-y-auto mb-4 p-3 border rounded" style={{borderColor: 'var(--border-color)', backgroundColor: 'var(--bg-primary)'}}>
+                                {messages.length === 0 ? (
+                                    <div className="text-center text-gray-500 mt-8">
+                                        <p>No messages yet. Start the conversation!</p>
+                                    </div>
+                                ) : (
+                                    messages.map((msg) => (
+                                        <div key={msg.id} className="mb-3 p-2 rounded" style={{backgroundColor: msg.user?.id === user?.id ? 'var(--bg-secondary)' : 'transparent'}}>
+                                            <div className="flex items-center gap-2 mb-1">
+                                                <img 
+                                                    src={msg.user?.profilePictureUrl || '/default-avatar.png'} 
+                                                    alt={msg.user?.username}
+                                                    className="w-6 h-6 rounded-full"
+                                                />
+                                                <span className="font-semibold text-blue-500">{msg.user?.username}</span>
+                                                <span className="text-xs text-gray-500">
+                                                    {new Date(msg.sentAt).toLocaleTimeString()}
+                                                </span>
+                                            </div>
+                                            <p className="ml-8">{msg.message}</p>
+                                        </div>
+                                    ))
+                                )}
+                                <div ref={messagesEndRef} />
+                            </div>
+                            <form onSubmit={sendMessage} className="flex gap-2">
+                                <input
+                                    type="text"
+                                    value={newMessage}
+                                    onChange={(e) => setNewMessage(e.target.value)}
+                                    placeholder="Type a message..."
+                                    className="flex-1 p-3 border rounded-lg"
+                                    style={{backgroundColor: 'var(--bg-primary)', color: 'var(--text-primary)', borderColor: 'var(--border-color)'}}
+                                    disabled={!isJoined}
+                                />
+                                <button 
+                                    type="submit" 
+                                    disabled={!newMessage.trim() || !isJoined}
+                                    className="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 disabled:opacity-50"
+                                >
+                                    Send
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            ) : (
+                <div className="text-center py-12">
+                    <p className="text-gray-500 mb-4">Join the room to participate in the discussion</p>
+                    <button onClick={joinRoom} className="bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700">
+                        Join Room
+                    </button>
                 </div>
             )}
         </div>

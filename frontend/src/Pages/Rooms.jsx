@@ -1,9 +1,11 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import { useAuth } from '../Context/AuthContext';
 
 const Rooms = () => {
     const [rooms, setRooms] = useState([]);
     const [loading, setLoading] = useState(true);
+    const { user } = useAuth();
 
     useEffect(() => {
         fetchRooms();
@@ -25,6 +27,26 @@ const Rooms = () => {
             console.error('Error fetching rooms:', error);
         } finally {
             setLoading(false);
+        }
+    };
+
+    const deleteRoom = async (roomId) => {
+        if (!confirm('Are you sure you want to delete this room?')) return;
+        
+        try {
+            const token = localStorage.getItem('token');
+            const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/room/${roomId}`, {
+                method: 'DELETE',
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+            if (response.ok) {
+                fetchRooms();
+            } else {
+                alert('Failed to delete room');
+            }
+        } catch (error) {
+            console.error('Error deleting room:', error);
+            alert('Error deleting room');
         }
     };
 
@@ -56,7 +78,17 @@ const Rooms = () => {
                     {rooms.map((room) => (
                         <div key={room.id} className="border rounded-lg p-6 hover:shadow-lg transition-shadow" 
                              style={{borderColor: 'var(--border-color)', backgroundColor: 'var(--bg-secondary)'}}>
-                            <h3 className="text-xl font-semibold mb-2">{room.title}</h3>
+                            <div className="flex justify-between items-start mb-2">
+                                <h3 className="text-xl font-semibold">{room.title}</h3>
+                                {user?.id === room.creator?.id && (
+                                    <button 
+                                        onClick={() => deleteRoom(room.id)}
+                                        className="text-red-500 hover:text-red-700 text-sm"
+                                    >
+                                        Delete
+                                    </button>
+                                )}
+                            </div>
                             <p className="text-gray-600 mb-4 line-clamp-2">{room.description}</p>
                             
                             <div className="flex items-center justify-between mb-4">

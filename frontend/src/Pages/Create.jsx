@@ -14,13 +14,6 @@ export default function Create() {
             path: "/create/post"
         },
         {
-            id: "room",
-            title: "Create Room",
-            description: "Start a discussion room",
-            icon: Users,
-            path: "/create/room"
-        },
-        {
             id: "live",
             title: "Go Live",
             description: "Start a live stream",
