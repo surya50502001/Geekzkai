@@ -1,0 +1,50 @@
+2025-11-24T07:07:10.745352049Z [6924041e.2e99a-2] user=postgres,db=geekzkai_db,app=[unknown],client=10.18.157.20,LOG:  connection authenticated: identity="postgres" method=md5 (/pgdata/dpg-d4gji91r0fns739lkc50-a/pg_hba.conf:88)
+2025-11-24T07:07:10.74537958Z [6924041e.2e99a-3] user=postgres,db=geekzkai_db,app=[unknown],client=10.18.157.20,LOG:  connection authorized: user=postgres database=geekzkai_db SSL enabled (protocol=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384, bits=256)
+2025-11-24T07:07:13.450111321Z [6924041e.2e99a-4] user=postgres,db=geekzkai_db,app=[unknown],client=10.18.157.20,LOG:  disconnection: session time: 0:00:02.804 user=postgres database=geekzkai_db host=10.18.157.20 port=44752
+2025-11-24T07:08:06.864430034Z [69240456.2e9d3-1] user=[unknown],db=[unknown],app=[unknown],client=10.18.157.20,LOG:  connection received: host=10.18.157.20 port=53462
+2025-11-24T07:08:06.86528484Z [69240456.2e9d4-1] user=[unknown],db=[unknown],app=[unknown],client=10.18.157.20,LOG:  connection received: host=10.18.157.20 port=53478
+2025-11-24T07:08:07.244111384Z [69240457.2e9d5-1] user=[unknown],db=[unknown],app=[unknown],client=10.18.157.20,LOG:  connection received: host=10.18.157.20 port=53480
+2025-11-24T07:08:07.345737468Z [69240457.2e9d5-2] user=postgres,db=geekzkai_db,app=[unknown],client=10.18.157.20,LOG:  connection authenticated: identity="postgres" method=md5 (/pgdata/dpg-d4gji91r0fns739lkc50-a/pg_hba.conf:88)
+2025-11-24T07:08:07.347168795Z [69240457.2e9d5-3] user=postgres,db=geekzkai_db,app=[unknown],client=10.18.157.20,LOG:  connection authorized: user=postgres database=geekzkai_db SSL enabled (protocol=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384, bits=256)
+2025-11-24T07:08:10.351141097Z [69240457.2e9d5-4] user=postgres,db=geekzkai_db,app=[unknown],client=10.18.157.20,LOG:  disconnection: session time: 0:00:03.107 user=postgres database=geekzkai_db host=10.18.157.20 port=53480
+2025-11-24T07:08:10.483113585Z [6924045a.2e9d6-1] user=[unknown],db=[unknown],app=[unknown],client=10.18.157.20,LOG:  connection received: host=10.18.157.20 port=51238
+2025-11-24T07:08:10.499929914Z [6924045a.2e9d7-1] user=[unknown],db=[unknown],app=[unknown],client=10.18.157.20,LOG:  connection received: host=10.18.157.20 port=51246
+2025-11-24T07:08:10.947387757Z [6924045a.2e9d8-1] user=[unknown],db=[unknown],app=[unknown],client=10.18.157.20,LOG:  connection received: host=10.18.157.20 port=51254
+2025-11-24T07:08:10.956463188Z [6924045a.2e9d8-2] user=postgres,db=geekzkai_db,app=[unknown],client=10.18.157.20,LOG:  connection authenticated: identity="postgres" method=md5 (/pgdata/dpg-d4gji91r0fns739lkc50-a/pg_hba.conf:88)
+2025-11-24T07:08:10.956481359Z [6924045a.2e9d8-3] user=postgres,db=geekzkai_db,app=[unknown],client=10.18.157.20,LOG:  connection authorized: user=postgres database=geekzkai_db SSL enabled (protocol=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384, bits=256)
+2025-11-24T07:08:13.362821444Z [6924045a.2e9d8-4] user=postgres,db=geekzkai_db,app=[unknown],client=10.18.157.20,LOG:  disconnection: session time: 0:00:02.417 user=postgres database=geekzkai_db host=10.18.157.20 port=51254
+2025-11-24T07:08:15.341502282Z [69213946.8a-1219] user=,db=,app=,client=,LOG:  checkpoint starting: time
+2025-11-24T07:08:15.35517372Z [69213946.8a-1220] user=,db=,app=,client=,LOG:  checkpoint complete: wrote 0 buffers (0.0%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 0 recycled; write=0.003 s, sync=0.001 s, total=0.014 s; sync files=1, longest=0.001 s, average=0.001 s; distance=1 kB, estimate=1 kB; lsn=0/1C53F88, redo lsn=0/1C53F30
+2025-11-24T07:08:47.804927259Z [6924047f.2e9ff-1] user=[unknown],db=[unknown],app=[unknown],client=10.19.177.62,LOG:  connection received: host=10.19.177.62 port=53190
+2025-11-24T07:08:50.01927724Z [6924047f.2e9ff-2] user=geekzkai_db_user,db=geekzkai_db,app=[unknown],client=10.19.177.62,LOG:  connection authenticated: identity="geekzkai_db_user" method=md5 (/pgdata/dpg-d4gji91r0fns739lkc50-a/pg_hba.conf:88)
+2025-11-24T07:08:50.019320811Z [6924047f.2e9ff-3] user=geekzkai_db_user,db=geekzkai_db,app=[unknown],client=10.19.177.62,LOG:  connection authorized: user=geekzkai_db_user database=geekzkai_db SSL enabled (protocol=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384, bits=256)
+2025-11-24T07:08:50.801945861Z [6924047f.2e9ff-4] user=geekzkai_db_user,db=geekzkai_db,app=[unknown],client=10.19.177.62,ERROR:  relation "Users" does not exist at character 233
+2025-11-24T07:08:50.802005993Z [6924047f.2e9ff-5] user=geekzkai_db_user,db=geekzkai_db,app=[unknown],client=10.19.177.62,STATEMENT:  SELECT u."User_Id", u."Bio", u."User_CreatedAt", u."User_Email", u."FollowersCount", u."FollowingCount", u."IsActive", u."IsAdmin", u."IsYoutuber", u."User_Password", u."ProfilePictureUrl", u."Username", u."YouTubeChannelLink"
+2025-11-24T07:08:50.802010503Z 	FROM "Users" AS u
+2025-11-24T07:08:50.802013403Z 	WHERE u."Username" = $1 OR u."User_Email" = $2
+2025-11-24T07:08:50.802015843Z 	LIMIT 1
+2025-11-24T07:09:06.864725728Z [69240492.2ea14-1] user=[unknown],db=[unknown],app=[unknown],client=10.18.157.20,LOG:  connection received: host=10.18.157.20 port=49536
+2025-11-24T07:09:06.866693735Z [69240492.2ea15-1] user=[unknown],db=[unknown],app=[unknown],client=10.18.157.20,LOG:  connection received: host=10.18.157.20 port=49542
+2025-11-24T07:09:07.34907338Z [69240493.2ea16-1] user=[unknown],db=[unknown],app=[unknown],client=10.18.157.20,LOG:  connection received: host=10.18.157.20 port=49548
+2025-11-24T07:09:07.359428086Z [69240493.2ea16-2] user=postgres,db=geekzkai_db,app=[unknown],client=10.18.157.20,LOG:  connection authenticated: identity="postgres" method=md5 (/pgdata/dpg-d4gji91r0fns739lkc50-a/pg_hba.conf:88)
+2025-11-24T07:09:07.359445806Z [69240493.2ea16-3] user=postgres,db=geekzkai_db,app=[unknown],client=10.18.157.20,LOG:  connection authorized: user=postgres database=geekzkai_db SSL enabled (protocol=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384, bits=256)
+2025-11-24T07:09:10.448092106Z [69240493.2ea16-4] user=postgres,db=geekzkai_db,app=[unknown],client=10.18.157.20,LOG:  disconnection: session time: 0:00:03.099 user=postgres database=geekzkai_db host=10.18.157.20 port=49548
+2025-11-24T07:09:10.479172135Z [69240496.2ea17-1] user=[unknown],db=[unknown],app=[unknown],client=10.18.157.20,LOG:  connection received: host=10.18.157.20 port=60626
+2025-11-24T07:09:10.479190735Z [69240496.2ea18-1] user=[unknown],db=[unknown],app=[unknown],client=10.18.157.20,LOG:  connection received: host=10.18.157.20 port=60628
+2025-11-24T07:09:10.945824112Z [69240496.2ea19-1] user=[unknown],db=[unknown],app=[unknown],client=10.18.157.20,LOG:  connection received: host=10.18.157.20 port=60640
+2025-11-24T07:09:11.04293208Z [69240496.2ea19-2] user=postgres,db=geekzkai_db,app=[unknown],client=10.18.157.20,LOG:  connection authenticated: identity="postgres" method=md5 (/pgdata/dpg-d4gji91r0fns739lkc50-a/pg_hba.conf:88)
+2025-11-24T07:09:11.042943831Z [69240496.2ea19-3] user=postgres,db=geekzkai_db,app=[unknown],client=10.18.157.20,LOG:  connection authorized: user=postgres database=geekzkai_db SSL enabled (protocol=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384, bits=256)
+2025-11-24T07:09:13.449190028Z [69240496.2ea19-4] user=postgres,db=geekzkai_db,app=[unknown],client=10.18.157.20,LOG:  disconnection: session time: 0:00:02.502 user=postgres database=geekzkai_db host=10.18.157.20 port=60640
+2025-11-24T07:10:06.864322051Z [692404ce.2ea52-1] user=[unknown],db=[unknown],app=[unknown],client=10.18.157.20,LOG:  connection received: host=10.18.157.20 port=53430
+2025-11-24T07:10:06.866299509Z [692404ce.2ea53-1] user=[unknown],db=[unknown],app=[unknown],client=10.18.157.20,LOG:  connection received: host=10.18.157.20 port=53432
+2025-11-24T07:10:07.351181082Z [692404cf.2ea54-1] user=[unknown],db=[unknown],app=[unknown],client=10.18.157.20,LOG:  connection received: host=10.18.157.20 port=53448
+2025-11-24T07:10:07.36111397Z [692404cf.2ea54-2] user=postgres,db=geekzkai_db,app=[unknown],client=10.18.157.20,LOG:  connection authenticated: identity="postgres" method=md5 (/pgdata/dpg-d4gji91r0fns739lkc50-a/pg_hba.conf:88)
+2025-11-24T07:10:07.361335114Z [692404cf.2ea54-3] user=postgres,db=geekzkai_db,app=[unknown],client=10.18.157.20,LOG:  connection authorized: user=postgres database=geekzkai_db SSL enabled (protocol=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384, bits=256)
+2025-11-24T07:10:10.445506323Z [692404cf.2ea54-4] user=postgres,db=geekzkai_db,app=[unknown],client=10.18.157.20,LOG:  disconnection: session time: 0:00:03.097 user=postgres database=geekzkai_db host=10.18.157.20 port=53448
+2025-11-24T07:10:10.490808631Z [692404d2.2ea55-1] user=[unknown],db=[unknown],app=[unknown],client=10.18.157.20,LOG:  connection received: host=10.18.157.20 port=44712
+2025-11-24T07:10:10.490828722Z [692404d2.2ea56-1] user=[unknown],db=[unknown],app=[unknown],client=10.18.157.20,LOG:  connection received: host=10.18.157.20 port=44714
+2025-11-24T07:10:11.042699943Z [692404d3.2ea57-1] user=[unknown],db=[unknown],app=[unknown],client=10.18.157.20,LOG:  connection received: host=10.18.157.20 port=44720
+2025-11-24T07:10:11.049764267Z [692404d3.2ea57-2] user=postgres,db=geekzkai_db,app=[unknown],client=10.18.157.20,LOG:  connection authenticated: identity="postgres" method=md5 (/pgdata/dpg-d4gji91r0fns739lkc50-a/pg_hba.conf:88)
+2025-11-24T07:10:11.04992707Z [692404d3.2ea57-3] user=postgres,db=geekzkai_db,app=[unknown],client=10.18.157.20,LOG:  connection authorized: user=postgres database=geekzkai_db SSL enabled (protocol=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384, bits=256)
+2025-11-24T07:10:13.448102738Z [692404d3.2ea57-4] user=postgres,db=geekzkai_db,app=[unknown],client=10.18.157.20,LOG:  disconnection: session time: 0:00:02.406 user=postgres database=geekzkai_db host=10.18.157.20 port=44720
+2025-11-24T07:10:23.545417548Z [692404df.2ea70-1] user=[unknown],db=[unknown],app=[unknown],client=[local],LOG:  connection received: host=[local]
