@@ -206,7 +206,7 @@ app.UseAuthorization();
 app.MapControllers();
 
 // SignalR Hub
-app.MapHub<GeekzKai.Hubs.ChatHub>("/chathub");
+app.MapHub<GeekzKai.Hubs.ChatHub>("/api/chathub");
 
 // SPA fallback routing - serve index.html for non-API routes
 app.MapFallbackToFile("index.html");
