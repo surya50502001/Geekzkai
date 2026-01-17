@@ -216,10 +216,4 @@ namespace GeekzKai.Controllers
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
     }
-}.WriteToken(token);
-        }
-    }
-}.WriteToken(token);
-        }
-    }
 }
