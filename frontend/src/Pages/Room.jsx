@@ -38,7 +38,7 @@ function Room() {
                 const data = await response.json();
                 console.log('Room data received:', data);
                 setRoom(data);
-                setMembers(data.participants || []);
+                setMembers((data.participants || []).filter(p => p.isActive !== false));
             } else {
                 console.error('Room fetch error:', response.status);
             }

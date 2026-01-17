@@ -5,7 +5,6 @@ using Microsoft.EntityFrameworkCore;
 
 namespace GeekzKai.Hubs
 {
-    [Authorize]
     public class ChatHub : Hub
     {
         private readonly AppDbContext _context;
@@ -15,18 +14,21 @@ namespace GeekzKai.Hubs
             _context = context;
         }
 
+        [Authorize]
         public async Task JoinRoom(string roomId)
         {
             await Groups.AddToGroupAsync(Context.ConnectionId, $"room_{roomId}");
             await Clients.Group($"room_{roomId}").SendAsync("UserJoined", Context.User?.Identity?.Name);
         }
 
+        [Authorize]
         public async Task LeaveRoom(string roomId)
         {
             await Groups.RemoveFromGroupAsync(Context.ConnectionId, $"room_{roomId}");
             await Clients.Group($"room_{roomId}").SendAsync("UserLeft", Context.User?.Identity?.Name);
         }
 
+        [Authorize]
         public async Task SendRoomMessage(string roomId, string message)
         {
             var userId = Context.User?.FindFirst("id")?.Value;
@@ -43,18 +45,21 @@ namespace GeekzKai.Hubs
             }
         }
 
+        [Authorize]
         public async Task JoinLiveStream(string streamId)
         {
             await Groups.AddToGroupAsync(Context.ConnectionId, $"stream_{streamId}");
             await Clients.Group($"stream_{streamId}").SendAsync("ViewerJoined", Context.User?.Identity?.Name);
         }
 
+        [Authorize]
         public async Task LeaveLiveStream(string streamId)
         {
             await Groups.RemoveFromGroupAsync(Context.ConnectionId, $"stream_{streamId}");
             await Clients.Group($"stream_{streamId}").SendAsync("ViewerLeft", Context.User?.Identity?.Name);
         }
 
+        [Authorize]
         public async Task SendLiveMessage(string streamId, string message)
         {
             var userId = Context.User?.FindFirst("id")?.Value;
@@ -71,11 +76,13 @@ namespace GeekzKai.Hubs
             }
         }
 
+        [Authorize]
         public async Task SendNotification(string userId, object notification)
         {
             await Clients.Group($"user_{userId}").SendAsync("ReceiveNotification", notification);
         }
 
+        [Authorize]
         public async Task JoinUserGroup(string userId)
         {
             await Groups.AddToGroupAsync(Context.ConnectionId, $"user_{userId}");

@@ -55,10 +55,10 @@ function ChatRoom({ roomId, roomName }) {
                 signalRService.onReceiveMessage((messageData) => {
                     setMessages(prev => [...prev, {
                         id: Date.now(),
-                        username: messageData.User.Username,
-                        message: messageData.Message,
-                        timestamp: messageData.SentAt,
-                        userId: messageData.User.Id
+                        username: messageData.user?.username || messageData.User?.Username,
+                        message: messageData.message || messageData.Message,
+                        timestamp: messageData.sentAt || messageData.SentAt,
+                        userId: messageData.user?.id || messageData.User?.Id
                     }]);
                 });
 

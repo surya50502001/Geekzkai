@@ -32,7 +32,10 @@ builder.Services.AddControllers()
     });
 
 // SignalR
-builder.Services.AddSignalR();
+builder.Services.AddSignalR(options =>
+{
+    options.EnableDetailedErrors = true;
+});
 
 // CORS
 var corsPolicy = "AllowFrontend";
@@ -139,7 +142,8 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             {
                 var accessToken = context.Request.Query["access_token"];
                 var path = context.HttpContext.Request.Path;
-                if (!string.IsNullOrEmpty(accessToken) && path.StartsWithSegments("/chathub"))
+                if (!string.IsNullOrEmpty(accessToken) && 
+                    (path.StartsWithSegments("/chathub") || path.StartsWithSegments("/api/chathub")))
                 {
                     context.Token = accessToken;
                 }
